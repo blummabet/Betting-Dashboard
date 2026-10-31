@@ -34,10 +34,10 @@ SENDER = {"tg_send", "tg_send_text", "tg_send_photo", "send_photo", "tg_post"}
 # Schleifen ohne Deckel, mit Grund. Kein Freibrief: `test_jede_ausnahme_wird_noch_gebraucht`
 # wirft jeden Eintrag raus, sobald die Schleife einen Deckel hat oder verschwunden ist.
 AUSNAHMEN = {
-    ("telegram_wm.py", 817): "Schleife ueber TG_LANGS — eine Sprachliste aus der Konfiguration, "
+    ("telegram_wm.py", 838): "Schleife ueber TG_LANGS — eine Sprachliste aus der Konfiguration, "
                              "keine Datenmenge. Sie waechst, wenn jemand eine Sprache dazustellt, "
                              "nicht wenn ein Rueckstau abflieszt.",
-    ("telegram_wm.py", 851): "dito — dieselbe Sprachliste, Recap-Karte statt Morgenkarte.",
+    ("telegram_wm.py", 872): "dito — dieselbe Sprachliste, Recap-Karte statt Morgenkarte.",
 }
 
 
