@@ -569,6 +569,13 @@ def main():
         home_name = _team_name_from_id(fx["home_id"])
         away_name = _team_name_from_id(fx["away_id"])
         ko = _kickoff_utc(fx["date"], fx["time"])
+        # 31.10.2026: echte UTC-Anstoßzeit bevorzugen — fx["time"] ist Wien-Zeit oder ein Platzhalter
+        # („21:00"), der Eintrag stand sonst mit kickoff 21:00Z statt 12:30Z im Speicher (Chelsea–Man Utd).
+        if fx.get("kickoff"):
+            try:
+                ko = datetime.fromisoformat(str(fx["kickoff"]).replace("Z", "+00:00"))
+            except Exception:
+                pass
 
         print(f"\n🔎 {mk} ({home_name} vs {away_name}) @ {fx['date']} {fx['time']}:")
 
