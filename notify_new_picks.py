@@ -83,9 +83,10 @@ def _kickoff_wien(u: dict, jetzt=None) -> str:
     if not ko:
         return ""
     try:
-        from datetime import timedelta
-        dt = datetime.fromisoformat(str(ko).replace("Z", "+00:00")) + timedelta(hours=2)
-        heute = ((jetzt or datetime.now(timezone.utc)) + timedelta(hours=2)).date()
+        from zoneinfo import ZoneInfo      # 31.10.2026: echte Wiener Zeit statt fest +2 h
+        wien = ZoneInfo("Europe/Vienna")
+        dt = datetime.fromisoformat(str(ko).replace("Z", "+00:00")).astimezone(wien)
+        heute = (jetzt or datetime.now(timezone.utc)).astimezone(wien).date()
     except Exception:
         return ""
     if dt.date() == heute:

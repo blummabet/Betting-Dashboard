@@ -55,3 +55,17 @@ class MorgenKarteNurOffeneSpiele(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WienerZeitImWinter(unittest.TestCase):
+    """31.10.2026: Anstoßzeiten waren fest UTC+2 — seit der Zeitumstellung am 25.10. eine Stunde zu spät."""
+
+    def test_notify_winterzeit(self):
+        import notify_new_picks as N
+        jetzt = datetime(2026, 10, 26, 10, 0, tzinfo=timezone.utc)
+        self.assertEqual(N._kickoff_wien({"kickoff": "2026-10-26T19:30:00Z"}, jetzt), " · 20:30")   # PSG–Lyon
+
+    def test_notify_sommerzeit_unveraendert(self):
+        import notify_new_picks as N
+        jetzt = datetime(2026, 9, 1, 10, 0, tzinfo=timezone.utc)
+        self.assertEqual(N._kickoff_wien({"kickoff": "2026-09-01T18:45:00Z"}, jetzt), " · 20:45")
