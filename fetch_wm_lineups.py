@@ -282,9 +282,14 @@ def _parse_lineup_entry(player_block: dict) -> dict:
     }
 
 
+_LETZTE_ANTWORT = None   # 31.10.2026: was API-Football bei „keine Aufstellung" wirklich sagte (Quote? leer?)
+
+
 def _fetch_lineup_for_fixture(fixture_id: int) -> dict | None:
     """Holt /fixtures/lineups?fixture=ID und konvertiert zu unserem Schema."""
     data = _apif_get(f"/fixtures/lineups?fixture={fixture_id}")
+    global _LETZTE_ANTWORT
+    _LETZTE_ANTWORT = ({"errors": data.get("errors"), "results": data.get("results")} if isinstance(data, dict) else {"keineAntwort": True})
     if not data or not data.get("response") or len(data["response"]) < 2:
         return None
     home_block, away_block = data["response"][:2]
@@ -590,7 +595,7 @@ def main():
         if lineup is None:
             print(f"   ⚠️  Lineup noch nicht verfügbar (zu früh?)")
             fail_count += 1
-            protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "noch keine Aufstellung", "fixture_id": fixture_id})
+            protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "noch keine Aufstellung", "fixture_id": fixture_id, "api": _LETZTE_ANTWORT})
             continue
 
         entry_new = {
