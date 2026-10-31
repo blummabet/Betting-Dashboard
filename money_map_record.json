@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-31T19:58:31.910888+00:00",
+"generatedAt": "2026-10-31T20:13:19.841692+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 38,
@@ -18,20 +18,20 @@
 "clvLb": -0.8151
 },
 "konsens": {
-"n": 650,
-"wins": 376,
-"hitRate": 0.5785,
-"polyN": 634,
-"polyWins": 359,
-"polyHitRate": 0.5662,
-"pinnN": 580,
-"pinnHitRate": 0.5776,
-"nRoi": 650,
-"roi": 0.0511,
-"roiLb": -0.0105,
-"nClv": 650,
+"n": 653,
+"wins": 378,
+"hitRate": 0.5789,
+"polyN": 637,
+"polyWins": 361,
+"polyHitRate": 0.5667,
+"pinnN": 582,
+"pinnHitRate": 0.579,
+"nRoi": 653,
+"roi": 0.0517,
+"roiLb": -0.0097,
+"nClv": 653,
 "clv": 0.07,
-"clvLb": -0.0946
+"clvLb": -0.0908
 },
 "teil": {
 "n": 1,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "Italian Serie A": {
-"n": 43,
-"wins": 31,
-"hitRate": 0.7209
+"n": 44,
+"wins": 32,
+"hitRate": 0.7273
 },
 "English Sky Bet Championship": {
 "n": 42,
@@ -82,9 +82,9 @@
 "hitRate": 0.6364
 },
 "US MLS": {
-"n": 32,
-"wins": 14,
-"hitRate": 0.4375
+"n": 33,
+"wins": 15,
+"hitRate": 0.4545
 },
 "German Bundesliga": {
 "n": 29,
@@ -176,6 +176,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Norwegian Eliteserien": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
 "Saudi Professional League": {
 "n": 7,
 "wins": 3,
@@ -217,11 +222,6 @@
 "hitRate": 0.1667
 },
 "Irish Premier Division": {
-"n": 6,
-"wins": 5,
-"hitRate": 0.8333
-},
-"Norwegian Eliteserien": {
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 481,
-"wins": 288,
-"hitRate": 0.5988,
-"nRoi": 481,
-"roi": 0.0164,
-"roiLb": -0.0496,
-"nClv": 481,
+"n": 483,
+"wins": 289,
+"hitRate": 0.5983,
+"nRoi": 483,
+"roi": 0.0155,
+"roiLb": -0.0503,
+"nClv": 483,
 "clv": 0.14,
-"clvLb": -0.0722
+"clvLb": -0.0678
 },
 "weak": {
-"n": 208,
-"wins": 101,
-"hitRate": 0.4856,
-"nRoi": 208,
-"roi": 0.116,
-"roiLb": -0.0203,
-"nClv": 208,
+"n": 209,
+"wins": 102,
+"hitRate": 0.488,
+"nRoi": 209,
+"roi": 0.12,
+"roiLb": -0.0157,
+"nClv": 209,
 "clv": -0.12,
-"clvLb": -0.3466
+"clvLb": -0.3437
 }
 },
 "divergence": {
@@ -450,6 +450,63 @@
 "polyRate": 0.3514
 },
 "recent": [
+{
+"matchId": "36246853",
+"home": "Udinese",
+"away": "Roma",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Roma",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+5
+],
+"kickoff": "2026-10-31T17:00:00Z",
+"settledAt": "2026-10-31T20:13:19.552868+00:00"
+},
+{
+"matchId": "36253170",
+"home": "Charlotte FC",
+"away": "Orlando City",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Charlotte FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-10-31T17:00:00Z",
+"settledAt": "2026-10-31T20:13:19.552868+00:00"
+},
+{
+"matchId": "36238825",
+"home": "Aalesunds",
+"away": "Sandefjord",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Aalesunds",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+4
+],
+"kickoff": "2026-10-31T17:00:00Z",
+"settledAt": "2026-10-31T20:13:19.552868+00:00"
+},
 {
 "matchId": "36240515",
 "home": "Catanzaro",
@@ -1152,76 +1209,19 @@
 ],
 "kickoff": "2026-10-30T23:00:00Z",
 "settledAt": "2026-10-31T02:11:44.347488+00:00"
-},
-{
-"matchId": "36211701",
-"home": "CA Huracan",
-"away": "Tigre",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CA Huracan",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-30T22:00:00Z",
-"settledAt": "2026-10-31T01:11:15.149308+00:00"
-},
-{
-"matchId": "36239679",
-"home": "Casa Pia",
-"away": "Sporting Lisbon",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sporting Lisbon",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-30T20:15:00Z",
-"settledAt": "2026-10-30T23:26:15.985445+00:00"
-},
-{
-"matchId": "36241484",
-"home": "Villarreal",
-"away": "Espanyol",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Villarreal",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-10-30T20:00:00Z",
-"settledAt": "2026-10-30T23:11:18.877462+00:00"
 }
 ],
 "global": {
-"n": 689,
-"wins": 389,
-"hitRate": 0.5646,
-"nRoi": 689,
-"roi": 0.0464,
-"roiLb": -0.0153,
-"nClv": 689,
+"n": 692,
+"wins": 391,
+"hitRate": 0.565,
+"nRoi": 692,
+"roi": 0.0471,
+"roiLb": -0.0145,
+"nClv": 692,
 "clv": 0.06,
-"clvLb": -0.1018
+"clvLb": -0.0981
 },
-"pending": 33,
-"ausgeschlossenLive": 1278
+"pending": 32,
+"ausgeschlossenLive": 1276
 }
