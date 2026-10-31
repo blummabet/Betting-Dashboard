@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-31T13:47:52.789319+00:00",
+ "generatedAt": "2026-10-31T14:38:59.739692+00:00",
  "sports": [
   "americanfootball_nfl",
   "basketball_nba",
@@ -9,27 +9,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 820,
- "pinnKeys": 276,
- "matched": 180,
- "footballRows": 180,
+ "polyRowsSeen": 832,
+ "pinnKeys": 288,
+ "matched": 192,
+ "footballRows": 192,
  "crossRows": 640,
- "footballSkippedStale": 151,
+ "footballSkippedStale": 155,
  "seenBySport": {
   "basketball_nba": 202,
   "americanfootball_nfl": 84,
   "icehockey_nhl": 334,
   "boxing_boxing": 20,
   "soccer_mls": 33,
-  "soccer_liga": 147
+  "soccer_liga": 159
  },
  "matchedBySport": {
   "soccer_mls": 33,
-  "soccer_liga": 147
+  "soccer_liga": 159
  },
  "trackRecord": {
-  "tracked": 142,
+  "tracked": 144,
   "converged": 7
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|bologna-monza|hw",
+   "sport": "soccer_liga",
+   "event": "Bologna vs Monza",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 39.5,
+   "pinnPP": 57.0,
+   "gapPP": -17.53,
+   "vol": 75739,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-31T14:38:59.739492+00:00"
+  },
+  {
+   "id": "soccer_liga|bologna-monza|aw",
+   "sport": "soccer_liga",
+   "event": "Bologna vs Monza",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 33.5,
+   "pinnPP": 17.8,
+   "gapPP": 15.71,
+   "vol": 75739,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-31T14:38:59.739492+00:00"
+  }
+ ]
 }
