@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-31T17:28:19.563517+00:00",
+"generatedAt": "2026-10-31T17:43:06.819709+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 37,
+"n": 38,
 "wins": 13,
-"hitRate": 0.3514,
-"polyN": 36,
+"hitRate": 0.3421,
+"polyN": 37,
 "polyWins": 13,
-"polyHitRate": 0.3611,
-"pinnN": 26,
-"pinnHitRate": 0.3077,
-"nRoi": 37,
-"roi": 0.0208,
-"roiLb": -0.3654,
-"nClv": 37,
-"clv": -0.24,
-"clvLb": -0.8932
+"polyHitRate": 0.3514,
+"pinnN": 27,
+"pinnHitRate": 0.3333,
+"nRoi": 38,
+"roi": -0.0061,
+"roiLb": -0.3846,
+"nClv": 38,
+"clv": -0.17,
+"clvLb": -0.8151
 },
 "konsens": {
-"n": 636,
-"wins": 370,
-"hitRate": 0.5818,
-"polyN": 620,
-"polyWins": 352,
-"polyHitRate": 0.5677,
-"pinnN": 567,
-"pinnHitRate": 0.582,
-"nRoi": 636,
-"roi": 0.0557,
-"roiLb": -0.0065,
-"nClv": 636,
+"n": 638,
+"wins": 371,
+"hitRate": 0.5815,
+"polyN": 622,
+"polyWins": 353,
+"polyHitRate": 0.5675,
+"pinnN": 569,
+"pinnHitRate": 0.5817,
+"nRoi": 638,
+"roi": 0.0565,
+"roiLb": -0.0057,
+"nClv": 638,
 "clv": 0.07,
-"clvLb": -0.0971
+"clvLb": -0.0945
 },
 "teil": {
 "n": 1,
@@ -86,15 +86,15 @@
 "wins": 14,
 "hitRate": 0.4375
 },
+"German Bundesliga": {
+"n": 29,
+"wins": 15,
+"hitRate": 0.5172
+},
 "UEFA Europa League": {
 "n": 29,
 "wins": 18,
 "hitRate": 0.6207
-},
-"German Bundesliga": {
-"n": 26,
-"wins": 14,
-"hitRate": 0.5385
 },
 "French Ligue 1": {
 "n": 25,
@@ -414,37 +414,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 473,
+"n": 474,
 "wins": 283,
-"hitRate": 0.5983,
-"nRoi": 473,
-"roi": 0.0141,
-"roiLb": -0.0523,
-"nClv": 473,
+"hitRate": 0.597,
+"nRoi": 474,
+"roi": 0.012,
+"roiLb": -0.0544,
+"nClv": 474,
 "clv": 0.14,
-"clvLb": -0.0657
+"clvLb": -0.0662
 },
 "weak": {
-"n": 201,
-"wins": 100,
+"n": 203,
+"wins": 101,
 "hitRate": 0.4975,
-"nRoi": 201,
-"roi": 0.1418,
-"roiLb": 0.0031,
-"nClv": 201,
-"clv": -0.15,
-"clvLb": -0.3885
+"nRoi": 203,
+"roi": 0.1434,
+"roiLb": 0.0053,
+"nClv": 203,
+"clv": -0.13,
+"clvLb": -0.365
 }
 },
 "divergence": {
-"n": 37,
+"n": 38,
 "betfairWins": 13,
-"betfairRate": 0.3514,
-"polyN": 36,
+"betfairRate": 0.3421,
+"polyN": 37,
 "polyWins": 13,
-"polyRate": 0.3611
+"polyRate": 0.3514
 },
 "recent": [
+{
+"matchId": "36241164",
+"home": "Werder Bremen",
+"away": "Hoffenheim",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Werder Bremen",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-10-31T14:30:00Z",
+"settledAt": "2026-10-31T17:43:06.611810+00:00"
+},
+{
+"matchId": "36241172",
+"home": "Leverkusen",
+"away": "Stuttgart",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Leverkusen",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-10-31T14:30:00Z",
+"settledAt": "2026-10-31T17:43:06.611810+00:00"
+},
+{
+"matchId": "36241101",
+"home": "Augsburg",
+"away": "Freiburg",
+"league": "German Bundesliga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Augsburg",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-31T14:30:00Z",
+"settledAt": "2026-10-31T17:43:06.611810+00:00"
+},
 {
 "matchId": "36246850",
 "home": "Bologna",
@@ -1147,76 +1204,19 @@
 ],
 "kickoff": "2026-10-30T18:00:00Z",
 "settledAt": "2026-10-30T21:10:52.235649+00:00"
-},
-{
-"matchId": "36238454",
-"home": "Bodo Glimt",
-"away": "Viking",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bodo Glimt",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-30T18:00:00Z",
-"settledAt": "2026-10-30T21:10:52.235649+00:00"
-},
-{
-"matchId": "36246141",
-"home": "Al-Shabab (KSA)",
-"away": "Al Ahli",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Al Ahli",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-10-30T18:00:00Z",
-"settledAt": "2026-10-30T21:10:52.235649+00:00"
-},
-{
-"matchId": "36242179",
-"home": "Arminia Bielefeld",
-"away": "Braunschweig",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Arminia Bielefeld",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-30T17:30:00Z",
-"settledAt": "2026-10-30T20:40:42.776612+00:00"
 }
 ],
 "global": {
-"n": 674,
-"wins": 383,
-"hitRate": 0.5682,
-"nRoi": 674,
-"roi": 0.0522,
-"roiLb": -0.0102,
-"nClv": 674,
+"n": 677,
+"wins": 384,
+"hitRate": 0.5672,
+"nRoi": 677,
+"roi": 0.0514,
+"roiLb": -0.0109,
+"nClv": 677,
 "clv": 0.06,
-"clvLb": -0.108
+"clvLb": -0.1018
 },
 "pending": 39,
-"ausgeschlossenLive": 1287
+"ausgeschlossenLive": 1284
 }
