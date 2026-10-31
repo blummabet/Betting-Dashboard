@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-30T22:33:52.929167+00:00",
+  "timestamp": "2026-10-31T08:42:14.310344+00:00",
   "checked": 99,
   "errors": 0,
-  "warnings": 64,
-  "infos": 298,
+  "warnings": 63,
+  "infos": 299,
   "issues": [
     {
       "date": "31.10.2026",
@@ -794,6 +794,15 @@
       "away": "Atletico Madrid",
       "league": "La Liga",
       "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Levante: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "31.10.2026",
+      "home": "Levante",
+      "away": "Atletico Madrid",
+      "league": "La Liga",
+      "severity": "INFO",
       "code": "CARDS35_LOW_FV",
       "msg": "Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
     },
@@ -994,15 +1003,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Racing Santander expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "01.11.2026",
-      "home": "Elche",
-      "away": "Valencia",
-      "league": "La Liga",
-      "severity": "WARN",
-      "code": "BOTRED_ASYMMETRIC_PRESSURE",
-      "msg": "Kellerduell-Narrativ aber asymmetrischer Druck: Valencia pressureRatio=0.34 vs Elche pressureRatio=0.30. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht."
     },
     {
       "date": "01.11.2026",
@@ -1604,8 +1604,8 @@
       "away": "1. FC Köln",
       "league": "Bundesliga",
       "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=0.50, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
     },
     {
       "date": "01.11.2026",
@@ -1613,8 +1613,8 @@
       "away": "1. FC Köln",
       "league": "Bundesliga",
       "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Union Berlin expH≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=0.50 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "01.11.2026",

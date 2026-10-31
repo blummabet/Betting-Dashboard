@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 30.10.2026 22:33
+# 🟡 Picks Validator — 31.10.2026 08:42
 
-**99 Spiele geprüft** · 🔴 0 Fehler · 🟡 64 Warnungen · 🔵 298 Hinweise
+**99 Spiele geprüft** · 🔴 0 Fehler · 🟡 63 Warnungen · 🔵 299 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  30.10.2026 22:33
+  31.10.2026 08:42
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -71,7 +71,7 @@
      Austria Vienna expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇧🇪 Jupiler Pro League  (rl=31)
+  🇧🇪 Jupiler Pro League  (rl=30)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 31.10.2026  KV Mechelen vs Genk
@@ -287,8 +287,11 @@
      Newcastle expH≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇪🇸 La Liga  (rl=28)
+  🇪🇸 La Liga  (rl=27)
 ─────────────────────────────────────────────────────────────────
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 31.10.2026  Levante vs Atletico Madrid
+     Levante: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 31.10.2026  Levante vs Atletico Madrid
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -358,9 +361,6 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 01.11.2026  Racing Santander vs Real Madrid
      Racing Santander expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
-     📅 01.11.2026  Elche vs Valencia
-     Kellerduell-Narrativ aber asymmetrischer Druck: Valencia pressureRatio=0.34 vs Elche pressureRatio=0.30. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 01.11.2026  Elche vs Valencia
      Elche: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -487,7 +487,7 @@
      Stade Brestois 29 expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇩🇪 Bundesliga  (rl=27)
+  🇩🇪 Bundesliga  (rl=26)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 31.10.2026  Werder Bremen vs 1899 Hoffenheim
@@ -567,12 +567,12 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 01.11.2026  Union Berlin vs 1. FC Köln
      Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [LOW_SCORING_PROFILE]
+     📅 01.11.2026  Union Berlin vs 1. FC Köln
+     Ø gpg=0.50, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 01.11.2026  Union Berlin vs 1. FC Köln
-     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 01.11.2026  Union Berlin vs 1. FC Köln
-     Union Berlin expH≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Ø gpg=0.50 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 01.11.2026  Eintracht Frankfurt vs Hamburger SV
      Eintracht Frankfurt: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -930,7 +930,7 @@
      Raków Częstochowa expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇵🇹 Primeira Liga  (rl=25)
+  🇵🇹 Primeira Liga  (rl=24)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 31.10.2026  FC Porto vs Estoril
@@ -1157,8 +1157,8 @@
 
 ═════════════════════════════════════════════════════════════════
   Geprüft: 99 Spiele
-  🟡 64 Warnungen — manuelle Prüfung empfohlen
-  🔵 298 Hinweise — Pick-Richtung kontrollieren
+  🟡 63 Warnungen — manuelle Prüfung empfohlen
+  🔵 299 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
