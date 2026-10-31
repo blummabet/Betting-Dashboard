@@ -88,27 +88,28 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1119101 verbraucht, 3880899 uebrig"
+      "note": "Kontingent: 1119658 verbraucht, 3880342 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 11,
       "failures": [
         "Deportivo Recoleta v Club Sportivo Ameliano (Paraguayan Primera Division): name — bester Kandidat „Deportivo Riestra v Talleres“",
         "Deportivo Moron v Ciudad de Bolivar (Argentinian Primera Nacional): name — bester Kandidat „Deportivo Riestra v Talleres“",
+        "Academia de Balompie Boli v San Antonio Bulo Bulo (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Velez Sarsfield BA v San Lorenzo“",
+        "OHiggins v Nublense (Chilean Primera Division): name — bester Kandidat „O'Higgins v Ñublense“",
         "Sportivo San Lorenzo v Libertad (Paraguayan Primera Division): name — bester Kandidat „Velez Sarsfield BA v San Lorenzo“",
         "Puerto Cabello v Deportivo Tachira (Venezuelan Primera Division): name — bester Kandidat „Deportivo Riestra v Talleres“",
         "Macara v Barcelona (Ecu) (Ecuadorian Serie A): name — bester Kandidat „Barcelona v Alavés“",
-        "OHiggins v Nublense (Chilean Primera Division): name — bester Kandidat „O'Higgins v Ñublense“",
         "TP Ho Chi Minh (W) v East Bengal (W) (AFC Ladies Champions League): name — bester Kandidat „Universidad Católica (CHI) v Universidad de Chile“",
         "Al Wasl v Al Quwa Al Jawiya (AFC Champions League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 69.4h Anpfiff-Abstand",
         "Gimhae City v Cheonan City (South Korean K2 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 149.0h Anpfiff-Abstand",
         "Karlsruhe v FC Heidenheim (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v 1. FC Heidenheim“"
       ],
-      "note": "ohne Anker: kein_kandidat 60 · name 8 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 4 · name 9 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -117,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 4 — Barcelona v Alaves (26 Buecher, ohne Pinnacle); Coritiba v EC Vitoria Salvador (20 Buecher, ohne Pinnacle); Guingamp v St Etienne (29 Buecher, ohne Pinnacle); GKS Katowice v Widzew Lodz (24 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -126,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
+      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -193,5 +194,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-10-31T20:28:58.840617+00:00"
+  "generatedAt": "2026-10-31T20:43:51.752557+00:00"
 }
