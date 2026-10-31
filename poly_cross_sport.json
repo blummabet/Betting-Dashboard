@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-31T18:09:21.043780+00:00",
+ "generatedAt": "2026-10-31T18:39:33.038626+00:00",
  "sports": [
   "americanfootball_nfl",
   "basketball_nba",
@@ -9,27 +9,70 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 838,
- "pinnKeys": 268,
- "matched": 174,
- "footballRows": 174,
- "crossRows": 664,
- "footballSkippedStale": 160,
+ "polyRowsSeen": 833,
+ "pinnKeys": 265,
+ "matched": 171,
+ "footballRows": 171,
+ "crossRows": 662,
+ "footballSkippedStale": 140,
  "seenBySport": {
-  "basketball_nba": 202,
+  "basketball_nba": 200,
   "americanfootball_nfl": 84,
   "icehockey_nhl": 358,
   "boxing_boxing": 20,
   "soccer_mls": 33,
-  "soccer_liga": 141
+  "soccer_liga": 138
  },
  "matchedBySport": {
   "soccer_mls": 33,
-  "soccer_liga": 141
+  "soccer_liga": 138
  },
  "trackRecord": {
-  "tracked": 134,
+  "tracked": 137,
   "converged": 7
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|crystalpalace-tottenham|hw",
+   "sport": "soccer_liga",
+   "event": "Tottenham vs Crystal Palace",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 58.5,
+   "pinnPP": 91.0,
+   "gapPP": -32.54,
+   "vol": 101346,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-31T18:39:33.038245+00:00"
+  },
+  {
+   "id": "soccer_liga|crystalpalace-tottenham|aw",
+   "sport": "soccer_liga",
+   "event": "Tottenham vs Crystal Palace",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 18.5,
+   "pinnPP": 1.3,
+   "gapPP": 17.18,
+   "vol": 101346,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-31T18:39:33.038245+00:00"
+  },
+  {
+   "id": "soccer_liga|crystalpalace-tottenham|dr",
+   "sport": "soccer_liga",
+   "event": "Tottenham vs Crystal Palace",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 23.5,
+   "pinnPP": 7.6,
+   "gapPP": 15.87,
+   "vol": 101346,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-31T18:39:33.038245+00:00"
+  }
+ ]
 }
