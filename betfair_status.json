@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 79 von 226 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Ajax v AZ Alkmaar (Dutch Eredivisie); Albacete v Sabadell (Spanish Segunda Division); Zaragoza v Villarreal B (Spanish Primera Federación - Group 2)"
+        "nur 85 von 226 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Zaragoza v Villarreal B (Spanish Primera Federación - Group 2); Albacete v Sabadell (Spanish Segunda Division); Deportivo Riestra v Talleres (Argentinian Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,28 +90,34 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1104410 verbraucht, 3895590 uebrig"
+      "note": "Kontingent: 1104686 verbraucht, 3895314 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 11,
+      "nFail": 17,
       "failures": [
         "Al Sailiya v Lusail (Qatari Stars League): name — bester Kandidat „Al-Taawoun v Al-Ettifaq“",
         "FK Dukla Praha B v Domazlice (Czech 3 Liga): name — bester Kandidat „Real Sociedad B v Girona FC“",
-        "Everton (W) v Man Utd (W) (English WSL): zeit — bester Kandidat „Newcastle United v Everton“ · 55.2h Anpfiff-Abstand",
-        "Forest Green v Harrogate Town (English National League): name — bester Kandidat „Grimsby Town v York City“",
         "Podbeskidzie B-B v Warta Poznan (Polish I Liga): name — bester Kandidat „Lech Poznań v Wisła Kraków“",
+        "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Ayr v Queens Park (Scottish Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
+        "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
         "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Bolton Wanderers v Bristol City“",
-        "Chesham Utd v Folkestone Invicta (English National League South): name — bester Kandidat „Colchester United v Walsall“",
+        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
         "Mgladbach v Paderborn (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v SC Paderborn“",
         "Southampton v QPR (English Sky Bet Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
-        "Nomme Utd v FCI Tallinn (Estonian Premier League): name — bester Kandidat „Colchester United v Walsall“"
+        "Nomme Utd v FCI Tallinn (Estonian Premier League): name — bester Kandidat „Chelsea v Manchester United“",
+        "Everton (W) v Man Utd (W) (English WSL): zeit — bester Kandidat „Newcastle United v Everton“ · 55.2h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 63 · kein_pinnacle 7 · name 10 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 58 · kein_pinnacle 4 · name 16 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -120,7 +126,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 5 — Chelsea v Man Utd (22 Buecher, ohne Pinnacle); Stoke v Preston (16 Buecher, ohne Pinnacle); Port Vale v Rochdale (12 Buecher, ohne Pinnacle); Grimsby v York City (17 Buecher, ohne Pinnacle); Leyton Orient v Cambridge Utd (7 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Chelsea v Man Utd (17 Buecher, ohne Pinnacle); Lincoln v Birmingham (22 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -129,7 +135,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -196,5 +202,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-31T14:24:11.372889+00:00"
+  "generatedAt": "2026-10-31T14:28:10.786770+00:00"
 }
