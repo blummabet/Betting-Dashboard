@@ -2,14 +2,14 @@
  "n": 746,
  "minOdds": 1.35,
  "moneyHitRate": 0.405,
- "priceHitRate": 0.418,
+ "priceHitRate": 0.416,
  "brierMoney": 0.8301,
  "brierPrice": 0.6778,
  "disagree": {
-  "n": 192,
-  "moneyWon": 30,
+  "n": 190,
+  "moneyWon": 32,
   "priceWon": 40,
-  "neither": 122
+  "neither": 118
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -121,8 +121,8 @@
  ],
  "guete": {
   "belastbar": 746,
-  "preis_echo": 519,
-  "abgeschnitten": 169,
+  "preis_echo": 522,
+  "abgeschnitten": 170,
   "unbekannt": 0,
   "leer": 0
  },
@@ -156,11 +156,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -564,7 +564,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -608,7 +608,7 @@
    "totalUsd": 399480
   }
  ],
- "generatedAt": "2026-11-01T14:18:51.961735+00:00",
+ "generatedAt": "2026-11-01T15:21:35.202756+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -621,17 +621,17 @@
   "soccer": 800,
   "tennis": 800,
   "ucl": 544,
-  "la-liga": 571,
+  "la-liga": 572,
   "bundesliga": 493,
   "serie-a": 52,
   "ligue-1": 556,
-  "primeira-liga": 484,
+  "primeira-liga": 485,
   "brazil-serie-a": 457,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 642,
+  "esports": 641,
   "cs2": 421,
   "lol": 432,
   "dota": 29,
@@ -641,8 +641,8 @@
   "boxing": 325,
   "golf": 415,
   "f1": 460,
-  "cricket": 545,
-  "afc-champions-league-elite": 299,
+  "cricket": 538,
+  "afc-champions-league-elite": 319,
   "allsvenskan": 1,
   "australian-a-league": 415,
   "austria-bundesliga": 430,
@@ -654,7 +654,7 @@
   "chinese-super-league": 446,
   "concacaf-nations-league": 443,
   "czechia-fortuna-liga": 188,
-  "denmark-superliga": 462,
+  "denmark-superliga": 463,
   "efl-championship": 521,
   "egypt-premier-league": 113,
   "english-premier-league": 2,
@@ -665,17 +665,17 @@
   "japan-j-league": 457,
   "japan-j2-league": 504,
   "k-league": 435,
-  "la-liga-2": 517,
+  "la-liga-2": 518,
   "liga-mx-apertura": 2,
   "ligue-2": 459,
   "naitons-league": 1,
   "national-league": 463,
   "nations-league": 25,
-  "norway-eliteserien": 473,
+  "norway-eliteserien": 475,
   "peru-liga-1": 179,
   "poland-ekstraklasa": 425,
   "premier-league": 527,
-  "romania-superliga": 180,
+  "romania-superliga": 181,
   "saudi-professional-league": 482,
   "scotland-league-cup": 203,
   "scottish-premiership": 446,
@@ -694,7 +694,7 @@
  },
  "rawBySeries": {
   "10188": 520,
-  "10193": 551,
+  "10193": 552,
   "10194": 478,
   "10195": 541,
   "10203": 563
@@ -705,22 +705,32 @@
   "sweepAdded": 416
  },
  "vorStats": {
-  "kandidaten": 41,
-  "budgetLeer": 19,
-  "ohneGeldSplit": 4,
+  "kandidaten": 25,
+  "budgetLeer": 3,
+  "ohneGeldSplit": 2,
   "nachgelegt": 0,
-  "mitAnteilen": 18,
+  "mitAnteilen": 20,
   "calls": 22
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1965,
-   "usd": 25774206,
+   "n": 2040,
+   "usd": 31844569,
    "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
+  "presidential": {
+   "n": 12,
+   "usd": 933947,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "world": {
+   "n": 40,
+   "usd": 592209,
+   "beispiel": "world-cup-winner"
+  },
   "wnba": {
-   "n": 63,
-   "usd": 362059,
+   "n": 65,
+   "usd": 371079,
    "beispiel": "wnba-wsh-min-2026-06-21"
   },
   "super": {
@@ -728,90 +738,80 @@
    "usd": 311522,
    "beispiel": "super-bowl-champion-2026-731"
   },
+  "ballon": {
+   "n": 6,
+   "usd": 263523,
+   "beispiel": "ballon-dor-winner-2026"
+  },
   "uefa": {
-   "n": 11,
-   "usd": 259831,
+   "n": 12,
+   "usd": 261286,
    "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   },
-  "lec": {
-   "n": 42,
-   "usd": 232490,
-   "beispiel": "lec-orl-asl-2026-08-12"
-  },
   "cbb": {
-   "n": 23,
-   "usd": 229125,
+   "n": 24,
+   "usd": 231425,
    "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "who": {
+   "n": 12,
+   "usd": 223252,
+   "beispiel": "who-will-biden-pardon"
+  },
+  "lec": {
+   "n": 35,
+   "usd": 215887,
+   "beispiel": "lec-orl-asl-2026-08-12"
   },
   "fed": {
    "n": 14,
    "usd": 203466,
    "beispiel": "fed-decision-in-january-20260729233815502"
   },
-  "texas": {
-   "n": 12,
-   "usd": 190303,
-   "beispiel": "texas-senate-election-winner"
-  },
   "btc": {
-   "n": 36,
-   "usd": 177461,
+   "n": 41,
+   "usd": 195536,
    "beispiel": "btc-updown-4h-1767862800"
+  },
+  "texas": {
+   "n": 10,
+   "usd": 167884,
+   "beispiel": "texas-senate-election-winner"
   },
   "uef": {
    "n": 11,
    "usd": 163989,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "world": {
-   "n": 38,
-   "usd": 157879,
-   "beispiel": "world-cup-nation-to-reach-quarterfinals"
+  "ncaa": {
+   "n": 4,
+   "usd": 124277,
+   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
   "nbasl": {
-   "n": 4,
-   "usd": 101771,
+   "n": 1,
+   "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
+  "worlds": {
+   "n": 20,
+   "usd": 96379,
+   "beispiel": "worlds-2026-winner"
+  },
+  "brazil": {
+   "n": 22,
+   "usd": 81549,
+   "beispiel": "brazil-presidential-election"
+  },
   "next": {
-   "n": 7,
-   "usd": 91583,
+   "n": 6,
+   "usd": 74000,
    "beispiel": "next-french-presidential-election"
-  },
-  "who": {
-   "n": 12,
-   "usd": 88466,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
-  },
-  "will": {
-   "n": 15,
-   "usd": 84399,
-   "beispiel": "will-the-us-invade-iran-before-2027"
-  },
-  "ballon": {
-   "n": 5,
-   "usd": 78933,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "ecs": {
-   "n": 7,
-   "usd": 78569,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
-  },
-  "us": {
-   "n": 10,
-   "usd": 74530,
-   "beispiel": "us-open-karen-khachanov-vs-kamil-majchrzak-2025-08-28"
   },
   "democratic": {
    "n": 20,
-   "usd": 72752,
+   "usd": 72901,
    "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "worlds": {
-   "n": 18,
-   "usd": 71637,
-   "beispiel": "worlds-2026-winner"
   }
  }
 }
