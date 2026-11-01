@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-01T01:28:51.736088+00:00",
+"generatedAt": "2026-11-01T01:44:06.103223+00:00",
 "count": 17,
-"covered": 16,
+"covered": 17,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -49,6 +49,7 @@
 ],
 "leaguesMitAnker": [
 "Argentinian Primera Division",
+"Australian A-League Men",
 "English Premier League",
 "German Bundesliga",
 "Italian Serie A",
@@ -62,15 +63,15 @@
 "oddsKeysMitDaten": 47,
 "oddsEvents": 474,
 "oddsTotals": {
-"versucht": 8,
+"versucht": 9,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 8,
+"gewollt": 9,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 3404,
-"remaining": 4996596,
+"used": 3973,
+"remaining": 4996027,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -88,9 +89,9 @@
 "moneySide": "away",
 "moneyName": "Real Madrid",
 "moneySharePct": 90,
-"moneyOdd": 1.22,
-"moneyDir": "in",
-"totVol": 134830,
+"moneyOdd": 1.23,
+"moneyDir": "out",
+"totVol": 135206,
 "pinnOdd": 1.22,
 "softOdd": 1.2,
 "softN": 46,
@@ -111,16 +112,16 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.0901,
-"draw": 0.1231,
-"away": 0.7868,
+"home": 0.0905,
+"draw": 0.1233,
+"away": 0.7862,
 "fav": "away",
 "n": 46
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": -0.0,
 "pinnMove": {
-"movePP": 0.1,
-"stepPP": 0.1,
+"movePP": -0.0,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -139,13 +140,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Arsenal",
-"moneySharePct": 43,
-"moneyOdd": 2.54,
-"moneyDir": "in",
-"totVol": 125351,
+"moneySharePct": 44,
+"moneyOdd": 2.56,
+"moneyDir": "out",
+"totVol": 125797,
 "pinnOdd": 2.47,
-"softOdd": 2.41,
-"softN": 50,
+"softOdd": 2.4,
+"softN": 51,
 "poly": {
 "vol": 33776,
 "odd": 2.53,
@@ -163,16 +164,16 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3279,
-"draw": 0.2794,
-"away": 0.3927,
+"home": 0.3281,
+"draw": 0.2795,
+"away": 0.3924,
 "fav": "away",
-"n": 50
+"n": 51
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
 "movePP": 0.3,
-"stepPP": 0.0,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -234,6 +235,77 @@
 "pinnTotals": null
 },
 {
+"matchId": "36243600",
+"home": "Monterrey",
+"away": "Tijuana",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-11-01T01:05:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Monterrey",
+"moneySharePct": 70,
+"moneyOdd": 1.76,
+"moneyDir": "in",
+"totVol": 78484,
+"pinnOdd": 2.68,
+"softOdd": 1.7,
+"softN": 31,
+"poly": {
+"vol": 95052,
+"odd": 1.63,
+"sharePct": 98,
+"shareSrc": "geld",
+"key": "mex-mon1-tij-2026-10-31",
+"sideKey": "CF Monterrey",
+"whales": [
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 22962
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 18804
+},
+{
+"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+"usd": 3386
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 320
+},
+{
+"wallet": "0x39fdb032b048fad388e9ff2ca5478a409b10a4d7",
+"usd": 254
+},
+{
+"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
+"usd": 230
+}
+],
+"whaleUsd": 46548
+},
+"pinn": {
+"home": 0.352,
+"draw": 0.2894,
+"away": 0.3587,
+"fav": "away"
+},
+"soft": {
+"home": 0.5354,
+"draw": 0.2816,
+"away": 0.1831,
+"fav": "home",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
 "matchId": "36246857",
 "home": "Juventus",
 "away": "Napoli",
@@ -283,77 +355,6 @@
 },
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36243600",
-"home": "Monterrey",
-"away": "Tijuana",
-"league": "Mexican Liga MX",
-"country": "MX",
-"kickoff": "2026-11-01T01:05:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Monterrey",
-"moneySharePct": 64,
-"moneyOdd": 2.66,
-"moneyDir": "out",
-"totVol": 61966,
-"pinnOdd": 2.68,
-"softOdd": 1.84,
-"softN": 30,
-"poly": {
-"vol": 95052,
-"odd": 1.63,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "mex-mon1-tij-2026-10-31",
-"sideKey": "CF Monterrey",
-"whales": [
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 22962
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 18804
-},
-{
-"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-"usd": 3386
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 320
-},
-{
-"wallet": "0x39fdb032b048fad388e9ff2ca5478a409b10a4d7",
-"usd": 254
-},
-{
-"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
-"usd": 230
-}
-],
-"whaleUsd": 46548
-},
-"pinn": {
-"home": 0.352,
-"draw": 0.2894,
-"away": 0.3587,
-"fav": "away"
-},
-"soft": {
-"home": 0.4545,
-"draw": 0.2688,
-"away": 0.2767,
-"fav": "home",
-"n": 30
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
 "pinnTotals": null
 },
 {
@@ -409,58 +410,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36246855",
-"home": "Como",
-"away": "Venezia",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-11-01T11:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Como",
-"moneySharePct": 86,
-"moneyOdd": 1.32,
-"moneyDir": "out",
-"totVol": 48296,
-"pinnOdd": 1.3,
-"softOdd": 1.29,
-"softN": 50,
-"poly": {
-"vol": 33713,
-"odd": 1.31,
-"sharePct": 76,
-"shareSrc": "preis",
-"key": "sea-com-ven-2026-11-01",
-"sideKey": "Como 1907",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.7446,
-"draw": 0.1517,
-"away": 0.1036,
-"fav": "home"
-},
-"soft": {
-"home": 0.7382,
-"draw": 0.1576,
-"away": 0.1042,
-"fav": "home",
-"n": 50
-},
-"pinnMovePP": 0.2,
-"pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.0,
-"n": 9,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36211773",
 "home": "Estudiantes",
 "away": "Instituto",
@@ -470,13 +419,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Instituto",
-"moneySharePct": 56,
-"moneyOdd": 1.74,
+"moneySharePct": 60,
+"moneyOdd": 1.04,
 "moneyDir": "in",
-"totVol": 46854,
-"pinnOdd": 1.75,
-"softOdd": 1.67,
-"softN": 26,
+"totVol": 54296,
+"pinnOdd": 1.68,
+"softOdd": 1.04,
+"softN": 25,
 "poly": {
 "vol": 32425,
 "odd": 1.9,
@@ -513,20 +462,72 @@
 "whaleUsd": 5347
 },
 "pinn": {
-"home": 0.1632,
-"draw": 0.2971,
-"away": 0.5398,
+"home": 0.1494,
+"draw": 0.2893,
+"away": 0.5613,
 "fav": "away"
 },
 "soft": {
-"home": 0.1559,
-"draw": 0.2966,
-"away": 0.5476,
+"home": 0.0271,
+"draw": 0.0836,
+"away": 0.8892,
 "fav": "away",
-"n": 26
+"n": 25
 },
 "pinnMovePP": null,
 "pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36246855",
+"home": "Como",
+"away": "Venezia",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-11-01T11:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Como",
+"moneySharePct": 86,
+"moneyOdd": 1.31,
+"moneyDir": "in",
+"totVol": 48428,
+"pinnOdd": 1.3,
+"softOdd": 1.28,
+"softN": 50,
+"poly": {
+"vol": 33713,
+"odd": 1.31,
+"sharePct": 76,
+"shareSrc": "preis",
+"key": "sea-com-ven-2026-11-01",
+"sideKey": "Como 1907",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.745,
+"draw": 0.1516,
+"away": 0.1035,
+"fav": "home"
+},
+"soft": {
+"home": 0.7386,
+"draw": 0.1575,
+"away": 0.1039,
+"fav": "home",
+"n": 50
+},
+"pinnMovePP": 0.3,
+"pinnMove": {
+"movePP": 0.3,
+"stepPP": 0.0,
+"n": 10,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -594,12 +595,12 @@
 "moneySide": "home",
 "moneyName": "Guadalajara",
 "moneySharePct": 93,
-"moneyOdd": 1.18,
-"moneyDir": "in",
-"totVol": 38176,
-"pinnOdd": 1.15,
-"softOdd": 1.13,
-"softN": 31,
+"moneyOdd": 1.19,
+"moneyDir": "out",
+"totVol": 41973,
+"pinnOdd": 1.17,
+"softOdd": 1.04,
+"softN": 24,
 "poly": {
 "vol": 7814,
 "odd": 1.44,
@@ -636,17 +637,17 @@
 "whaleUsd": 1881
 },
 "pinn": {
-"home": 0.8266,
-"draw": 0.1295,
-"away": 0.0439,
+"home": 0.8142,
+"draw": 0.1418,
+"away": 0.0441,
 "fav": "home"
 },
 "soft": {
-"home": 0.8157,
-"draw": 0.1278,
-"away": 0.0565,
+"home": 0.8733,
+"draw": 0.0917,
+"away": 0.035,
 "fav": "home",
-"n": 31
+"n": 24
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -698,7 +699,7 @@
 "pinnMove": {
 "movePP": 0.4,
 "stepPP": 0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
@@ -740,9 +741,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.337,
+"home": 0.3372,
 "draw": 0.242,
-"away": 0.421,
+"away": 0.4208,
 "fav": "away",
 "n": 44
 },
@@ -750,7 +751,7 @@
 "pinnMove": {
 "movePP": -0.2,
 "stepPP": -0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -770,7 +771,7 @@
 "moneyName": "Roma",
 "moneySharePct": 58,
 "moneyOdd": 2.92,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 27711,
 "pinnOdd": 2.75,
 "softOdd": 2.71,
@@ -802,116 +803,12 @@
 "pinnMove": {
 "movePP": -0.1,
 "stepPP": -0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36223272",
-"home": "Galatasaray",
-"away": "Stuttgart",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-11-03T17:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Galatasaray",
-"moneySharePct": 96,
-"moneyOdd": 2.22,
-"moneyDir": "flat",
-"totVol": 24476,
-"pinnOdd": 2.14,
-"softOdd": 2.15,
-"softN": 45,
-"poly": {
-"vol": 9845,
-"odd": 2.2,
-"sharePct": 46,
-"shareSrc": "preis",
-"key": "ucl-gal-stu-2026-11-03",
-"sideKey": "Galatasaray SK",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4454,
-"draw": 0.2248,
-"away": 0.3298,
-"fav": "home"
-},
-"soft": {
-"home": 0.4371,
-"draw": 0.235,
-"away": 0.3279,
-"fav": "home",
-"n": 45
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
-"n": 13,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36206268",
-"home": "Newcastle",
-"away": "Everton",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-11-02T20:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Newcastle",
-"moneySharePct": 52,
-"moneyOdd": 2.5,
-"moneyDir": "flat",
-"totVol": 22985,
-"pinnOdd": 2.43,
-"softOdd": 2.31,
-"softN": 50,
-"poly": {
-"vol": 6677,
-"odd": 2.47,
-"sharePct": 40,
-"shareSrc": "preis",
-"key": "epl-new-eve-2026-11-02",
-"sideKey": "Newcastle United FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.3981,
-"draw": 0.2717,
-"away": 0.3302,
-"fav": "home"
-},
-"soft": {
-"home": 0.4056,
-"draw": 0.2692,
-"away": 0.3252,
-"fav": "home",
-"n": 50
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
-"n": 8,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
 "pinnTotals": null
 },
 {
@@ -921,16 +818,16 @@
 "league": "US MLS",
 "country": "US",
 "kickoff": "2026-11-01T01:30:00Z",
-"live": false,
+"live": true,
 "moneySide": "home",
 "moneyName": "Colorado",
-"moneySharePct": 75,
+"moneySharePct": 71,
 "moneyOdd": 2.48,
-"moneyDir": "in",
-"totVol": 21353,
-"pinnOdd": 2.42,
-"softOdd": 2.31,
-"softN": 48,
+"moneyDir": "flat",
+"totVol": 24751,
+"pinnOdd": 2.36,
+"softOdd": 2.3,
+"softN": 47,
 "poly": {
 "vol": 7702,
 "odd": 2.47,
@@ -967,71 +864,195 @@
 "whaleUsd": 1391
 },
 "pinn": {
-"home": 0.3987,
-"draw": 0.2741,
-"away": 0.3271,
+"home": 0.3973,
+"draw": 0.2749,
+"away": 0.3278,
 "fav": "home"
 },
 "soft": {
-"home": 0.4011,
-"draw": 0.2625,
-"away": 0.3364,
+"home": 0.3991,
+"draw": 0.262,
+"away": 0.3389,
 "fav": "home",
-"n": 48
+"n": 47
 },
-"pinnMovePP": -0.7,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36223272",
+"home": "Galatasaray",
+"away": "Stuttgart",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-11-03T17:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Galatasaray",
+"moneySharePct": 96,
+"moneyOdd": 2.2,
+"moneyDir": "in",
+"totVol": 24515,
+"pinnOdd": 2.14,
+"softOdd": 2.15,
+"softN": 45,
+"poly": {
+"vol": 9845,
+"odd": 2.2,
+"sharePct": 46,
+"shareSrc": "preis",
+"key": "ucl-gal-stu-2026-11-03",
+"sideKey": "Galatasaray SK",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4454,
+"draw": 0.2248,
+"away": 0.3298,
+"fav": "home"
+},
+"soft": {
+"home": 0.4379,
+"draw": 0.2348,
+"away": 0.3273,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": -0.0,
 "pinnMove": {
-"movePP": -0.7,
-"stepPP": -0.7,
-"n": 2,
+"movePP": -0.0,
+"stepPP": -0.0,
+"n": 14,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
 },
 {
-"matchId": "36256867",
-"home": "Veraguas FC",
-"away": "Herrera FC",
-"league": "Panamanian Premier League",
-"country": "PA",
-"kickoff": "2026-11-01T01:30:00Z",
+"matchId": "36206268",
+"home": "Newcastle",
+"away": "Everton",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-11-02T20:00:00Z",
 "live": false,
 "moneySide": "home",
-"moneyName": "Veraguas FC",
-"moneySharePct": 36,
-"moneyOdd": 1.52,
+"moneyName": "Newcastle",
+"moneySharePct": 52,
+"moneyOdd": 2.5,
 "moneyDir": "flat",
-"totVol": 113,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
+"totVol": 23019,
+"pinnOdd": 2.43,
+"softOdd": 2.31,
+"softN": 51,
+"poly": {
+"vol": 6677,
+"odd": 2.47,
+"sharePct": 40,
+"shareSrc": "preis",
+"key": "epl-new-eve-2026-11-02",
+"sideKey": "Newcastle United FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3981,
+"draw": 0.2717,
+"away": 0.3302,
+"fav": "home"
+},
+"soft": {
+"home": 0.4055,
+"draw": 0.2692,
+"away": 0.3253,
+"fav": "home",
+"n": 51
+},
+"pinnMovePP": -0.0,
+"pinnMove": {
+"movePP": -0.0,
+"stepPP": -0.0,
+"n": 9,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36219979",
+"home": "Melbourne Victory",
+"away": "Central Coast Mariners",
+"league": "Australian A-League Men",
+"country": "AU",
+"kickoff": "2026-11-01T04:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Melbourne Victory",
+"moneySharePct": 80,
+"moneyOdd": 1.47,
+"moneyDir": "out",
+"totVol": 19151,
+"pinnOdd": 1.41,
+"softOdd": 1.4,
+"softN": 36,
+"poly": {
+"vol": 713,
+"odd": 1.44,
+"sharePct": 70,
+"shareSrc": "preis",
+"key": "aus-vic-ccm-2026-11-01",
+"sideKey": "Melbourne Victory FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.684,
+"draw": 0.1806,
+"away": 0.1354,
+"fav": "home"
+},
+"soft": {
+"home": 0.6717,
+"draw": 0.1932,
+"away": 0.1351,
+"fav": "home",
+"n": 36
+},
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Veraguas FC v Herrera FC",
-"grund": "kein_kandidat"
-}
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
 }
 ],
-"ankerN": 60,
+"ankerN": 61,
 "ankerNOffen": 150,
-"ankerMit": 60,
+"ankerMit": 61,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 74,
+"kein_kandidat": 73,
 "zeit": 4,
 "name": 1
 },
 "beispiele": [
+{
+"spiel": "Gimhae City v Cheonan City",
+"kandidat": "Bristol City v Norwich City",
+"key": "soccer_efl_champ",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 149.0,
+"matchId": "36243563",
+"liga": "South Korean K2 League"
+},
 {
 "spiel": "Al Wasl v Al Quwa Al Jawiya",
 "kandidat": "Al-Kholood v Al-Khaleej",
@@ -1060,16 +1081,6 @@
 "abstandH": 1062.0,
 "matchId": "36239637",
 "liga": "English WSL"
-},
-{
-"spiel": "Gimhae City v Cheonan City",
-"kandidat": "Bristol City v Norwich City",
-"key": "soccer_efl_champ",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 149.0,
-"matchId": "36243563",
-"liga": "South Korean K2 League"
 },
 {
 "spiel": "Ajax (W) v Twente (W)",
