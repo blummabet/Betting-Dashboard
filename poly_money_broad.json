@@ -2,14 +2,14 @@
  "n": 740,
  "minOdds": 1.35,
  "moneyHitRate": 0.408,
- "priceHitRate": 0.42,
+ "priceHitRate": 0.419,
  "brierMoney": 0.8251,
  "brierPrice": 0.677,
  "disagree": {
-  "n": 187,
-  "moneyWon": 32,
+  "n": 194,
+  "moneyWon": 33,
   "priceWon": 41,
-  "neither": 114
+  "neither": 120
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -156,11 +156,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -608,11 +608,11 @@
    "totalUsd": 399480
   }
  ],
- "generatedAt": "2026-11-01T05:46:38.841789+00:00",
+ "generatedAt": "2026-11-01T06:15:57.086237+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
-  "nba": 590,
+  "nba": 597,
   "nfl": 800,
   "mlb": 419,
   "nhl": 620,
@@ -631,7 +631,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 656,
+  "esports": 655,
   "cs2": 422,
   "lol": 432,
   "dota": 29,
@@ -639,7 +639,7 @@
   "ufc": 460,
   "mma": 62,
   "boxing": 325,
-  "golf": 424,
+  "golf": 419,
   "f1": 460,
   "cricket": 558,
   "afc-champions-league-elite": 299,
@@ -702,46 +702,31 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 417
+  "sweepAdded": 416
  },
  "vorStats": {
-  "kandidaten": 25,
-  "budgetLeer": 3,
-  "ohneGeldSplit": 0,
+  "kandidaten": 35,
+  "budgetLeer": 13,
+  "ohneGeldSplit": 1,
   "nachgelegt": 0,
-  "mitAnteilen": 22,
+  "mitAnteilen": 21,
   "calls": 22
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1463,
-   "usd": 25495012,
-   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
-  },
-  "btc": {
-   "n": 254,
-   "usd": 1740060,
-   "beispiel": "btc-updown-15m-1777649400"
-  },
-  "wnba": {
-   "n": 237,
-   "usd": 1603731,
-   "beispiel": "wnba-atl-gsv-2026-10-31"
+   "n": 1226,
+   "usd": 23008347,
+   "beispiel": "fifwc-arg-aut-2026-06-22-more-markets"
   },
   "presidential": {
-   "n": 15,
-   "usd": 1033724,
+   "n": 14,
+   "usd": 936376,
    "beispiel": "presidential-election-winner-2028"
   },
   "world": {
-   "n": 42,
-   "usd": 651913,
+   "n": 27,
+   "usd": 529026,
    "beispiel": "world-cup-winner"
-  },
-  "cbb": {
-   "n": 84,
-   "usd": 381185,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "elon": {
    "n": 170,
@@ -753,24 +738,24 @@
    "usd": 311522,
    "beispiel": "super-bowl-champion-2026-731"
   },
+  "wnba": {
+   "n": 57,
+   "usd": 295377,
+   "beispiel": "wnba-la-por-2026-08-02"
+  },
+  "cbb": {
+   "n": 31,
+   "usd": 251958,
+   "beispiel": "cbb-utahst-arz-2026-03-22"
+  },
   "uefa": {
    "n": 14,
-   "usd": 241165,
-   "beispiel": "uefa-champions-league-team-to-advance-to-2027-quarters"
-  },
-  "fed": {
-   "n": 19,
-   "usd": 222882,
-   "beispiel": "fed-decision-in-march-885"
-  },
-  "who": {
-   "n": 8,
-   "usd": 203644,
-   "beispiel": "who-will-trump-nominate-as-fed-chair"
+   "usd": 240415,
+   "beispiel": "uefa-champions-league-winner"
   },
   "ncaa": {
    "n": 8,
-   "usd": 194136,
+   "usd": 192591,
    "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
   "ballon": {
@@ -778,40 +763,55 @@
    "usd": 188890,
    "beispiel": "ballon-dor-winner-2026"
   },
+  "who": {
+   "n": 7,
+   "usd": 184878,
+   "beispiel": "who-will-trump-nominate-as-fed-chair"
+  },
   "uef": {
    "n": 14,
    "usd": 183187,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "texas": {
-   "n": 10,
-   "usd": 180990,
-   "beispiel": "texas-senate-election-winner"
+   "beispiel": "uef-pol-alb-2026-03-26"
   },
   "pro": {
-   "n": 17,
-   "usd": 164626,
+   "n": 18,
+   "usd": 169071,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
-  "brazil": {
-   "n": 25,
-   "usd": 128645,
-   "beispiel": "brazil-presidential-election"
-  },
-  "nbasl": {
-   "n": 3,
-   "usd": 113076,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+  "btc": {
+   "n": 22,
+   "usd": 135616,
+   "beispiel": "btc-updown-15m-1777649400"
   },
   "lec": {
-   "n": 30,
-   "usd": 105921,
-   "beispiel": "lec-nas-leo-2026-08-05"
+   "n": 33,
+   "usd": 111930,
+   "beispiel": "lec-tol-mon-2026-09-06-more-markets"
   },
-  "us": {
-   "n": 9,
-   "usd": 79004,
-   "beispiel": "us-iran-ceasefire-continues-through-the-midterms"
+  "nbasl": {
+   "n": 1,
+   "usd": 97044,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "texas": {
+   "n": 7,
+   "usd": 93954,
+   "beispiel": "texas-governor-winner-2026"
+  },
+  "brazil": {
+   "n": 21,
+   "usd": 79759,
+   "beispiel": "brazil-presidential-election"
+  },
+  "democratic": {
+   "n": 20,
+   "usd": 73228,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "fed": {
+   "n": 15,
+   "usd": 65566,
+   "beispiel": "fed-decision-in-march-885"
   }
  }
 }
