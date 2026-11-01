@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: Konjunktion · Top-5 + MLS, ABWÄGEN · gepusht, Italian Serie A · Over/Under 2.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: Konjunktion · Top-5 + MLS, ABWÄGEN · gepusht, UEFA U21 Euro Qualifiers · First Half Goals 0.5 nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -116,7 +116,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Man Utd v Roma (UEFA Champions League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $57839 fremdes Geld in einer Konsens-Zeile"
+        "Man Utd v Roma (UEFA Champions League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $94993 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -173,27 +173,27 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "136 Picks im Fenster, 18 % ohne Preis-Signal."
+      "hinweis": "143 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 470 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 483 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 470 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 483 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "apif_predictions schadet belegt: Ausgang -0.062 schlechter als ohne (OG -0.006, n=45/258) — abwerten oder nur noch beobachten",
-        "injury schadet belegt: Ausgang -0.047 schlechter als ohne (OG -0.008, n=159/144) — abwerten oder nur noch beobachten",
-        "topscorer_momentum schadet belegt: Ausgang -0.061 schlechter als ohne (OG -0.013, n=61/242) — abwerten oder nur noch beobachten"
+        "apif_predictions schadet belegt: Ausgang -0.064 schlechter als ohne (OG -0.008, n=46/270) — abwerten oder nur noch beobachten",
+        "injury schadet belegt: Ausgang -0.046 schlechter als ohne (OG -0.008, n=166/150) — abwerten oder nur noch beobachten",
+        "topscorer_momentum schadet belegt: Ausgang -0.070 schlechter als ohne (OG -0.024, n=69/247) — abwerten oder nur noch beobachten"
       ],
       "nFail": 3,
       "ok": false,
@@ -203,11 +203,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.8 %, UG +1.8 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.0 %, UG +2.0 %, Geldseite +1.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6534 (UG -5.7 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6542 (UG -6.0 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -229,13 +229,12 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 271 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 3. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "fetch-liga-odds-dense.yml: Cron sagt alle 60 Min, gemessen alle 357 Min (liga-odds-dense, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 12 Laeufen/Tag, geliefert werden eher 2. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 265 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 3. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 81 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 9. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 81 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "fetch-mls-odds-dense.yml: Cron sagt alle 60 Min, gemessen alle 359 Min (mls-odds-dense, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 12 Laeufen/Tag, geliefert werden eher 2. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 46 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 32. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
-      "nFail": 5,
+      "nFail": 4,
       "ok": false,
       "hinweis": ""
     },
@@ -261,8 +260,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 184 h — die Datei selbst ist 184 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 174 h — die Datei selbst ist 174 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 192 h — die Datei selbst ist 192 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 181 h — die Datei selbst ist 181 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -282,7 +281,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1045 Zeilen · 1024 abgerechnet · 11 offen"
+      "hinweis": "1064 Zeilen · 1049 abgerechnet · 5 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -338,7 +337,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 470.1 h, MLS 477.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 477.4 h, MLS 485.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -346,5 +345,5 @@
     }
   ],
   "nFail": 11,
-  "generatedAt": "2026-11-01T14:48:35.059491+00:00"
+  "generatedAt": "2026-11-01T22:08:10.715315+00:00"
 }
