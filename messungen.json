@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-10-31T23:45:27.039236+00:00",
- "heute": "2026-10-31",
+ "generatedAt": "2026-11-01T00:14:43.066230+00:00",
+ "heute": "2026-11-01",
  "messungen": [
   {
    "id": "entschiedene-ausgaenge",
@@ -18,7 +18,7 @@
    "zustand": "ueberfaellig",
    "stand": "Termin erreicht, aber nur 4 von 20 Beobachtungen — die Frage ist NICHT beantwortet",
    "fortschritt": 0.2,
-   "tageBisFaellig": -18
+   "tageBisFaellig": -19
   },
   {
    "id": "horizont-trader",
@@ -37,7 +37,43 @@
    "zustand": "ueberfaellig",
    "stand": "Termin erreicht, aber nur 5 von 20 Beobachtungen — die Frage ist NICHT beantwortet",
    "fortschritt": 0.25,
-   "tageBisFaellig": -11
+   "tageBisFaellig": -12
+  },
+  {
+   "id": "betfair-einseitigkeit-unterseite",
+   "titel": "Ist 0,80 Einseitigkeit die richtige Schranke — oder liegt darunter dasselbe?",
+   "frage": "Trefferquote und ROI der NICHT gesendeten Kandidaten im Schattenbuch, aufgeteilt nach leadShare (<0,70 / 0,70–0,75 / 0,75–0,80), gegen die gesendeten ab 0,80. Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer.",
+   "warum": "19.09.2026 (Lucas): „ich glaube, wir haben einfach noch nicht die optimale Einstellung … da muessten wir rumtuefteln und das dann rueckrechnen.“ Rueckrechnen ging nicht: der Trichter vom 19.09. zeigt roh 69 Kandidaten, 3 gesendet — und 43 davon starben allein an der 80-%-Schranke. Wie diese 43 ausgegangen waeren, stand nirgends, und eine Schwelle, deren Unterseite man nicht kennt, laesst sich nur blind senken. Die bestehende Messung `betfair-einseitigkeit-schwelle` sieht nur die Oberseite (was ab 0,80 durchkam); diese hier sieht die Unterseite. Vorregistriert, BEVOR die erste Zahl da ist.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-01",
+   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen, quelle=public, raus=einseitig",
+   "messer": "bf_schatten",
+   "mindestN": 1200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 1014,
+   "zustand": "ueberfaellig",
+   "stand": "Termin erreicht, aber nur 1014 von 1200 Beobachtungen — die Frage ist NICHT beantwortet",
+   "fortschritt": 0.845,
+   "tageBisFaellig": 0
+  },
+  {
+   "id": "betfair-geldschwelle",
+   "titel": "Traegt ein hoeherer Geld-Boden — oder ein niedrigerer?",
+   "frage": "Trefferquote und ROI nach `anteilSchwelle` (Anteil des Geldes an der geltenden Schwelle): 0,5–0,75 / 0,75–1,0 / gesendet ab 1,0 / deutlich darueber. Getrennt nach tier (top / rest), damit die Frage je Ligengruppe beantwortet wird.",
+   "warum": "19.09.2026 (Lucas): „vielleicht auch hoehere, noch hoehere Geldbetraege auf diverse Ligen und ab dann erst.“ Konnte niemand pruefen: gesendet wird ab 30.000 (rest) bzw. 100.000 EUR (top), und was knapp darunter lag, wurde verworfen, ohne je abgerechnet zu werden. Das Schattenbuch haelt beide Richtungen fest — die Kandidaten unter der Schwelle (quelle=trades) sagen, was ein Absenken braechte; `anteilSchwelle` beziffert, um wie viel es fehlte.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-01",
+   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen mit anteilSchwelle, beide Quellen",
+   "messer": "bf_schatten",
+   "mindestN": 1200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 1014,
+   "zustand": "ueberfaellig",
+   "stand": "Termin erreicht, aber nur 1014 von 1200 Beobachtungen — die Frage ist NICHT beantwortet",
+   "fortschritt": 0.845,
+   "tageBisFaellig": 0
   },
   {
    "id": "sharp-radar-drift-pushes",
@@ -53,9 +89,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 39 Tagen)",
+   "stand": "Entscheidung faellig (seit 40 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -39
+   "tageBisFaellig": -40
   },
   {
    "id": "echte-fills",
@@ -74,7 +110,7 @@
    "zustand": "faellig",
    "stand": "234 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -32
+   "tageBisFaellig": -33
   },
   {
    "id": "sharp-z-1282",
@@ -92,7 +128,7 @@
    "zustand": "faellig",
    "stand": "1176 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -22
+   "tageBisFaellig": -23
   },
   {
    "id": "torlinien-13-ligen",
@@ -109,9 +145,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 19 Tagen)",
+   "stand": "Entscheidung faellig (seit 20 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -19
+   "tageBisFaellig": -20
   },
   {
    "id": "serie-a-btts-schublade",
@@ -127,9 +163,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 16 Tagen)",
+   "stand": "Entscheidung faellig (seit 17 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -16
+   "tageBisFaellig": -17
   },
   {
    "id": "einigkeit-statt-geld",
@@ -144,11 +180,101 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 701,
+   "standN": 700,
    "zustand": "faellig",
-   "stand": "701 von 40 Beobachtungen · Entscheidung faellig",
+   "stand": "700 von 40 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -1
+   "tageBisFaellig": -2
+  },
+  {
+   "id": "poly-autobet-oktober",
+   "titel": "Auto-Bet Oktober (flat $5): wo kommt der Gewinn her — und sortiert die Conviction?",
+   "frage": "Alle im Oktober gesetzten Auto-Bets aus „Heute spielenswert“ (flat $5, unverändert inkl. Fußball), dazu der Papier-Track der Public-Kandidaten im selben Zeitraum. Drei Fragen, vorab festgelegt: (1) je Sportart Trefferquote gegen Preis und ROI mit Grenzen; (2) je Conviction-Stufe — treffen höhere Stufen öfter und rentieren besser als niedrige?; (3) je Preisband — wo entsteht der E-Sport-Gewinn?",
+   "warum": "01.10.2026 (Lucas): „wir lassen das jetzt weiter mit Flat, und Ende Oktober entscheiden wir, ob wir aufgrund der Conviction die Stakes anpassen“ — „mir ist wichtig, dass die Heute-spielenswert-Wetten an Qualität nicht schlechter, sondern weiter verbessert werden“. Stand bis 30.09. (110 Echtgeld-Wetten seit 14.09.): gesamt +6,35 $ / ROI +1,2 % (UG −8 %), Spitze +40 $ am 24.09.; E-Sport 77 Wetten +41,88 $ (83 % getroffen bei 75 % Preis), Tennis 14 ±0 (79 % bei 78 %), Fußball 19 −35,80 $ (47 % bei 65 %). Papier Public-Kandidaten: E-Sport n=160 +5,9 % (UG −1,7), Tennis n=66 +3,4 %, Fußball n=81 −5,8 %. Fußball wurde bewusst NICHT nach dem Hinsehen rausgefiltert. Entscheidung vorab am 01.11.: (a) liegt die ROI-OBERgrenze von Fußball über Echtgeld+Papier unter null, fliegt Fußball aus dem Auto-Bet; (b) steigen Trefferquote-über-Preis und ROI monoton mit der Conviction und trennt die oberste von der untersten Stufe (Grenzen überlappen nicht), wird der Einsatz nach Conviction gestaffelt — sonst bleibt flat und die Conviction-Berechnung wird überarbeitet; (c) das Preisband-Ergebnis geht nur als Hypothese in den November, nicht als Filter.",
+   "gestartet": "2026-10-01",
+   "faellig": "2026-11-01",
+   "quelle": "shortlist_auto_bets_placed.json (status won/lost, placedAt >= 2026-10-01) + poly_shortlist_track.json (public, settled)",
+   "messer": "autobet_oktober",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 114,
+   "zustand": "faellig",
+   "stand": "114 von 100 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
+  },
+  {
+   "id": "ligen-watch-betfair",
+   "titel": "Schlagen die 12 eingefrorenen Betfair-Ligen die Top-5 — vorwaerts?",
+   "frage": "ROI aller Betfair-Track-Signale (alle Maerkte, Signalquote minus 2 % Kommission) in den am 03.10. eingefrorenen 12 Ligen, abgerechnet ab 04.10., gegen die Kontrolle Top-5-Ligen (EPL, La Liga, Bundesliga, Serie A, Ligue 1). Urteil ueber die Rendite-Untergrenze der Liste; der Abstand zur Kontrolle steht daneben.",
+   "warum": "03.10.2026 (Lucas: „welche Liga am besten abschneidet … in einem Monat naechster Check“). In freigabe.json lagen 12 Ligen ueber der Huerde — gegen 13,7, die per Zufall zu erwarten waren; Liga-Rendite Haelfte 1 sagte Haelfte 2 nicht voraus (−6,6 %). Eine taeglich neu sortierte Rangliste misst die Auswahl, nicht die Ligen. Deshalb Liste eingefroren (ligen_watch.LISTEN), gezaehlt wird nur, was danach abgerechnet wird. Entscheidung vorab: Untergrenze > 0 bei n >= 300 -> Liga-Filter fuer Betfair-Pushes; Liste nicht besser als Kontrolle -> Liga-Idee fuer Betfair begraben.",
+   "gestartet": "2026-10-04",
+   "faellig": "2026-11-01",
+   "quelle": "ligen_watch.json -> listen.betfair_liste",
+   "messer": "ligen_betfair",
+   "mindestN": 300,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 751,
+   "zustand": "faellig",
+   "stand": "751 von 300 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
+  },
+  {
+   "id": "ligen-watch-poly",
+   "titel": "Tragen E-Sport und ITF-Tennis auf Poly weiter — gegen die Top-Fussball-Ligen?",
+   "frage": "ROI der Poly-Shortlist-Plays (pnl/stake) mit erstem Signal ab 04.10. in den Listen E-Sport und ITF-Tennis, gegen die Kontrolle EPL/LaLiga/Bundesliga/Ligue 1. Urteil ueber die Untergrenze je Liste.",
+   "warum": "03.10.2026 (Lucas: „das selbe gilt aber fuer Poly auch … Tennis traegt nirgends bei Poly?“). Bisher: E-Sport +8,1 % (UG +3,3 %), ITF +7,5 % bei n=31, ATP/WTA zusammen −1,5 %, EPL −9,7 %. ITF ist zu klein fuer einen Beleg — eingefroren, damit die naechsten Wochen ihn liefern oder widerlegen. Entscheidung vorab: ITF-UG > 0 -> ITF in den Auto-Bet, ATP/WTA raus; E-Sport-OG < 0 -> E-Sport-Gewicht zurueck.",
+   "gestartet": "2026-10-04",
+   "faellig": "2026-11-01",
+   "quelle": "ligen_watch.json -> listen.poly_esport / poly_itf",
+   "messer": "ligen_poly",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 156,
+   "zustand": "faellig",
+   "stand": "156 von 150 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
+  },
+  {
+   "id": "reihenfolge-signale",
+   "titel": "Macht es einen Unterschied, wer zuerst zeigt — Poly, Betfair oder Pinnacle?",
+   "frage": "Je Spiel und Seite vor Anpfiff: erster Zeitpunkt von Betfair-Geld >= 65 %, Poly-Geld >= 65 %, Pinnacle +3 pp. ROI je Muster (z. B. poly>betfair) und je allein-erster Quelle, gewertet zur Quote des Signals, das das Muster komplett macht. Gezaehlt: Seiten mit >= 2 Signalen und eindeutigem Ersten.",
+   "warum": "03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly … dickes Wallet … danach Betfair-Push“). Die Money Map kennt nur den Endstand, nicht die Reihenfolge — nachtraeglich nicht rekonstruierbar, also ab jetzt mitschreiben (reihenfolge_protokoll.py). Entscheidung vorab: zeigt ein Erster (z. B. poly) bei n >= 60 eine Untergrenze > 0 und die anderen nicht -> eigener Push „X zuerst, Y folgt“; sonst ist die Reihenfolge kein Signal.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-11-01",
+   "quelle": "reihenfolge_protokoll.json -> settled",
+   "messer": "reihenfolge",
+   "mindestN": 60,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 180,
+   "zustand": "faellig",
+   "stand": "180 von 60 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
+  },
+  {
+   "id": "hz-null-null",
+   "titel": "HZ 0:0 in einem Over-Spiel: ist das Tor in der 2. Halbzeit besser als die Quote zur Pause?",
+   "frage": "Spiele mit 0:0 zur Pause, in denen vor dem Anpfiff das Betfair-Geld auf Over 2.5 lag (Quote <= 1,75). Gebucht zur Over-0.5-Quote IM MOMENT DER PAUSE, abgerechnet am Endstand, minus 2 % Kommission. Daneben (ohne eigenes Urteil): Over 1.5 zur Pause und Heimsieg zur Pause bei Heimfavorit <= 1,60.",
+   "warum": "04.10.2026 (Lucas: „wenn inplay 0:0 zur Pause steht, es aber ein Over-2.5-Spiel war … dann 2. Halbzeit ok zu wetten. Mach ich selbst oft, nur such ich die Spiele manuell“). Rueckblick im Betfair-Ledger: Over-2.5-erwartete Spiele mit HZ 0:0 n=504, Tor in der 2. HZ 85 % (alle HZ-0:0-Spiele 78 %). Die Pausenquote fuer Tore wurde nie gespeichert — ob 85 % mehr sind als der Markt zur Pause sagt, ist unbekannt. Fuer den Heimsieg liess sie sich nachmessen: eingepreist (Quote 55-65 %, Treffer 56-63 %, ab 19.09. ROI +1 %). Entscheidung vorab: Untergrenze > 0 bei n >= 100 -> Finder wird Empfehlung mit Einsatz; Obergrenze < 0 -> bleibt reine Such-Hilfe ohne Wett-Anspruch. — 04.10.2026 erweitert (Lucas): je Fund wird mitgeschrieben (1) die Live-Statistik der 1. HZ und die Serie beider Teams rueckwirkend aus API-Football (apif_live.py, Abdeckung in hz_finder.json -> apif), (2) das frische Betfair-Geld auf O/U 1.5/0.5 seit dem letzten Lauf (zufluss). Beides ist KEIN Filter; der Bericht teilt die Wetten nach „mit/ohne Over-Zufluss“ (>= 200, >= 60 % auf Over), damit am 01.11. sichtbar ist, ob das Signal die Treffer gegenueber der Pausenquote verbessert.",
+   "gestartet": "2026-10-04",
+   "faellig": "2026-11-01",
+   "quelle": "hz_finder.json -> bericht['tore/over05']",
+   "messer": "hz_null",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 305,
+   "zustand": "faellig",
+   "stand": "305 von 100 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
   },
   {
    "id": "poly-preisband",
@@ -166,97 +292,7 @@
    "zustand": "quelle unlesbar",
    "stand": "Quelle nicht lesbar — Stand unbekannt",
    "fortschritt": null,
-   "tageBisFaellig": 15
-  },
-  {
-   "id": "poly-autobet-oktober",
-   "titel": "Auto-Bet Oktober (flat $5): wo kommt der Gewinn her — und sortiert die Conviction?",
-   "frage": "Alle im Oktober gesetzten Auto-Bets aus „Heute spielenswert“ (flat $5, unverändert inkl. Fußball), dazu der Papier-Track der Public-Kandidaten im selben Zeitraum. Drei Fragen, vorab festgelegt: (1) je Sportart Trefferquote gegen Preis und ROI mit Grenzen; (2) je Conviction-Stufe — treffen höhere Stufen öfter und rentieren besser als niedrige?; (3) je Preisband — wo entsteht der E-Sport-Gewinn?",
-   "warum": "01.10.2026 (Lucas): „wir lassen das jetzt weiter mit Flat, und Ende Oktober entscheiden wir, ob wir aufgrund der Conviction die Stakes anpassen“ — „mir ist wichtig, dass die Heute-spielenswert-Wetten an Qualität nicht schlechter, sondern weiter verbessert werden“. Stand bis 30.09. (110 Echtgeld-Wetten seit 14.09.): gesamt +6,35 $ / ROI +1,2 % (UG −8 %), Spitze +40 $ am 24.09.; E-Sport 77 Wetten +41,88 $ (83 % getroffen bei 75 % Preis), Tennis 14 ±0 (79 % bei 78 %), Fußball 19 −35,80 $ (47 % bei 65 %). Papier Public-Kandidaten: E-Sport n=160 +5,9 % (UG −1,7), Tennis n=66 +3,4 %, Fußball n=81 −5,8 %. Fußball wurde bewusst NICHT nach dem Hinsehen rausgefiltert. Entscheidung vorab am 01.11.: (a) liegt die ROI-OBERgrenze von Fußball über Echtgeld+Papier unter null, fliegt Fußball aus dem Auto-Bet; (b) steigen Trefferquote-über-Preis und ROI monoton mit der Conviction und trennt die oberste von der untersten Stufe (Grenzen überlappen nicht), wird der Einsatz nach Conviction gestaffelt — sonst bleibt flat und die Conviction-Berechnung wird überarbeitet; (c) das Preisband-Ergebnis geht nur als Hypothese in den November, nicht als Filter.",
-   "gestartet": "2026-10-01",
-   "faellig": "2026-11-01",
-   "quelle": "shortlist_auto_bets_placed.json (status won/lost, placedAt >= 2026-10-01) + poly_shortlist_track.json (public, settled)",
-   "messer": "autobet_oktober",
-   "mindestN": 100,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 114,
-   "zustand": "bereit",
-   "stand": "114 von 100 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "ligen-watch-betfair",
-   "titel": "Schlagen die 12 eingefrorenen Betfair-Ligen die Top-5 — vorwaerts?",
-   "frage": "ROI aller Betfair-Track-Signale (alle Maerkte, Signalquote minus 2 % Kommission) in den am 03.10. eingefrorenen 12 Ligen, abgerechnet ab 04.10., gegen die Kontrolle Top-5-Ligen (EPL, La Liga, Bundesliga, Serie A, Ligue 1). Urteil ueber die Rendite-Untergrenze der Liste; der Abstand zur Kontrolle steht daneben.",
-   "warum": "03.10.2026 (Lucas: „welche Liga am besten abschneidet … in einem Monat naechster Check“). In freigabe.json lagen 12 Ligen ueber der Huerde — gegen 13,7, die per Zufall zu erwarten waren; Liga-Rendite Haelfte 1 sagte Haelfte 2 nicht voraus (−6,6 %). Eine taeglich neu sortierte Rangliste misst die Auswahl, nicht die Ligen. Deshalb Liste eingefroren (ligen_watch.LISTEN), gezaehlt wird nur, was danach abgerechnet wird. Entscheidung vorab: Untergrenze > 0 bei n >= 300 -> Liga-Filter fuer Betfair-Pushes; Liste nicht besser als Kontrolle -> Liga-Idee fuer Betfair begraben.",
-   "gestartet": "2026-10-04",
-   "faellig": "2026-11-01",
-   "quelle": "ligen_watch.json -> listen.betfair_liste",
-   "messer": "ligen_betfair",
-   "mindestN": 300,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 751,
-   "zustand": "bereit",
-   "stand": "751 von 300 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "ligen-watch-poly",
-   "titel": "Tragen E-Sport und ITF-Tennis auf Poly weiter — gegen die Top-Fussball-Ligen?",
-   "frage": "ROI der Poly-Shortlist-Plays (pnl/stake) mit erstem Signal ab 04.10. in den Listen E-Sport und ITF-Tennis, gegen die Kontrolle EPL/LaLiga/Bundesliga/Ligue 1. Urteil ueber die Untergrenze je Liste.",
-   "warum": "03.10.2026 (Lucas: „das selbe gilt aber fuer Poly auch … Tennis traegt nirgends bei Poly?“). Bisher: E-Sport +8,1 % (UG +3,3 %), ITF +7,5 % bei n=31, ATP/WTA zusammen −1,5 %, EPL −9,7 %. ITF ist zu klein fuer einen Beleg — eingefroren, damit die naechsten Wochen ihn liefern oder widerlegen. Entscheidung vorab: ITF-UG > 0 -> ITF in den Auto-Bet, ATP/WTA raus; E-Sport-OG < 0 -> E-Sport-Gewicht zurueck.",
-   "gestartet": "2026-10-04",
-   "faellig": "2026-11-01",
-   "quelle": "ligen_watch.json -> listen.poly_esport / poly_itf",
-   "messer": "ligen_poly",
-   "mindestN": 150,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 156,
-   "zustand": "bereit",
-   "stand": "156 von 150 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "reihenfolge-signale",
-   "titel": "Macht es einen Unterschied, wer zuerst zeigt — Poly, Betfair oder Pinnacle?",
-   "frage": "Je Spiel und Seite vor Anpfiff: erster Zeitpunkt von Betfair-Geld >= 65 %, Poly-Geld >= 65 %, Pinnacle +3 pp. ROI je Muster (z. B. poly>betfair) und je allein-erster Quelle, gewertet zur Quote des Signals, das das Muster komplett macht. Gezaehlt: Seiten mit >= 2 Signalen und eindeutigem Ersten.",
-   "warum": "03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly … dickes Wallet … danach Betfair-Push“). Die Money Map kennt nur den Endstand, nicht die Reihenfolge — nachtraeglich nicht rekonstruierbar, also ab jetzt mitschreiben (reihenfolge_protokoll.py). Entscheidung vorab: zeigt ein Erster (z. B. poly) bei n >= 60 eine Untergrenze > 0 und die anderen nicht -> eigener Push „X zuerst, Y folgt“; sonst ist die Reihenfolge kein Signal.",
-   "gestartet": "2026-10-03",
-   "faellig": "2026-11-01",
-   "quelle": "reihenfolge_protokoll.json -> settled",
-   "messer": "reihenfolge",
-   "mindestN": 60,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 180,
-   "zustand": "bereit",
-   "stand": "180 von 60 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "hz-null-null",
-   "titel": "HZ 0:0 in einem Over-Spiel: ist das Tor in der 2. Halbzeit besser als die Quote zur Pause?",
-   "frage": "Spiele mit 0:0 zur Pause, in denen vor dem Anpfiff das Betfair-Geld auf Over 2.5 lag (Quote <= 1,75). Gebucht zur Over-0.5-Quote IM MOMENT DER PAUSE, abgerechnet am Endstand, minus 2 % Kommission. Daneben (ohne eigenes Urteil): Over 1.5 zur Pause und Heimsieg zur Pause bei Heimfavorit <= 1,60.",
-   "warum": "04.10.2026 (Lucas: „wenn inplay 0:0 zur Pause steht, es aber ein Over-2.5-Spiel war … dann 2. Halbzeit ok zu wetten. Mach ich selbst oft, nur such ich die Spiele manuell“). Rueckblick im Betfair-Ledger: Over-2.5-erwartete Spiele mit HZ 0:0 n=504, Tor in der 2. HZ 85 % (alle HZ-0:0-Spiele 78 %). Die Pausenquote fuer Tore wurde nie gespeichert — ob 85 % mehr sind als der Markt zur Pause sagt, ist unbekannt. Fuer den Heimsieg liess sie sich nachmessen: eingepreist (Quote 55-65 %, Treffer 56-63 %, ab 19.09. ROI +1 %). Entscheidung vorab: Untergrenze > 0 bei n >= 100 -> Finder wird Empfehlung mit Einsatz; Obergrenze < 0 -> bleibt reine Such-Hilfe ohne Wett-Anspruch. — 04.10.2026 erweitert (Lucas): je Fund wird mitgeschrieben (1) die Live-Statistik der 1. HZ und die Serie beider Teams rueckwirkend aus API-Football (apif_live.py, Abdeckung in hz_finder.json -> apif), (2) das frische Betfair-Geld auf O/U 1.5/0.5 seit dem letzten Lauf (zufluss). Beides ist KEIN Filter; der Bericht teilt die Wetten nach „mit/ohne Over-Zufluss“ (>= 200, >= 60 % auf Over), damit am 01.11. sichtbar ist, ob das Signal die Treffer gegenueber der Pausenquote verbessert.",
-   "gestartet": "2026-10-04",
-   "faellig": "2026-11-01",
-   "quelle": "hz_finder.json -> bericht['tore/over05']",
-   "messer": "hz_null",
-   "mindestN": 100,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 305,
-   "zustand": "bereit",
-   "stand": "305 von 100 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
+   "tageBisFaellig": 14
   },
   {
    "id": "betfair-einseitigkeit-schwelle",
@@ -272,9 +308,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 120,
    "zustand": "bereit",
-   "stand": "120 von 90 Beobachtungen · faellig in 14 Tag(en)",
+   "stand": "120 von 90 Beobachtungen · faellig in 13 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 14
+   "tageBisFaellig": 13
   },
   {
    "id": "betfair-quote-muss-sinken",
@@ -290,9 +326,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 40000,
    "zustand": "bereit",
-   "stand": "40000 von 20000 Beobachtungen · faellig in 15 Tag(en)",
+   "stand": "40000 von 20000 Beobachtungen · faellig in 14 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 15
+   "tageBisFaellig": 14
   },
   {
    "id": "betfair-zeit-vor-anpfiff",
@@ -308,9 +344,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 40000,
    "zustand": "bereit",
-   "stand": "40000 von 20000 Beobachtungen · faellig in 15 Tag(en)",
+   "stand": "40000 von 20000 Beobachtungen · faellig in 14 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 15
+   "tageBisFaellig": 14
   },
   {
    "id": "serien-wetten",
@@ -326,9 +362,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 417,
    "zustand": "bereit",
-   "stand": "417 von 150 Beobachtungen · faellig in 30 Tag(en)",
+   "stand": "417 von 150 Beobachtungen · faellig in 29 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 30
+   "tageBisFaellig": 29
   },
   {
    "id": "poly-wallet-clv",
@@ -344,9 +380,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 1999,
    "zustand": "bereit",
-   "stand": "1999 von 150 Beobachtungen · faellig in 45 Tag(en)",
+   "stand": "1999 von 150 Beobachtungen · faellig in 44 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 45
+   "tageBisFaellig": 44
   },
   {
    "id": "betfair-ou35",
@@ -362,45 +398,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 2432,
    "zustand": "bereit",
-   "stand": "2432 von 200 Beobachtungen · faellig in 61 Tag(en)",
+   "stand": "2432 von 200 Beobachtungen · faellig in 60 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 61
-  },
-  {
-   "id": "betfair-einseitigkeit-unterseite",
-   "titel": "Ist 0,80 Einseitigkeit die richtige Schranke — oder liegt darunter dasselbe?",
-   "frage": "Trefferquote und ROI der NICHT gesendeten Kandidaten im Schattenbuch, aufgeteilt nach leadShare (<0,70 / 0,70–0,75 / 0,75–0,80), gegen die gesendeten ab 0,80. Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer.",
-   "warum": "19.09.2026 (Lucas): „ich glaube, wir haben einfach noch nicht die optimale Einstellung … da muessten wir rumtuefteln und das dann rueckrechnen.“ Rueckrechnen ging nicht: der Trichter vom 19.09. zeigt roh 69 Kandidaten, 3 gesendet — und 43 davon starben allein an der 80-%-Schranke. Wie diese 43 ausgegangen waeren, stand nirgends, und eine Schwelle, deren Unterseite man nicht kennt, laesst sich nur blind senken. Die bestehende Messung `betfair-einseitigkeit-schwelle` sieht nur die Oberseite (was ab 0,80 durchkam); diese hier sieht die Unterseite. Vorregistriert, BEVOR die erste Zahl da ist.",
-   "gestartet": "2026-09-19",
-   "faellig": "2026-11-01",
-   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen, quelle=public, raus=einseitig",
-   "messer": "bf_schatten",
-   "mindestN": 1200,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1014,
-   "zustand": "sammelt",
-   "stand": "1014 von 1200 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 0.845,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "betfair-geldschwelle",
-   "titel": "Traegt ein hoeherer Geld-Boden — oder ein niedrigerer?",
-   "frage": "Trefferquote und ROI nach `anteilSchwelle` (Anteil des Geldes an der geltenden Schwelle): 0,5–0,75 / 0,75–1,0 / gesendet ab 1,0 / deutlich darueber. Getrennt nach tier (top / rest), damit die Frage je Ligengruppe beantwortet wird.",
-   "warum": "19.09.2026 (Lucas): „vielleicht auch hoehere, noch hoehere Geldbetraege auf diverse Ligen und ab dann erst.“ Konnte niemand pruefen: gesendet wird ab 30.000 (rest) bzw. 100.000 EUR (top), und was knapp darunter lag, wurde verworfen, ohne je abgerechnet zu werden. Das Schattenbuch haelt beide Richtungen fest — die Kandidaten unter der Schwelle (quelle=trades) sagen, was ein Absenken braechte; `anteilSchwelle` beziffert, um wie viel es fehlte.",
-   "gestartet": "2026-09-19",
-   "faellig": "2026-11-01",
-   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen mit anteilSchwelle, beide Quellen",
-   "messer": "bf_schatten",
-   "mindestN": 1200,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1014,
-   "zustand": "sammelt",
-   "stand": "1014 von 1200 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 0.845,
-   "tageBisFaellig": 1
+   "tageBisFaellig": 60
   },
   {
    "id": "betfair-kursrutsch",
@@ -416,9 +416,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 294,
    "zustand": "sammelt",
-   "stand": "294 von 400 Beobachtungen · faellig in 15 Tag(en)",
+   "stand": "294 von 400 Beobachtungen · faellig in 14 Tag(en)",
    "fortschritt": 0.735,
-   "tageBisFaellig": 15
+   "tageBisFaellig": 14
   },
   {
    "id": "stake-kleine-liga",
@@ -434,9 +434,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 58,
    "zustand": "sammelt",
-   "stand": "58 von 100 Beobachtungen · faellig in 53 Tag(en)",
+   "stand": "58 von 100 Beobachtungen · faellig in 52 Tag(en)",
    "fortschritt": 0.58,
-   "tageBisFaellig": 53
+   "tageBisFaellig": 52
   },
   {
    "id": "poly-public-klasse",
@@ -452,9 +452,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 15,
    "zustand": "sammelt",
-   "stand": "15 von 30 Beobachtungen · faellig in 61 Tag(en)",
+   "stand": "15 von 30 Beobachtungen · faellig in 60 Tag(en)",
    "fortschritt": 0.5,
-   "tageBisFaellig": 61
+   "tageBisFaellig": 60
   },
   {
    "id": "stake-torlinien-burst",
@@ -470,9 +470,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 71,
    "zustand": "sammelt",
-   "stand": "71 von 100 Beobachtungen · faellig in 92 Tag(en)",
+   "stand": "71 von 100 Beobachtungen · faellig in 91 Tag(en)",
    "fortschritt": 0.71,
-   "tageBisFaellig": 92
+   "tageBisFaellig": 91
   },
   {
    "id": "hz-heim-130",
@@ -488,9 +488,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 81,
    "zustand": "sammelt",
-   "stand": "81 von 100 Beobachtungen · faellig in 92 Tag(en)",
+   "stand": "81 von 100 Beobachtungen · faellig in 91 Tag(en)",
    "fortschritt": 0.81,
-   "tageBisFaellig": 92
+   "tageBisFaellig": 91
   },
   {
    "id": "horizont-shortlist",
@@ -509,7 +509,7 @@
    "zustand": "entschieden",
    "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
    "fortschritt": 0.0,
-   "tageBisFaellig": -32
+   "tageBisFaellig": -33
   },
   {
    "id": "devig-proportional-vs-power",
@@ -527,10 +527,10 @@
    "zustand": "entschieden",
    "stand": "04.10.2026 auf POWER umgestellt (Lucas: „ja stell um“). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge seit 14.09., mittlerer Abstand proportional minus power: alle +0,12pp [90 %: +0,03 … +0,22] zum Einstieg, +0,16pp [+0,08 … +0,25] am Schluss; O/U-Seite unter 40 Cent +0,57pp [+0,23 … +0,88]; 1X2 unter 40 Cent -0,03pp [-0,09 … +0,04], kein Unterschied. Schwellen 4,0pp bleiben. Proportional laeuft als fairProp_* weiter; DEVIG_METHODE=proportional stellt zurueck. BTTS unveraendert (keine Messung).",
    "fortschritt": null,
-   "tageBisFaellig": -27
+   "tageBisFaellig": -28
   }
  ],
  "n": 29,
  "nOffen": 27,
- "nHandlung": 9
+ "nHandlung": 16
 }
