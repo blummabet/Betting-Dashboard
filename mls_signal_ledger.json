@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-31T22:27:39Z",
-    "total_records": 162,
+    "updated_at": "2026-11-01T14:23:32Z",
+    "total_records": 166,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1445,7 +1445,7 @@
           "score": 4.0
         }
       ],
-      "resolvedAt": "2026-10-31T22:27:39Z",
+      "resolvedAt": "2026-11-01T14:23:32Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -7661,6 +7661,93 @@
       "clvBasis": "fair"
     },
     {
+      "key": "MLS-33-1596-1606|Doppelte Chance — X2",
+      "matchKey": "MLS-33-1596-1606",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 2.78
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.92
+        },
+        {
+          "name": "form_rating",
+          "score": 3.54
+        },
+        {
+          "name": "league_pressure",
+          "score": 1.76
+        },
+        {
+          "name": "venue_form",
+          "score": -2.07
+        }
+      ],
+      "resolvedAt": "2026-11-01T14:23:29Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.01,
+      "clvResolved": true,
+      "odds": 1.61,
+      "entryOdd": 1.61,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "MLS-33-1596-1606|Unter 3.5 Tore",
+      "matchKey": "MLS-33-1596-1606",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.75
+        },
+        {
+          "name": "form_trend",
+          "score": 1.73
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.51
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.66
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.75
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.61
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.36
+        }
+      ],
+      "resolvedAt": "2026-11-01T14:23:29Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.69,
+      "entryOdd": 1.69,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "MLS-33-1604-1614|Heimsieg",
       "matchKey": "MLS-33-1604-1614",
       "market": "Heimsieg",
@@ -7704,6 +7791,95 @@
       "processVerdict": "UNLUCKY",
       "clvFairPP": -1.86,
       "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-33-1605-16489|Heimsieg",
+      "matchKey": "MLS-33-1605-16489",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 2.49
+        },
+        {
+          "name": "form_rating",
+          "score": 2.27
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 1.5
+        },
+        {
+          "name": "mls_travel",
+          "score": 0.37
+        },
+        {
+          "name": "venue_form",
+          "score": 1.71
+        }
+      ],
+      "resolvedAt": "2026-11-01T14:23:29Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.15,
+      "clvResolved": true,
+      "odds": 1.47,
+      "entryOdd": 1.47,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 0.21,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-33-1610-1607|Doppelte Chance — 1X",
+      "matchKey": "MLS-33-1610-1607",
+      "market": "Doppelte Chance — 1X",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "chance_creation",
+          "score": -1.43
+        },
+        {
+          "name": "league_pressure",
+          "score": 1.13
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.42
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.18
+        },
+        {
+          "name": "mls_travel",
+          "score": 0.79
+        },
+        {
+          "name": "venue_form",
+          "score": 2.22
+        }
+      ],
+      "resolvedAt": "2026-11-01T14:23:29Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -5.77,
+      "clvResolved": true,
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
     },
     {
       "key": "MLS-33-1613-1615|AH Heim −1.25",
