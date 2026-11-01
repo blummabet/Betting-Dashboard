@@ -2149,12 +2149,19 @@
           "polyPrice": 0.835,
           "pinnFair": 0.8474,
           "steamLag": false
+        },
+        {
+          "ts": "2026-11-01T13:21:52Z",
+          "edgePp": 1.8,
+          "polyPrice": 0.845,
+          "pinnFair": 0.8634,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.2,
-      "currentPolyPrice": 0.835,
-      "edgeVelocityPPH": -0.135,
-      "convergencePct": 66.7,
+      "currentEdgePp": 1.8,
+      "currentPolyPrice": 0.845,
+      "edgeVelocityPPH": 0.038,
+      "convergencePct": 50.0,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
@@ -2739,6 +2746,13 @@
           "polyPrice": 0.765,
           "pinnFair": 0.7771,
           "steamLag": false
+        },
+        {
+          "ts": "2026-11-01T13:21:52Z",
+          "edgePp": 1.2,
+          "polyPrice": 0.765,
+          "pinnFair": 0.7771,
+          "steamLag": false
         }
       ],
       "currentEdgePp": 1.2,
@@ -2885,9 +2899,49 @@
       "convergenceHours": 37.5,
       "status": "CONVERGED",
       "outcome": null
+    },
+    {
+      "id": "164-157_hw",
+      "matchKey": "164-157",
+      "homeId": "164",
+      "awayId": "157",
+      "home": "1. FSV Mainz 05",
+      "away": "FC Bayern München",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-11-07",
+      "market": "hw",
+      "marketLabel": "Heimsieg",
+      "signalTs": "2026-11-01T13:21:52Z",
+      "entryEdgePp": 2.1,
+      "entryPolyPrice": 0.17,
+      "entryPinnFair": 0.1906,
+      "entryVol": 5052.0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": 0.9,
+      "edgeTrendAtSignal": "growing",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-11-01T13:21:52Z",
+          "edgePp": 2.1,
+          "polyPrice": 0.17,
+          "pinnFair": 0.1906,
+          "steamLag": false
+        }
+      ],
+      "currentEdgePp": 2.1,
+      "currentPolyPrice": 0.17,
+      "edgeVelocityPPH": null,
+      "convergencePct": 0.0,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
     }
   ],
-  "updatedAt": "2026-10-31T21:34:01Z",
-  "runCount": 241,
+  "updatedAt": "2026-11-01T13:21:52Z",
+  "runCount": 242,
   "lastError": "no_poly_prices"
 }
