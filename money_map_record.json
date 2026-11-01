@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-01T18:15:49.747289+00:00",
+"generatedAt": "2026-11-01T18:30:45.717734+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 40,
@@ -18,20 +18,20 @@
 "clvLb": -0.774
 },
 "konsens": {
-"n": 692,
-"wins": 400,
-"hitRate": 0.578,
-"polyN": 676,
-"polyWins": 383,
-"polyHitRate": 0.5666,
-"pinnN": 620,
-"pinnHitRate": 0.5774,
-"nRoi": 692,
-"roi": 0.0458,
-"roiLb": -0.0138,
-"nClv": 692,
-"clv": 0.07,
-"clvLb": -0.0834
+"n": 695,
+"wins": 403,
+"hitRate": 0.5799,
+"polyN": 679,
+"polyWins": 386,
+"polyHitRate": 0.5685,
+"pinnN": 623,
+"pinnHitRate": 0.5795,
+"nRoi": 695,
+"roi": 0.0497,
+"roiLb": -0.0098,
+"nClv": 695,
+"clv": 0.08,
+"clvLb": -0.0774
 },
 "teil": {
 "n": 1,
@@ -67,9 +67,9 @@
 "hitRate": 0.45
 },
 "English Premier League": {
-"n": 38,
-"wins": 20,
-"hitRate": 0.5263
+"n": 39,
+"wins": 21,
+"hitRate": 0.5385
 },
 "Spanish La Liga": {
 "n": 38,
@@ -87,9 +87,9 @@
 "hitRate": 0.6471
 },
 "German Bundesliga": {
-"n": 31,
-"wins": 15,
-"hitRate": 0.4839
+"n": 32,
+"wins": 16,
+"hitRate": 0.5
 },
 "UEFA Europa League": {
 "n": 29,
@@ -141,15 +141,15 @@
 "wins": 4,
 "hitRate": 0.3333
 },
+"Portuguese Primeira Liga": {
+"n": 12,
+"wins": 8,
+"hitRate": 0.6667
+},
 "Swedish Allsvenskan": {
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"Portuguese Primeira Liga": {
-"n": 11,
-"wins": 7,
-"hitRate": 0.6364
 },
 "Mexican Liga MX": {
 "n": 9,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 510,
-"wins": 306,
-"hitRate": 0.6,
-"nRoi": 510,
-"roi": 0.0128,
-"roiLb": -0.051,
-"nClv": 510,
-"clv": 0.13,
-"clvLb": -0.0645
+"n": 512,
+"wins": 308,
+"hitRate": 0.6016,
+"nRoi": 512,
+"roi": 0.0152,
+"roiLb": -0.0484,
+"nClv": 512,
+"clv": 0.14,
+"clvLb": -0.0596
 },
 "weak": {
-"n": 223,
-"wins": 109,
-"hitRate": 0.4888,
-"nRoi": 223,
-"roi": 0.1248,
-"roiLb": -0.0069,
-"nClv": 223,
-"clv": -0.1,
-"clvLb": -0.3156
+"n": 224,
+"wins": 110,
+"hitRate": 0.4911,
+"nRoi": 224,
+"roi": 0.1313,
+"roiLb": -0.0003,
+"nClv": 224,
+"clv": -0.09,
+"clvLb": -0.3076
 }
 },
 "divergence": {
@@ -450,6 +450,63 @@
 "polyRate": 0.359
 },
 "recent": [
+{
+"matchId": "36205839",
+"home": "Liverpool",
+"away": "Arsenal",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Arsenal",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-11-01T16:30:00Z",
+"settledAt": "2026-11-01T18:30:45.501957+00:00"
+},
+{
+"matchId": "36241179",
+"home": "Eintracht Frankfurt",
+"away": "Hamburger SV",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Eintracht Frankfurt",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-01T16:30:00Z",
+"settledAt": "2026-11-01T18:30:45.501957+00:00"
+},
+{
+"matchId": "36239547",
+"home": "Arouca",
+"away": "CD Nacional Funchal",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Arouca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-01T15:30:00Z",
+"settledAt": "2026-11-01T18:30:45.501957+00:00"
+},
 {
 "matchId": "36211830",
 "home": "Racing Santander",
@@ -1152,76 +1209,19 @@
 ],
 "kickoff": "2026-10-31T18:00:00Z",
 "settledAt": "2026-10-31T21:13:30.489870+00:00"
-},
-{
-"matchId": "36253043",
-"home": "New York City",
-"away": "CF Montreal",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "New York City",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-31T18:00:00Z",
-"settledAt": "2026-10-31T21:13:30.489870+00:00"
-},
-{
-"matchId": "36206168",
-"home": "Tottenham",
-"away": "Crystal Palace",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tottenham",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-31T17:30:00Z",
-"settledAt": "2026-10-31T20:43:29.908002+00:00"
-},
-{
-"matchId": "36241096",
-"home": "Bayern Munich",
-"away": "Dortmund",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bayern Munich",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-31T17:30:00Z",
-"settledAt": "2026-10-31T20:43:29.908002+00:00"
 }
 ],
 "global": {
-"n": 733,
-"wins": 415,
-"hitRate": 0.5662,
-"nRoi": 733,
-"roi": 0.0469,
-"roiLb": -0.013,
-"nClv": 733,
-"clv": 0.06,
-"clvLb": -0.0905
+"n": 736,
+"wins": 418,
+"hitRate": 0.5679,
+"nRoi": 736,
+"roi": 0.0505,
+"roiLb": -0.0092,
+"nClv": 736,
+"clv": 0.07,
+"clvLb": -0.0848
 },
-"pending": 27,
+"pending": 24,
 "ausgeschlossenLive": 1240
 }
