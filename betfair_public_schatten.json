@@ -45987,7 +45987,7 @@ null
 "leadOdd": 1.44,
 "value": 355747.27,
 "sentAt": "2026-11-01T16:01:27.848278+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": null,
 "leadShare": 0.7350644180628568,
 "leadDir": "in",
@@ -46005,7 +46005,17 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": -32.13,
+"clvPinn": -31.99,
+"settledAt": "2026-11-01T16:46:04.729175+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36246878:Match Odds",
@@ -46020,7 +46030,10 @@ null
 "value": 97026.25,
 "sentAt": "2026-11-01T16:15:58.469771+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+1
+],
 "leadShare": 0.8562465312222208,
 "leadDir": "in",
 "onLeader": false,
@@ -46052,7 +46065,10 @@ null
 "value": 189599.13,
 "sentAt": "2026-11-01T16:15:58.469873+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.8544753343541186,
 "leadDir": "out",
 "onLeader": null,
@@ -46068,6 +46084,111 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36241179:Match Odds",
+"matchId": "36241179",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "German Bundesliga",
+"home": "Eintracht Frankfurt",
+"away": "Hamburger SV",
+"leadName": "Eintracht Frankfurt",
+"leadOdd": 1.55,
+"value": 405260.62,
+"sentAt": "2026-11-01T16:45:55.317912+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8936241078642184,
+"leadDir": "flat",
+"onLeader": false,
+"tier": "top",
+"magnitude": 125338.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.253,
+"raus": "top5",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 13,
+"score": [
+1,
+1
+]
+}
+},
+{
+"k": "fresh:36242971:Match Odds",
+"matchId": "36242971",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Danish Superliga",
+"home": "FC Nordsjaelland",
+"away": "Midtjylland",
+"leadName": "FC Nordsjaelland",
+"leadOdd": 3.6,
+"value": 180212.88,
+"sentAt": "2026-11-01T16:45:55.317930+00:00",
+"status": "lost",
+"htScore": null,
+"leadShare": 0.6244748987974666,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 107875.9,
+"schwelle": 30000.0,
+"anteilSchwelle": 3.596,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 81,
+"score": [
+2,
+2
+]
+},
+"clvBf": 18.09,
+"clvPinn": null,
+"settledAt": "2026-11-01T17:01:28.392320+00:00",
+"ftScore": [
+2,
+3
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:36235326:Match Odds",
+"matchId": "36235326",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Scottish League Cup",
+"home": "Hearts",
+"away": "Hibernian",
+"leadName": "Hibernian",
+"leadOdd": 1.31,
+"value": 131304.15,
+"sentAt": "2026-11-01T16:45:55.317936+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5534822775974713,
+"leadDir": "in",
+"onLeader": true,
+"tier": "rest",
+"magnitude": 31822.6,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.061,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 80,
+"score": [
+1,
+2
 ]
 }
 }
