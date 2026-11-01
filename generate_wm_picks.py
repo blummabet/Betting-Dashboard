@@ -1882,6 +1882,7 @@ def main():
     # Betfair-Geld-Snapshot (29.07.2026): Betwatch-Matched-€ je Ausgang → betfair_money-Signal.
     # Per Team-Namen gematcht (event_key, reihenfolge-unabhängig/normalisiert). Kein Match → kein Signal.
     betfair_snapshots = {}
+    betfair_stand = None    # 01.11.2026: Zeitstempel des Snapshots → steht im Signal-Text dabei
     _bf_ekey = None
     _bf_index = []          # 15.08.2026 (Lucas): toleranter Fallback-Abgleich (Namensvarianten)
     _bf_find = None
@@ -1892,6 +1893,7 @@ def main():
         if os.path.exists(_bf_file):
             with open(_bf_file, encoding="utf-8") as bff:
                 _bfraw = json.load(bff)
+            betfair_stand = _bfraw.get("generatedAt")
             for _bm in (_bfraw.get("matches") or []):
                 _h, _a = _bm.get("home"), _bm.get("away")
                 if _h and _a:
@@ -2196,6 +2198,7 @@ def main():
                     "poly_snapshot": poly_snapshots.get(ha_key, {}),
                     "betfair_snapshot": _bf_lookup(
                         fx.get("homeName") or fx.get("home"), fx.get("awayName") or fx.get("away")),
+                    "betfair_stand": betfair_stand,
                     "smartmoney":    smartmoney,
                     "travel":       travel_data,
                     "injuries":     injuries,
