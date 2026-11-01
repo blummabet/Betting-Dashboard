@@ -30559,11 +30559,12 @@
 "walletRank": 94,
 "restock": false,
 "sentAt": "2026-10-22T14:45:37Z",
-"status": "pending",
+"status": "unaufloesbar",
 "kanal": "trades",
 "public": null,
 "anteil": 0.0477,
-"htkFirst": 0.11
+"htkFirst": 0.11,
+"ageDays": 10.03
 },
 {
 "k": "0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3|uel-aa-az-2026-10-22|AZ",
@@ -40943,7 +40944,7 @@
 "walletRank": null,
 "restock": false,
 "sentAt": "2026-11-01T08:18:34Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 88260.0,
@@ -40951,7 +40952,17 @@
 "seitenAnteil": 0.1174,
 "seiteUsd": 43941.83,
 "htkMess": 2.7,
-"htkFirst": 2.82
+"htkFirst": 2.82,
+"cond": "0x76b95600939d25a82ec6b25754f74c9e24628010599b65e6fa8b1f9aa2d832d5",
+"condQuelle": "erfassung+wallet",
+"result": "loss",
+"winner": "Betclic Apogee Esports",
+"closePrice": 0.485,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": -1.0,
+"settledTs": "2026-11-01T15:22:06.959861+00:00",
+"resolvedTs": "2026-11-01T15:21:34.957935+00:00"
 },
 {
 "k": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b|cs2-jjh-mzp-2026-11-01|Metizport",
@@ -40966,7 +40977,7 @@
 "walletRank": 50,
 "restock": false,
 "sentAt": "2026-11-01T09:18:41Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 23603.0,
@@ -40974,7 +40985,17 @@
 "seitenAnteil": 0.1747,
 "seiteUsd": 13443.33,
 "htkMess": 0.69,
-"htkFirst": 1.82
+"htkFirst": 1.82,
+"cond": "0xf8f8edf1bb2181a4546c405262f818e62d7cf5d302e38393277ee3e775ee30fd",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Metizport",
+"closePrice": 0.415,
+"stake": 10.0,
+"pnl": 14.1,
+"clvPP": 0.0,
+"settledTs": "2026-11-01T15:22:06.959861+00:00",
+"resolvedTs": "2026-11-01T15:21:34.957935+00:00"
 },
 {
 "k": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e|cs2-bca-pha-2026-11-01|Betclic Apogee Esports",
@@ -40989,7 +41010,7 @@
 "walletRank": 2,
 "restock": false,
 "sentAt": "2026-11-01T09:49:11Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 104885.0,
@@ -40997,7 +41018,17 @@
 "seitenAnteil": 0.1244,
 "seiteUsd": 53966.05,
 "htkMess": 1.19,
-"htkFirst": 1.83
+"htkFirst": 1.83,
+"cond": "0x76b95600939d25a82ec6b25754f74c9e24628010599b65e6fa8b1f9aa2d832d5",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Betclic Apogee Esports",
+"closePrice": 0.515,
+"stake": 10.0,
+"pnl": 9.42,
+"clvPP": 0.0,
+"settledTs": "2026-11-01T15:22:06.959861+00:00",
+"resolvedTs": "2026-11-01T15:21:34.957935+00:00"
 },
 {
 "k": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b|cs2-hotu-1win-2026-11-01|1WIN",
@@ -41251,5 +41282,28 @@
 "seiteUsd": 33744.22,
 "htkMess": 2.69,
 "htkFirst": 2.81
+},
+{
+"k": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5|sea-fro-tor-2026-11-01|Frosinone Calcio",
+"key": "sea-fro-tor-2026-11-01",
+"side": "Frosinone Calcio",
+"wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+"league": "SOCCER",
+"cat": "Fußball",
+"usd": 2608.0,
+"pushPrice": 0.455,
+"whaleEntry": 0.485,
+"walletRank": 15,
+"restock": false,
+"sentAt": "2026-11-01T15:22:06Z",
+"status": "pending",
+"kanal": "trades",
+"public": null,
+"totalUsd": 27628.0,
+"anteil": 0.0944,
+"seitenAnteil": 0.3133,
+"seiteUsd": 8325.41,
+"htkMess": 0.17,
+"htkFirst": 1.32
 }
 ]
