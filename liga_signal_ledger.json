@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-01T14:48:31Z",
-    "total_records": 304,
+    "updated_at": "2026-11-01T22:08:06Z",
+    "total_records": 317,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -3675,6 +3675,104 @@
       "processVerdict": "JUSTIFIED"
     },
     {
+      "key": "ESP-11-4665-541|AH Auswärts −1.75",
+      "matchKey": "ESP-11-4665-541",
+      "market": "AH Auswärts −1.75",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -2.1
+        },
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.5
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.21
+        },
+        {
+          "name": "form_rating",
+          "score": 4.03
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.07
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.74
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.77,
+      "entryOdd": 1.77,
+      "entryBook": "pini",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ESP-11-4665-541|Über 3.5 Tore",
+      "matchKey": "ESP-11-4665-541",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 5.5
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.04
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.36
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.84
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.19
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.5,
+      "entryOdd": 1.5,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "ESP-11-533-540|Heimsieg",
       "matchKey": "ESP-11-533-540",
       "market": "Heimsieg",
@@ -3842,6 +3940,118 @@
       "entryOdd": 1.78,
       "entryBook": "pini",
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "ESP-11-546-536|Doppelte Chance — X2",
+      "matchKey": "ESP-11-546-536",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.47
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.04
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.35
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.8
+        },
+        {
+          "name": "form_rating",
+          "score": 1.39
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.64
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": -1.32
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.4,
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "ESP-11-797-532|Doppelte Chance — 1X",
+      "matchKey": "ESP-11-797-532",
+      "market": "Doppelte Chance — 1X",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 3.7
+        },
+        {
+          "name": "form_trend",
+          "score": 2.37
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "lineup_signal",
+          "score": -0.67
+        },
+        {
+          "name": "form_rating",
+          "score": 1.47
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 1.03
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.08
+        },
+        {
+          "name": "move_following",
+          "score": 0.6
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.31
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.25,
+      "clvResolved": true,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvBasis": "roh"
     },
     {
       "key": "ESP-2-543-548|Heimsieg",
@@ -9517,6 +9727,53 @@
       "processVerdict": "JUSTIFIED"
     },
     {
+      "key": "FRA-9-114-91|Unter 3.5 Tore",
+      "matchKey": "FRA-9-114-91",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.13
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.94
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.16
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.6
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.82
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.41,
+      "entryOdd": 1.41,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "FRA-9-79-116|Doppelte Chance — X2",
       "matchKey": "FRA-9-79-116",
       "market": "Doppelte Chance — X2",
@@ -9603,6 +9860,59 @@
       "entryBook": "soft",
       "processVerdict": "JUSTIFIED",
       "clvFairPP": 3.59,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-9-81-96|Über 2.5 Tore",
+      "matchKey": "FRA-9-81-96",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.75
+        },
+        {
+          "name": "form_trend",
+          "score": 2.93
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.51
+        },
+        {
+          "name": "lineup_signal",
+          "score": -3.63
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.02
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.8
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.07
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.09,
+      "clvResolved": true,
+      "odds": 1.53,
+      "entryOdd": 1.53,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 1.99,
       "clvBasis": "fair"
     },
     {
@@ -11165,6 +11475,103 @@
       "clvBasis": "fair"
     },
     {
+      "key": "GER-8-182-192|Doppelte Chance — X2",
+      "matchKey": "GER-8-182-192",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.2
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.82
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.09
+        },
+        {
+          "name": "form_rating",
+          "score": 4.65
+        },
+        {
+          "name": "opener_move",
+          "score": 0.46
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.9,
+      "clvResolved": true,
+      "odds": 1.48,
+      "entryOdd": 1.48,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "GER-8-182-192|Unter 3.5 Tore",
+      "matchKey": "GER-8-182-192",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.3
+        },
+        {
+          "name": "injury",
+          "score": 1.5
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.26
+        },
+        {
+          "name": "lineup_signal",
+          "score": 0.84
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.3
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.44,
+      "clvResolved": true,
+      "odds": 1.48,
+      "entryOdd": 1.48,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 1.13,
+      "clvBasis": "fair"
+    },
+    {
       "key": "ITA-1-500-487|Auswärtssieg",
       "matchKey": "ITA-1-500-487",
       "market": "Auswärtssieg",
@@ -11293,6 +11700,187 @@
       "entryOdd": 2.93,
       "entryBook": "soft",
       "clvFairPP": 1.45,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-10-487-490|AH Heim −0.75",
+      "matchKey": "ITA-10-487-490",
+      "market": "AH Heim −0.75",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.67
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.92
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.67
+        },
+        {
+          "name": "form_rating",
+          "score": 5.0
+        },
+        {
+          "name": "freshness_leg",
+          "score": 4.0
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "opener_move",
+          "score": 0.67
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.78,
+      "entryOdd": 1.78,
+      "entryBook": "pini",
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "ITA-10-487-490|Heimsieg",
+      "matchKey": "ITA-10-487-490",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -3.37
+        },
+        {
+          "name": "form_trend",
+          "score": 4.67
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.92
+        },
+        {
+          "name": "lineup_signal",
+          "score": -5.35
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.3
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.67
+        },
+        {
+          "name": "form_rating",
+          "score": 5.0
+        },
+        {
+          "name": "smart_money",
+          "score": 1.25
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.1
+        },
+        {
+          "name": "opener_move",
+          "score": 0.67
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -5.18,
+      "clvResolved": true,
+      "odds": 1.43,
+      "entryOdd": 1.43,
+      "entryBook": "soft",
+      "processVerdict": "LUCKY",
+      "clvFairPP": -3.05,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-10-487-490|Über 2.5 Tore",
+      "matchKey": "ITA-10-487-490",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -4.25
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.96
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.55
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.63
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.69
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.81,
+      "clvResolved": true,
+      "odds": 1.8,
+      "entryOdd": 1.8,
+      "entryBook": "soft",
+      "processVerdict": "LUCKY",
+      "clvFairPP": 1.53,
       "clvBasis": "fair"
     },
     {
@@ -11428,6 +12016,119 @@
       "processVerdict": "JUSTIFIED",
       "clvFairPP": -0.63,
       "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-10-512-503|Über 2.5 Tore",
+      "matchKey": "ITA-10-512-503",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -2.5
+        },
+        {
+          "name": "form_trend",
+          "score": 2.13
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.21
+        },
+        {
+          "name": "lineup_signal",
+          "score": -2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.45
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.76
+        },
+        {
+          "name": "betfair_money",
+          "score": 2.37
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.87,
+      "clvResolved": true,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 0.29,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-10-867-495|Doppelte Chance — X2",
+      "matchKey": "ITA-10-867-495",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -0.97
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 1.81
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.88
+        },
+        {
+          "name": "form_rating",
+          "score": 1.79
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.52
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.64
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "move_following",
+          "score": -1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-11-01T22:07:54Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.57,
+      "clvResolved": true,
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
     },
     {
       "key": "ITA-2-1579-494|Über 2.5 Tore",
@@ -13546,7 +14247,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-01T14:48:31Z",
+      "resolvedAt": "2026-11-01T22:08:06Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
