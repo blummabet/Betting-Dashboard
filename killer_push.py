@@ -282,7 +282,12 @@ def main() -> int:
     # Erst abrechnen, dann senden: eine abgerechnete Zeile darf nicht auf den nächsten Lauf warten.
     ledger = ledger_abrechnen(_load(LEDGER_FILE, []), now=now)
 
-    neu = auswahl(kd, seen, now)
+    # 01.11.2026 (Lucas: „auch die Push kann man im Trades abdrehen" — dasselbe zeigt der Geldradar unter
+    # „Wo am meisten liegt"): KILLER_PUSH_AUS=1 → nichts mehr senden, das Buch wird nur noch zu Ende abgerechnet.
+    aus = str(os.environ.get("KILLER_PUSH_AUS") or "").lower() in ("1", "true", "yes")
+    neu = [] if aus else auswahl(kd, seen, now)
+    if aus:
+        print("[killer_push] abgeschaltet — nur offene Zeilen abrechnen")
     if neu:
         text = nachricht(neu, killer.bilanz(), now)
         ok = True if trocken else TG.send_trades_message(text)
