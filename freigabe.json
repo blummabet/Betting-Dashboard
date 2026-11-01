@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-01T09:14:43.674775+00:00",
+ "generatedAt": "2026-11-01T09:29:43.382463+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -72,7 +72,7 @@
     "nieAnteil": 0.02,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4657,7 +4657,7 @@
     "nieAnteil": 0.02,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5615,7 +5615,7 @@
    "zielN": 120,
    "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
    "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 43,
+   "nDavor": 42,
    "rueckblick": {
     "n": 158,
     "roi": 0.1055,
@@ -5913,6 +5913,34 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 802,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0151,
+   "pl": 12.15,
+   "roiLb": -0.0291,
+   "clv": -0.153,
+   "clvLb": -0.417,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.111,
+   "fehltN": 0,
+   "noetigNRoi": 6839,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 2524,
+    "lo": 339,
+    "hi": 231997,
+    "nieAnteil": 0.278,
+    "schaetzbar": false
+   },
+   "alterTage": 0.1,
+   "art": "conviction",
+   "wert": 6
+  },
+  {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 6223,
@@ -5933,34 +5961,6 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 803,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0139,
-   "pl": 11.15,
-   "roiLb": -0.0303,
-   "clv": -0.153,
-   "clvLb": -0.417,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.111,
-   "fehltN": 0,
-   "noetigNRoi": 8149,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 3265,
-    "lo": 343,
-    "hi": 490228,
-    "nieAnteil": 0.267,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6
   },
   {
    "schublade": "Mix money+sharp+steam",
@@ -6064,7 +6064,7 @@
     "nieAnteil": 0.157,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -6377,34 +6377,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 719,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0185,
-   "pl": -13.32,
-   "roiLb": -0.0604,
-   "clv": -0.148,
-   "clvLb": -0.387,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.092,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 6656,
-    "lo": 897,
-    "hi": 363467,
-    "nieAnteil": 0.763,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "mix",
-   "wert": "money+sharp"
-  },
-  {
    "schublade": "South Korean K2 League · First Half Goals 1.5",
    "strom": "betfair",
    "n": 30,
@@ -6466,6 +6438,34 @@
    }
   },
   {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 720,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0199,
+   "pl": -14.32,
+   "roiLb": -0.0617,
+   "clv": -0.147,
+   "clvLb": -0.387,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.092,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 8029,
+    "lo": 829,
+    "hi": 154958,
+    "nieAnteil": 0.783,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp"
+  },
+  {
    "schublade": "UEFA Champions League · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 36,
@@ -6508,6 +6508,34 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+steam",
+   "strom": "poly",
+   "n": 288,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0065,
+   "pl": 1.88,
+   "roiLb": -0.0675,
+   "clv": -0.008,
+   "clvLb": -0.756,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.74,
+   "fehltN": 0,
+   "noetigNRoi": 37164,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1770,
+    "lo": 202,
+    "hi": 136102,
+    "nieAnteil": 0.443,
+    "schaetzbar": false
+   },
+   "alterTage": 0.7,
+   "art": "mix",
+   "wert": "money+steam"
   },
   {
    "schublade": "Public · frisches Signal",
@@ -6584,34 +6612,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+steam",
-   "strom": "poly",
-   "n": 289,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.003,
-   "pl": 0.88,
-   "roiLb": -0.071,
-   "clv": -0.008,
-   "clvLb": -0.756,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.74,
-   "fehltN": 0,
-   "noetigNRoi": 171855,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 1877,
-    "lo": 151,
-    "hi": 160368,
-    "nieAnteil": 0.448,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "mix",
-   "wert": "money+steam"
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -6817,7 +6817,7 @@
     "nieAnteil": 0.63,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -6867,7 +6867,7 @@
     "nieAnteil": 0.467,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -14217,6 +14217,28 @@
    "wert": 9
   },
   {
+   "schublade": "Conviction 3",
+   "strom": "poly",
+   "n": 8,
+   "status": "sammelt",
+   "grund": "8 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
+   "roi": -0.3218,
+   "pl": -2.57,
+   "roiLb": null,
+   "clv": 0.667,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 22,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "zu_wenige",
+   "entfernung": null,
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 3
+  },
+  {
    "schublade": "MLS · BET",
    "strom": "cards",
    "n": 8,
@@ -14238,28 +14260,6 @@
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
-  },
-  {
-   "schublade": "Conviction 3",
-   "strom": "poly",
-   "n": 7,
-   "status": "sammelt",
-   "grund": "7 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
-   "roi": -0.2249,
-   "pl": -1.57,
-   "roiLb": null,
-   "clv": 0.8,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 23,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "zu_wenige",
-   "entfernung": null,
-   "alterTage": 1.5,
-   "art": "conviction",
-   "wert": 3
   },
   {
    "schublade": "Mix bf+sharp",
