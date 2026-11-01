@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-01T00:28:47.992701+00:00",
-"count": 15,
-"covered": 13,
+"generatedAt": "2026-11-01T00:40:29.967097+00:00",
+"count": 16,
+"covered": 14,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,6 +48,7 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
+"Argentinian Primera Division",
 "English Premier League",
 "German Bundesliga",
 "Italian Serie A",
@@ -59,15 +60,15 @@
 "oddsKeysMitDaten": 47,
 "oddsEvents": 475,
 "oddsTotals": {
-"versucht": 6,
+"versucht": 7,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 6,
+"gewollt": 7,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 997,
-"remaining": 4999003,
+"used": 1566,
+"remaining": 4998434,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -92,7 +93,7 @@
 "softOdd": 1.2,
 "softN": 44,
 "poly": {
-"vol": 112045,
+"vol": 112449,
 "odd": 1.23,
 "sharePct": 82,
 "shareSrc": "preis",
@@ -109,8 +110,8 @@
 },
 "soft": {
 "home": 0.0906,
-"draw": 0.1238,
-"away": 0.7856,
+"draw": 0.1239,
+"away": 0.7855,
 "fav": "away",
 "n": 44
 },
@@ -138,13 +139,13 @@
 "moneyName": "Arsenal",
 "moneySharePct": 44,
 "moneyOdd": 2.54,
-"moneyDir": "in",
-"totVol": 122256,
+"moneyDir": "flat",
+"totVol": 122958,
 "pinnOdd": 2.47,
-"softOdd": 2.4,
-"softN": 51,
+"softOdd": 2.41,
+"softN": 50,
 "poly": {
-"vol": 32796,
+"vol": 32903,
 "odd": 2.53,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -160,11 +161,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3282,
-"draw": 0.2791,
-"away": 0.3926,
+"home": 0.3283,
+"draw": 0.279,
+"away": 0.3927,
 "fav": "away",
-"n": 51
+"n": 50
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
@@ -190,14 +191,14 @@
 "moneyName": "Lazio",
 "moneySharePct": 94,
 "moneyOdd": 1.47,
-"moneyDir": "in",
-"totVol": 97893,
+"moneyDir": "flat",
+"totVol": 97897,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
 "softN": 49,
 "poly": {
-"vol": 51704,
-"odd": 1.48,
+"vol": 51738,
+"odd": 1.46,
 "sharePct": 68,
 "shareSrc": "preis",
 "key": "sea-laz-cag-2026-11-01",
@@ -212,16 +213,16 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.66,
-"draw": 0.2078,
-"away": 0.1323,
+"home": 0.6605,
+"draw": 0.2077,
+"away": 0.1319,
 "fav": "home",
 "n": 49
 },
 "pinnMovePP": 0.4,
 "pinnMove": {
 "movePP": 0.4,
-"stepPP": 0.1,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -229,6 +230,81 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36240324",
+"home": "Pachuca",
+"away": "Tigres",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-10-31T23:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Pachuca",
+"moneySharePct": 81,
+"moneyOdd": 1.01,
+"moneyDir": "in",
+"totVol": 67920,
+"pinnOdd": null,
+"softOdd": 1.0,
+"softN": 16,
+"poly": {
+"vol": 45189,
+"odd": 1.08,
+"sharePct": 97,
+"shareSrc": "geld",
+"key": "mex-pac-tig-2026-10-31",
+"sideKey": "CF Pachuca",
+"whales": [
+{
+"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+"usd": 4565
+},
+{
+"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+"usd": 2404
+},
+{
+"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
+"usd": 1866
+},
+{
+"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
+"usd": 1412
+},
+{
+"wallet": "0xdebbe89ceb32828a99648bca497684f5209ceedb",
+"usd": 1063
+},
+{
+"wallet": "0xf9dcbb0a9b740625738cdd7cf83db99c7deaaba7",
+"usd": 465
+}
+],
+"whaleUsd": 13684
+},
+"pinn": null,
+"soft": {
+"home": 0.9268,
+"draw": 0.054,
+"away": 0.0192,
+"fav": "home",
+"n": 16
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Pachuca v Tigres",
+"grund": "kein_pinnacle",
+"kandidat": "Pachuca v Tigres",
+"key": "soccer_mexico_ligamx",
+"nSoft": 16,
+"pinnacleImEvent": false,
+"nBuecher": 16
+}
 },
 {
 "matchId": "36246857",
@@ -241,9 +317,9 @@
 "moneySide": "home",
 "moneyName": "Juventus",
 "moneySharePct": 62,
-"moneyOdd": 2.46,
-"moneyDir": "flat",
-"totVol": 60994,
+"moneyOdd": 2.44,
+"moneyDir": "in",
+"totVol": 61408,
 "pinnOdd": 2.38,
 "softOdd": 2.28,
 "softN": 49,
@@ -270,9 +346,9 @@
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": -1.6,
+"pinnMovePP": -1.4,
 "pinnMove": {
-"movePP": -1.6,
+"movePP": -1.4,
 "stepPP": -0.0,
 "n": 25,
 "move": true,
@@ -281,81 +357,6 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
-},
-{
-"matchId": "36240324",
-"home": "Pachuca",
-"away": "Tigres",
-"league": "Mexican Liga MX",
-"country": "MX",
-"kickoff": "2026-10-31T23:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Pachuca",
-"moneySharePct": 78,
-"moneyOdd": 1.08,
-"moneyDir": "in",
-"totVol": 58272,
-"pinnOdd": null,
-"softOdd": 1.04,
-"softN": 28,
-"poly": {
-"vol": 41903,
-"odd": 1.42,
-"sharePct": 87,
-"shareSrc": "geld",
-"key": "mex-pac-tig-2026-10-31",
-"sideKey": "CF Pachuca",
-"whales": [
-{
-"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
-"usd": 3443
-},
-{
-"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 1882
-},
-{
-"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
-"usd": 1415
-},
-{
-"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-"usd": 1070
-},
-{
-"wallet": "0xdebbe89ceb32828a99648bca497684f5209ceedb",
-"usd": 806
-},
-{
-"wallet": "0xf9dcbb0a9b740625738cdd7cf83db99c7deaaba7",
-"usd": 352
-}
-],
-"whaleUsd": 10281
-},
-"pinn": null,
-"soft": {
-"home": 0.8891,
-"draw": 0.0849,
-"away": 0.026,
-"fav": "home",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Pachuca v Tigres",
-"grund": "kein_pinnacle",
-"kandidat": "Pachuca v Tigres",
-"key": "soccer_mexico_ligamx",
-"nSoft": 28,
-"pinnacleImEvent": false,
-"nBuecher": 28
-}
 },
 {
 "matchId": "36241179",
@@ -373,7 +374,7 @@
 "totVol": 57591,
 "pinnOdd": 1.55,
 "softOdd": 1.53,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 6780,
 "odd": 1.57,
@@ -392,10 +393,10 @@
 },
 "soft": {
 "home": 0.6139,
-"draw": 0.2052,
+"draw": 0.2053,
 "away": 0.1808,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 1.3,
 "pinnMove": {
@@ -403,6 +404,58 @@
 "stepPP": 0.0,
 "n": 25,
 "move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36246855",
+"home": "Como",
+"away": "Venezia",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-11-01T11:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Como",
+"moneySharePct": 84,
+"moneyOdd": 1.31,
+"moneyDir": "flat",
+"totVol": 44708,
+"pinnOdd": 1.3,
+"softOdd": 1.29,
+"softN": 49,
+"poly": {
+"vol": 33178,
+"odd": 1.31,
+"sharePct": 76,
+"shareSrc": "preis",
+"key": "sea-com-ven-2026-11-01",
+"sideKey": "Como 1907",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.7446,
+"draw": 0.1517,
+"away": 0.1036,
+"fav": "home"
+},
+"soft": {
+"home": 0.7382,
+"draw": 0.1575,
+"away": 0.1043,
+"fav": "home",
+"n": 49
+},
+"pinnMovePP": 0.2,
+"pinnMove": {
+"movePP": 0.2,
+"stepPP": 0.0,
+"n": 8,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -462,58 +515,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36246855",
-"home": "Como",
-"away": "Venezia",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-11-01T11:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Como",
-"moneySharePct": 84,
-"moneyOdd": 1.31,
-"moneyDir": "flat",
-"totVol": 41400,
-"pinnOdd": 1.3,
-"softOdd": 1.29,
-"softN": 49,
-"poly": {
-"vol": 33059,
-"odd": 1.31,
-"sharePct": 76,
-"shareSrc": "preis",
-"key": "sea-com-ven-2026-11-01",
-"sideKey": "Como 1907",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.7444,
-"draw": 0.1519,
-"away": 0.1037,
-"fav": "home"
-},
-"soft": {
-"home": 0.738,
-"draw": 0.1576,
-"away": 0.1045,
-"fav": "home",
-"n": 49
-},
-"pinnMovePP": 0.2,
-"pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.0,
-"n": 7,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36211829",
 "home": "Getafe",
 "away": "Sevilla",
@@ -531,7 +532,7 @@
 "softOdd": 2.45,
 "softN": 45,
 "poly": {
-"vol": 7045,
+"vol": 7070,
 "odd": 2.53,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -547,17 +548,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2959,
-"draw": 0.3185,
-"away": 0.3856,
+"home": 0.2956,
+"draw": 0.3182,
+"away": 0.3863,
 "fav": "away",
 "n": 45
 },
 "pinnMovePP": 0.4,
 "pinnMove": {
 "movePP": 0.4,
-"stepPP": 0.2,
-"n": 14,
+"stepPP": 0.0,
+"n": 15,
 "move": false,
 "laeuft": false
 },
@@ -581,7 +582,7 @@
 "totVol": 27426,
 "pinnOdd": 2.75,
 "softOdd": 2.7,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 47379,
 "odd": 2.82,
@@ -599,17 +600,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4089,
+"home": 0.409,
 "draw": 0.2431,
-"away": 0.348,
+"away": 0.3479,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
 "movePP": -0.1,
 "stepPP": -0.0,
-"n": 9,
+"n": 10,
 "move": false,
 "laeuft": false
 },
@@ -633,7 +634,7 @@
 "totVol": 26484,
 "pinnOdd": 2.32,
 "softOdd": 2.25,
-"softN": 43,
+"softN": 44,
 "poly": {
 "vol": 22179,
 "odd": 2.41,
@@ -651,17 +652,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.337,
-"draw": 0.2419,
-"away": 0.4211,
+"home": 0.3371,
+"draw": 0.242,
+"away": 0.421,
 "fav": "away",
-"n": 43
+"n": 44
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
 "movePP": -0.2,
 "stepPP": -0.0,
-"n": 9,
+"n": 10,
 "move": false,
 "laeuft": false
 },
@@ -685,7 +686,7 @@
 "totVol": 24476,
 "pinnOdd": 2.14,
 "softOdd": 2.15,
-"softN": 44,
+"softN": 45,
 "poly": {
 "vol": 9845,
 "odd": 2.2,
@@ -703,17 +704,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4372,
+"home": 0.4371,
 "draw": 0.235,
 "away": 0.3279,
 "fav": "home",
-"n": 44
+"n": 45
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -734,12 +735,12 @@
 "moneySharePct": 52,
 "moneyOdd": 2.5,
 "moneyDir": "flat",
-"totVol": 22936,
+"totVol": 22949,
 "pinnOdd": 2.43,
 "softOdd": 2.31,
-"softN": 51,
+"softN": 50,
 "poly": {
-"vol": 6670,
+"vol": 6677,
 "odd": 2.47,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -755,21 +756,92 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4055,
+"home": 0.4056,
 "draw": 0.2692,
-"away": 0.3253,
+"away": 0.3252,
 "fav": "home",
-"n": 51
+"n": 50
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 6,
+"n": 7,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36211773",
+"home": "Estudiantes",
+"away": "Instituto",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-11-01T00:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Estudiantes",
+"moneySharePct": 59,
+"moneyOdd": 3.85,
+"moneyDir": "out",
+"totVol": 19362,
+"pinnOdd": 2.02,
+"softOdd": 3.55,
+"softN": 32,
+"poly": {
+"vol": 10700,
+"odd": 2.11,
+"sharePct": 83,
+"shareSrc": "geld",
+"key": "arg-est-iac-2026-10-31",
+"sideKey": "Estudiantes de La Plata",
+"whales": [
+{
+"wallet": "0x59911710f01a9a8fb3470e3c9be8f5b78f6cee89",
+"usd": 1710
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 1413
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 1081
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 646
+},
+{
+"wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+"usd": 487
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 380
+}
+],
+"whaleUsd": 6879
+},
+"pinn": {
+"home": 0.4794,
+"draw": 0.3055,
+"away": 0.2152,
+"fav": "home"
+},
+"soft": {
+"home": 0.3106,
+"draw": 0.2902,
+"away": 0.3992,
+"fav": "away",
+"n": 32
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "teil",
 "agree": true,
 "pinnTotals": null
 },
@@ -783,16 +855,16 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Llaneros FC",
-"moneySharePct": 66,
-"moneyOdd": 1.39,
-"moneyDir": "in",
-"totVol": 22370,
+"moneySharePct": 53,
+"moneyOdd": 4.7,
+"moneyDir": "out",
+"totVol": 31652,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 8237,
-"odd": 1.57,
+"vol": 9044,
+"odd": 1.43,
 "sharePct": 90,
 "shareSrc": "geld",
 "key": "col1-llf-cjf-2026-10-31",
@@ -800,30 +872,30 @@
 "whales": [
 {
 "wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 946
+"usd": 1043
 },
 {
 "wallet": "0x8314fd1f002a4e9bbf4b5abb939e24949a4e0f1e",
-"usd": 317
+"usd": 350
 },
 {
 "wallet": "0x37a6ea78c1650c8c9de3ecc3e7a0d833665a105d",
-"usd": 176
+"usd": 194
+},
+{
+"wallet": "0xf7f67ecde5cfb6fd4e30edadb19a7c53f9e8e517",
+"usd": 152
 },
 {
 "wallet": "0x505b6b0b04192bf1f8e5fb465ce155afa580fbe0",
-"usd": 72
+"usd": 80
 },
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 47
-},
-{
-"wallet": "0x5317d780fb04f4e8d587dd02a9671bc78e509a3b",
-"usd": 25
+"usd": 59
 }
 ],
-"whaleUsd": 1619
+"whaleUsd": 1982
 },
 "pinn": null,
 "soft": null,
@@ -868,9 +940,9 @@
 }
 }
 ],
-"ankerN": 59,
-"ankerNOffen": 149,
-"ankerMit": 58,
+"ankerN": 60,
+"ankerNOffen": 150,
+"ankerMit": 59,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 74,
@@ -933,9 +1005,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Pachuca v Tigres",
 "key": "soccer_mexico_ligamx",
-"nSoft": 28,
+"nSoft": 16,
 "pinnacleImEvent": false,
-"nBuecher": 28,
+"nBuecher": 16,
 "matchId": "36240324",
 "liga": "Mexican Liga MX"
 }
