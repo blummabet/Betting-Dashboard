@@ -243,8 +243,10 @@ jobs:
       #     RUECKNAHME wird gemeldet.
       # Beide fuehren ihr EIGENES Buch (killer_push_ledger.json) — zum Preis, der in der
       # Nachricht stand, nicht zum Haltepreis der Flaeche.
-      - name: 📣 Konjunktion Stufe 1 → Trades-Channel
+      # 01.11.2026 (Lucas): Push abgedreht (KILLER_PUSH_AUS) — der Schritt rechnet nur noch das Buch zu Ende ab.
+      - name: 📣 Konjunktion Stufe 1 → Trades-Channel (abgedreht, nur Abrechnung)
         env:
+          KILLER_PUSH_AUS: "1"
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
         run: ${{ env.BETFAIR_PY }} killer_push.py
