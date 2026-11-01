@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 128 von 169 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Panaitolikos v OFI (Greek Super League); Hodd v Bryne (Norwegian 1st Division); Sarpsborg v Kristiansund (Norwegian Eliteserien)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 21445 verbraucht, 4978555 uebrig"
+      "note": "Kontingent: 21990 verbraucht, 4978010 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -101,13 +103,13 @@
         "RZ Pellets WAC v Sturm Graz (Austrian Bundesliga): name — bester Kandidat „Wolfsberger AC v Sturm Graz“",
         "Ajax (W) v Twente (W) (Dutch Ladies Eredivisie): zeit — bester Kandidat „FC Twente Enschede v Ajax“ · 170.2h Anpfiff-Abstand",
         "West Ham United (W) v Liverpool (W) (English WSL): zeit — bester Kandidat „Liverpool v Manchester United“ · 506.5h Anpfiff-Abstand",
+        "FCV Dender v Racing Genk B (Belgian Challenger Pro League): name — bester Kandidat „Real Racing Club de Santander v Real Madrid“",
         "Al Jahra v Al Fahaheel FC (Kuwaiti Premier League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 94.9h Anpfiff-Abstand",
         "TP Ho Chi Minh (W) v East Bengal (W) (AFC Ladies Champions League): name — bester Kandidat „Universidad Católica (CHI) v Universidad de Chile“",
         "Viimsi JK v Levadia Tallinn II (Estonian Esiliiga): name — bester Kandidat „Kasimpasa SK v Besiktas JK“",
-        "Wolverhampton Wanderers (W) v Bristol City (W) (English Ladies League Cup): zeit — bester Kandidat „Bristol City v Wolverhampton Wanderers“ · 78.0h Anpfiff-Abstand",
-        "FCV Dender v Racing Genk B (Belgian Challenger Pro League): name — bester Kandidat „Real Racing Club de Santander v Real Madrid“"
+        "Wolverhampton Wanderers (W) v Bristol City (W) (English Ladies League Cup): zeit — bester Kandidat „Bristol City v Wolverhampton Wanderers“ · 78.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 92 · kein_pinnacle 48 · name 4 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 93 · kein_pinnacle 48 · name 4 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -116,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 20 — Racing Santander v Real Madrid (46 Buecher, ohne Pinnacle); Liverpool v Arsenal (50 Buecher, ohne Pinnacle); Lazio v Cagliari (49 Buecher, ohne Pinnacle); Como v Venezia (49 Buecher, ohne Pinnacle); Juventus v Napoli (49 Buecher, ohne Pinnacle); Athletic Bilbao v Real Sociedad (46 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 20 — Racing Santander v Real Madrid (46 Buecher, ohne Pinnacle); Liverpool v Arsenal (51 Buecher, ohne Pinnacle); Lazio v Cagliari (50 Buecher, ohne Pinnacle); Como v Venezia (50 Buecher, ohne Pinnacle); Juventus v Napoli (50 Buecher, ohne Pinnacle); Athletic Bilbao v Real Sociedad (46 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -191,6 +193,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-01T10:00:19.169564+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-01T10:15:49.449268+00:00"
 }
