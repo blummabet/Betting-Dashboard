@@ -58,8 +58,15 @@ def _tok(market_name: str, runner_name: str, home, away) -> Optional[str]:
 
 
 def _pick_target(market: str):
-    """Pick-Markt → (Betwatch-Marktname, Token) für 1X2 / Ü-U 2.5-3.5 / BTTS. Sonst None."""
+    """Pick-Markt → (Betwatch-Marktname, Token) für 1X2 / Ü-U 2.5-3.5 / BTTS. Sonst None.
+    01.11.2026 (Lucas, Getafe – Sevilla X2): Doppelte Chance ist ein Token-PAAR — X2 = Remis + Auswärts.
+    Vorher zählte nur das Geld auf Sevilla (48 %), auf X2 lagen aber 88 % (fair 74 %)."""
     m = (market or "").lower()
+    if "doppelte chance" in m or "double chance" in m:
+        for k, t in (("1x", ("H", "D")), ("x2", ("D", "A")), ("12", ("H", "A"))):
+            if k in m.split("—")[-1].replace(" ", "") or m.rstrip().endswith(k):
+                return ("Match Odds", t)
+        return None
     if "bts" in m or "btts" in m or "beide" in m:
         return ("Both teams to Score?", "NO" if ("nein" in m or " no" in m) else "YES")
     side = market_side(market)   # home/away/over/under/None (eine Quelle, base.py)
@@ -76,6 +83,29 @@ def _devig(odds: dict) -> dict:
     inv = {t: (1.0 / o) for t, o in odds.items() if isinstance(o, (int, float)) and o > 1}
     s = sum(inv.values())
     return {t: v / s for t, v in inv.items()} if s > 0 else {}
+
+
+def _urteil(tr):
+    """Urteil des Track-Records (betfair_track_record._urteil) — fehlt das Feld, aus Unter-/Obergrenze abgeleitet."""
+    if not tr:
+        return None
+    if tr.get("urteil") in ("traegt", "verliert", "neutral"):
+        return tr["urteil"]
+    u, o = tr.get("roiUg"), tr.get("roiOg")
+    if isinstance(u, (int, float)) and u > TR_BOOST_ROI:
+        return "traegt"
+    if isinstance(o, (int, float)) and o < 0:
+        return "verliert"
+    return "neutral" if isinstance(u, (int, float)) else None
+
+
+def _stand_wien(ts):
+    try:
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+        return datetime.fromisoformat(str(ts).replace("Z", "+00:00")).astimezone(ZoneInfo("Europe/Vienna")).strftime("%H:%M")
+    except Exception:
+        return None
 
 
 class BetfairMoneySignal(Signal):
@@ -119,14 +149,15 @@ class BetfairMoneySignal(Signal):
             if isinstance(r.get("odd"), (int, float)):
                 odd_by[t] = r["odd"]
         total = sum(vol_by.values())
-        if total < MIN_MONEY_EUR or tok not in vol_by:
+        toks = tok if isinstance(tok, tuple) else (tok,)
+        if total < MIN_MONEY_EUR or any(t not in vol_by for t in toks):
             return None
 
-        money_share = vol_by[tok] / total
+        money_share = sum(vol_by[t] for t in toks) / total
         fair = _devig(odd_by)
-        fair_share = fair.get(tok)
-        if fair_share is None:
+        if any(t not in fair for t in toks):
             return None
+        fair_share = sum(fair[t] for t in toks)
         edge = money_share - fair_share            # + = mehr Geld als der Preis impliziert
         if abs(edge) < MIN_EDGE:
             return None
@@ -141,29 +172,37 @@ class BetfairMoneySignal(Signal):
         # 04.09.2026: Urteil an der Rendite-UNTERGRENZE, nicht am Punktschaetzer. Median-n je
         # Bucket ist 5; von 1.641 Buckets tragen 3 ueberhaupt eine Untergrenze. Was keine hat,
         # verschiebt hier nichts mehr — weder nach oben noch nach unten.
-        if tr and isinstance(tr.get("roiUg"), (int, float)):
+        # 01.11.2026 (Lucas, Getafe – Sevilla): umgedreht wurde, sobald die UNTERgrenze ≤ −10 % lag — bei n 30–40 fast
+        # immer (320 Buckets, La Liga Sieg-Markt mit ROI +13,7 % inklusive). Jetzt am Urteil des Track-Records:
+        # „verliert" (auch die OBERgrenze < 0) → umdrehen, „traegt" (Untergrenze > 0) → verstärken, sonst nichts.
+        u = _urteil(tr)
+        if u == "verliert":
+            score = -score                      # dem Geld folgen verliert hier belegt → Fade
+            confidence = min(0.8, 0.5 + abs(tr.get("roiOg") or 0))
+            tr_note = " · ⚠️ Liga×Markt verliert (ROI %+.0f%%, bis höchstens %+.0f%%, n%d) → gefadet" % (
+                (tr.get("roi") or 0) * 100, (tr.get("roiOg") or 0) * 100, tr["n"])
+        elif u == "traegt":
             roi = tr["roiUg"]
-            if roi <= TR_FADE_ROI:
-                score = -score                      # dem Geld folgen verliert hier → Fade
-                confidence = min(0.8, 0.5 + abs(roi))
-                tr_note = " · ⚠️ Liga×Markt verliert (ROI-UG %+.0f%%, n%d) → gefadet" % (roi * 100, tr["n"])
-            elif roi > TR_BOOST_ROI:
-                confidence = min(0.92, confidence * (1.0 + min(0.3, roi)))
-                tr_note = " · ✅ Liga×Markt solide (ROI-UG %+.0f%%, n%d)" % (roi * 100, tr["n"])
+            confidence = min(0.92, confidence * (1.0 + min(0.3, roi)))
+            tr_note = " · ✅ Liga×Markt solide (ROI-UG %+.0f%%, n%d)" % (roi * 100, tr["n"])
+        elif u == "neutral":
+            pass
         else:
             confidence *= 0.85                       # noch keine belastbare Historie → etwas vorsichtiger
 
-        lbl = {"H": "Heim", "D": "X", "A": "Ausw", "OVER": "Über", "UNDER": "Unter",
-               "YES": "BTTS Ja", "NO": "BTTS Nein"}.get(tok, tok)
+        lbl = {("H",): "Heim", ("D",): "X", ("A",): "Ausw", ("OVER",): "Über", ("UNDER",): "Unter",
+               ("YES",): "BTTS Ja", ("NO",): "BTTS Nein", ("H", "D"): "1X", ("D", "A"): "X2", ("H", "A"): "12"}.get(toks, "/".join(toks))
         stance = "stützt" if score > 0 else "warnt gegen"
-        ev = ("💷 Betfair-Geld %s %s: %.0f%% des Geldes (fair %.0f%%) auf €%.0fk%s"
-              % (stance, lbl, money_share * 100, fair_share * 100, total / 1000.0, tr_note))
+        # 01.11.2026: Stand des Snapshots dazu — der Betrag ist der von der letzten Pick-Rechnung, nicht live
+        stand = _stand_wien(context.get("betfair_stand"))
+        ev = ("💷 Betfair-Geld %s %s: %.0f%% des Geldes (fair %.0f%%) auf €%.0fk%s%s"
+              % (stance, lbl, money_share * 100, fair_share * 100, total / 1000.0, (" (Stand %s)" % stand) if stand else "", tr_note))
 
         return SignalResult(
             score=round(score, 2),
             confidence=round(confidence, 2),
             evidence=ev,
-            metadata={"market": market_name, "token": tok,
+            metadata={"market": market_name, "token": "+".join(toks),
                       "money_share": round(money_share, 3), "fair_share": round(fair_share, 3),
                       "edge_pp": round(edge * 100, 2), "total_eur": round(total),
                       "track_roi": (tr or {}).get("roi"), "track_n": (tr or {}).get("n")},
