@@ -72,7 +72,7 @@ def test_track_record_boost():
 
 def test_track_record_fade_dreht_um():
     sig = BetfairMoneySignal()
-    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 40, "roi": -0.18, "roiUg": -0.14}}}
+    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 40, "roi": -0.18, "roiUg": -0.30, "roiOg": -0.04}}}
     sig._loaded = True
     r = sig.evaluate({"market": "Heimsieg"}, ctx())
     # Geld auf Heim, aber Liga×Markt verliert historisch → Signal dreht auf NEGATIV (Fade)
@@ -106,3 +106,25 @@ def test_ein_schoener_punktschaetzer_ohne_untergrenze_fadet_auch_nicht():
     sig._loaded = True
     r = sig.evaluate({"market": "Heimsieg"}, ctx())
     assert "verliert" not in r.evidence, "kein Urteil heisst nichts tun, nicht faden"
+
+
+# ── 01.11.2026 (Lucas, Getafe – Sevilla X2) ───────────────────────────────────
+def test_tiefe_untergrenze_allein_dreht_nicht_mehr_um():
+    """La Liga Sieg-Markt: ROI +13,7 %, Spanne −14 % … +41 % = neutral → kein Fade (vorher: gefadet)."""
+    sig = BetfairMoneySignal()
+    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 35, "roi": 0.137, "roiUg": -0.138, "roiOg": 0.41, "urteil": "neutral"}}}
+    sig._loaded = True
+    r = sig.evaluate({"market": "Heimsieg"}, ctx())
+    assert r.score > 0 and "gefadet" not in r.evidence
+
+
+def test_doppelte_chance_zaehlt_remis_mit():
+    bf = {"home": "Getafe", "away": "Sevilla", "league": "X", "markets": {"Match Odds": {"runners": [
+        {"name": "Getafe", "odd": 3.85, "vol": 22578}, {"name": "The Draw", "odd": 3.0, "vol": 78556},
+        {"name": "Sevilla", "odd": 2.42, "vol": 93231}]}}}
+    sig = BetfairMoneySignal(); sig._track = {"byLeagueMarket": {}}; sig._loaded = True
+    r = sig.evaluate({"market": "Doppelte Chance — X2"}, {"betfair_snapshot": bf, "betfair_stand": "2026-11-01T12:59:29+00:00"})
+    assert r.score > 0 and "X2" in r.evidence and "88%" in r.evidence
+    assert "Stand 13:59" in r.evidence
+    r1 = sig.evaluate({"market": "Doppelte Chance — 1X"}, {"betfair_snapshot": bf})
+    assert r1.metadata["token"] == "H+D" and r1.score < 0
