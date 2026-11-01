@@ -1,35 +1,5 @@
 [
 {
-"k": "ucl-mnc-psg-2026-10-14|Manchester City FC",
-"key": "ucl-mnc-psg-2026-10-14",
-"side": "Manchester City FC",
-"wallet": "0x5af3203a38e5f7deb356dc05aea613936c231534",
-"wallets": [
-"0x5af3203a38e5f7deb356dc05aea613936c231534",
-"0x7d3b7ff761d046f5dc1d972e8a755dc1eccf55b8",
-"0xbc5613462ce3902eea10874a11cf74191f4a8f28"
-],
-"nWallets": 3,
-"league": "SOCCER",
-"cat": "Fußball",
-"usd": 3068.0,
-"maxEinzel": 2414.0,
-"pushPrice": 0.485,
-"whaleEntry": 0.485,
-"htkMess": 1.02,
-"sentAt": "2026-10-14T17:59:18Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "loss",
-"winner": "Paris Saint-Germain FC",
-"closePrice": 0.505,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 2.0,
-"settledTs": "2026-10-14T21:57:26.207387+00:00",
-"resolvedTs": "2026-10-14T21:57:08.969563+00:00"
-},
-{
 "k": "ucl-ast-fen-2026-10-14-more-markets|Over",
 "key": "ucl-ast-fen-2026-10-14-more-markets",
 "side": "Over",
@@ -24285,8 +24255,16 @@
 "whaleEntry": 0.405,
 "htkMess": 2.14,
 "sentAt": "2026-11-01T15:22:06Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "loss",
+"winner": "Valencia CF",
+"closePrice": 0.415,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 1.0,
+"settledTs": "2026-11-01T20:16:38.764785+00:00",
+"resolvedTs": "2026-11-01T20:16:13.210261+00:00"
 },
 {
 "k": "nhl-wpg-car-2026-11-01|Hurricanes",
@@ -24408,18 +24386,18 @@
 "whaleEntry": 0.425,
 "htkMess": 0.2,
 "sentAt": "2026-11-01T16:48:36Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x7eba76c592d76dfbb2db7689aec75cde6d75a284f5450c1f8557fd9689d5cc24",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Over",
 "closePrice": 0.425,
-"stake": 10.0,
-"pnl": 13.53,
-"clvPP": 0.0,
 "settledTs": "2026-11-01T19:47:18.505139+00:00",
-"resolvedTs": "2026-11-01T19:46:57.341724+00:00"
+"resolvedTs": "2026-11-01T19:46:57.341724+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-11-01T20:16:38.764785+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "val-m8gc-kru-2026-11-01|KRÜ Blaze",
@@ -24566,6 +24544,27 @@
 "whaleEntry": 0.485,
 "htkMess": 0.61,
 "sentAt": "2026-11-01T19:23:53Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "nhl-edm-nyr-2026-11-01|Oilers",
+"key": "nhl-edm-nyr-2026-11-01",
+"side": "Oilers",
+"wallet": "0x361361da1313e396077d39ec8031d25568bf79e1",
+"wallets": [
+"0x361361da1313e396077d39ec8031d25568bf79e1",
+"0x489d3df3601288940f89d56b5642b0951129f6e3"
+],
+"nWallets": 2,
+"league": "NHL",
+"cat": "US-Sport",
+"usd": 228.0,
+"maxEinzel": 182.0,
+"pushPrice": 0.455,
+"whaleEntry": 0.455,
+"htkMess": 2.73,
+"sentAt": "2026-11-01T20:16:38Z",
 "status": "pending",
 "nurBeobachtung": true
 }
