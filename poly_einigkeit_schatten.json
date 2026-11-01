@@ -1,34 +1,5 @@
 [
 {
-"k": "nor2-sif-kil-2026-10-14|Stroemsgodset IF",
-"key": "nor2-sif-kil-2026-10-14",
-"side": "Stroemsgodset IF",
-"wallet": "0x200298f83227a9665d142f64264ce812d05da75e",
-"wallets": [
-"0x200298f83227a9665d142f64264ce812d05da75e",
-"0x5f962be8a9805477f98d2a2a35396e34f241ba93"
-],
-"nWallets": 2,
-"league": "SOCCER",
-"cat": "Fußball",
-"usd": 148.0,
-"maxEinzel": 119.0,
-"pushPrice": 0.585,
-"whaleEntry": 0.585,
-"htkMess": 0.03,
-"sentAt": "2026-10-14T16:59:02Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "win",
-"winner": "Stroemsgodset IF",
-"closePrice": 0.585,
-"stake": 10.0,
-"pnl": 7.09,
-"clvPP": 0.0,
-"settledTs": "2026-10-14T20:59:06.408944+00:00",
-"resolvedTs": "2026-10-14T20:58:47.339457+00:00"
-},
-{
 "k": "ucl-shd-aek1-2026-10-14-more-markets|Over",
 "key": "ucl-shd-aek1-2026-10-14-more-markets",
 "side": "Over",
@@ -24245,7 +24216,8 @@
 "htkMess": 2.67,
 "sentAt": "2026-11-01T13:50:18Z",
 "status": "pending",
-"nurBeobachtung": true
+"nurBeobachtung": true,
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)"
 },
 {
 "k": "epl-liv-ars-2026-11-01|Liverpool FC",
@@ -24399,18 +24371,18 @@
 "whaleEntry": 0.425,
 "htkMess": 0.45,
 "sentAt": "2026-11-01T15:48:43Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0xd471f7b653fad70d63ffef9f9195400fd5490ce81dab7efeea8c4196bd840106",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Under",
 "closePrice": 0.425,
-"stake": 10.0,
-"pnl": 13.53,
-"clvPP": 0.0,
 "settledTs": "2026-11-01T18:47:51.886440+00:00",
-"resolvedTs": "2026-11-01T18:47:30.988456+00:00"
+"resolvedTs": "2026-11-01T18:47:30.988456+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-11-01T19:17:00.663155+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "por-aro-nac-2026-11-01|FC Arouca",
@@ -24557,6 +24529,27 @@
 "whaleEntry": 0.505,
 "htkMess": 2.63,
 "sentAt": "2026-11-01T18:47:51Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "cs2-100t-wc1-2026-11-01|100 Thieves",
+"key": "cs2-100t-wc1-2026-11-01",
+"side": "100 Thieves",
+"wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+"wallets": [
+"0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+"0xa81aff34f8d19eb7434a655ec6aad2821bedb5a3"
+],
+"nWallets": 2,
+"league": "ESPORTS",
+"cat": "E-Sport",
+"usd": 9757.0,
+"maxEinzel": 9734.0,
+"pushPrice": 0.765,
+"whaleEntry": 0.765,
+"htkMess": 1.22,
+"sentAt": "2026-11-01T19:16:59Z",
 "status": "pending",
 "nurBeobachtung": true
 }
