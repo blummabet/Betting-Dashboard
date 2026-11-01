@@ -1,15 +1,15 @@
 {
- "n": 745,
+ "n": 744,
  "minOdds": 1.35,
- "moneyHitRate": 0.408,
- "priceHitRate": 0.417,
- "brierMoney": 0.8273,
- "brierPrice": 0.6773,
+ "moneyHitRate": 0.407,
+ "priceHitRate": 0.418,
+ "brierMoney": 0.8284,
+ "brierPrice": 0.6775,
  "disagree": {
-  "n": 192,
+  "n": 189,
   "moneyWon": 33,
-  "priceWon": 40,
-  "neither": 119
+  "priceWon": 41,
+  "neither": 115
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -55,14 +55,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EPL",
-   "n": 66,
-   "moneyHitRate": 0.258,
-   "brierMoney": 0.8742,
-   "brierPrice": 0.7796,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "SOCCER:COL",
    "n": 33,
    "moneyHitRate": 0.515,
@@ -84,6 +76,14 @@
    "moneyHitRate": 0.5,
    "brierMoney": 0.6939,
    "brierPrice": 0.5917,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EPL",
+   "n": 65,
+   "moneyHitRate": 0.246,
+   "brierMoney": 0.8875,
+   "brierPrice": 0.7835,
    "verdict": "preis_besser"
   },
   {
@@ -120,8 +120,8 @@
   }
  ],
  "guete": {
-  "belastbar": 745,
-  "preis_echo": 509,
+  "belastbar": 744,
+  "preis_echo": 510,
   "abgeschnitten": 170,
   "unbekannt": 0,
   "leer": 0
@@ -500,18 +500,6 @@
    "totalUsd": 498873
   },
   {
-   "key": "epl-sun-bri-2026-10-10",
-   "league": "EPL",
-   "winner": "Brighton & Hove Albion FC",
-   "moneyFav": "Brighton & Hove Albion FC",
-   "priceFav": "Brighton & Hove Albion FC",
-   "moneyShare": 0.944,
-   "priceProb": 0.407,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 481286
-  },
-  {
    "key": "epl-tot-cov-2026-10-19",
    "league": "EPL",
    "winner": "Tottenham Hotspur FC",
@@ -576,7 +564,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -606,9 +594,21 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 409150
+  },
+  {
+   "key": "por-aro-ama-2026-10-11",
+   "league": "PRIMEIRA-LIGA",
+   "winner": "FC Arouca",
+   "moneyFav": "FC Arouca",
+   "priceFav": "FC Arouca",
+   "moneyShare": 0.974,
+   "priceProb": 0.453,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 399480
   }
  ],
- "generatedAt": "2026-11-01T00:14:02.797509+00:00",
+ "generatedAt": "2026-11-01T00:30:24.974140+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -617,7 +617,7 @@
   "mlb": 419,
   "nhl": 624,
   "mls": 583,
-  "epl": 556,
+  "epl": 555,
   "soccer": 800,
   "tennis": 800,
   "ucl": 544,
@@ -631,12 +631,12 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 652,
+  "esports": 654,
   "cs2": 422,
   "lol": 434,
   "dota": 29,
   "valorant": 440,
-  "ufc": 466,
+  "ufc": 465,
   "mma": 62,
   "boxing": 325,
   "golf": 425,
@@ -674,7 +674,7 @@
   "norway-eliteserien": 472,
   "peru-liga-1": 179,
   "poland-ekstraklasa": 425,
-  "premier-league": 529,
+  "premier-league": 528,
   "romania-superliga": 180,
   "saudi-professional-league": 482,
   "scotland-league-cup": 203,
@@ -693,7 +693,7 @@
   "womens-champions-league": 445
  },
  "rawBySeries": {
-  "10188": 522,
+  "10188": 521,
   "10193": 552,
   "10194": 477,
   "10195": 541,
@@ -705,47 +705,47 @@
   "sweepAdded": 417
  },
  "vorStats": {
-  "kandidaten": 2,
+  "kandidaten": 1,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 2,
-  "calls": 2
+  "mitAnteilen": 1,
+  "calls": 1
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1860,
-   "usd": 55061115,
+   "n": 1453,
+   "usd": 45327781,
    "beispiel": "fifwc-bra-nor-2026-07-05-more-markets"
   },
   "wnba": {
-   "n": 351,
-   "usd": 2367091,
+   "n": 482,
+   "usd": 2688341,
    "beispiel": "wnba-gsv-atl-2026-10-29"
-  },
-  "world": {
-   "n": 48,
-   "usd": 1553700,
-   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "presidential": {
    "n": 19,
-   "usd": 1236458,
+   "usd": 1236222,
    "beispiel": "presidential-election-winner-2028"
   },
+  "world": {
+   "n": 44,
+   "usd": 1116070,
+   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
+  },
   "ecs": {
-   "n": 8,
-   "usd": 1024933,
+   "n": 6,
+   "usd": 1015758,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "cbb": {
-   "n": 124,
-   "usd": 900760,
+   "n": 67,
+   "usd": 489556,
    "beispiel": "cbb-stbr-neast-2026-01-22"
   },
   "worlds": {
-   "n": 30,
-   "usd": 334551,
+   "n": 31,
+   "usd": 340523,
    "beispiel": "worlds-2026-winner"
   },
   "usc": {
@@ -765,18 +765,18 @@
   },
   "fed": {
    "n": 16,
-   "usd": 288811,
+   "usd": 289982,
    "beispiel": "fed-decision-in-january-20260729233815502"
+  },
+  "brazil": {
+   "n": 27,
+   "usd": 257672,
+   "beispiel": "brazil-presidential-election"
   },
   "uefa": {
    "n": 13,
    "usd": 256205,
    "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
-  },
-  "brazil": {
-   "n": 26,
-   "usd": 253342,
-   "beispiel": "brazil-presidential-election"
   },
   "ballon": {
    "n": 7,
@@ -789,29 +789,29 @@
    "beispiel": "democratic-presidential-nominee-2028"
   },
   "who": {
-   "n": 9,
-   "usd": 222117,
+   "n": 10,
+   "usd": 225440,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
-  "pro": {
-   "n": 23,
-   "usd": 205917,
-   "beispiel": "pro-football-nfc-east-champion"
-  },
   "us": {
-   "n": 18,
-   "usd": 194041,
+   "n": 20,
+   "usd": 198542,
    "beispiel": "us-recession-by-end-of-2026"
   },
-  "ncaa": {
-   "n": 11,
-   "usd": 170374,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
+  "pro": {
+   "n": 22,
+   "usd": 195036,
+   "beispiel": "pro-football-nfc-east-champion"
   },
   "btc": {
    "n": 30,
    "usd": 159588,
    "beispiel": "btc-updown-5m-1784351400"
+  },
+  "nbasl": {
+   "n": 17,
+   "usd": 158188,
+   "beispiel": "nbasl-bos-cha-2026-07-12"
   }
  }
 }
