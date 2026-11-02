@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-01T22:16:49.009435+00:00",
+  "timestamp": "2026-11-02T09:30:45.020606+00:00",
   "checked": 11,
   "errors": 0,
   "warnings": 7,
-  "infos": 32,
+  "infos": 34,
   "issues": [
     {
       "date": "04.11.2026",
@@ -65,15 +65,6 @@
       "away": "Osasuna",
       "league": "La Liga",
       "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Osasuna: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "02.11.2026",
-      "home": "Deportivo La Coruna",
-      "away": "Osasuna",
-      "league": "La Liga",
-      "severity": "INFO",
       "code": "CARDS35_LOW_FV",
       "msg": "Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
     },
@@ -85,6 +76,24 @@
       "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "02.11.2026",
+      "home": "Deportivo La Coruna",
+      "away": "Osasuna",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=1.80, H2H Ø=2.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+    },
+    {
+      "date": "02.11.2026",
+      "home": "Deportivo La Coruna",
+      "away": "Osasuna",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "02.11.2026",
@@ -182,15 +191,6 @@
       "away": "Parma",
       "league": "Serie A",
       "severity": "INFO",
-      "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 4.5 Punkte: Parma (9.0) vs Atalanta (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
-    },
-    {
-      "date": "02.11.2026",
-      "home": "Atalanta",
-      "away": "Parma",
-      "league": "Serie A",
-      "severity": "INFO",
       "code": "LOW_MOTIV_CARDS_CHECK",
       "msg": "Parma: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
     },
@@ -220,6 +220,24 @@
       "severity": "WARN",
       "code": "U25_H2H_HARD_BLOCK_MISS",
       "msg": "H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
+    },
+    {
+      "date": "02.11.2026",
+      "home": "Atalanta",
+      "away": "Parma",
+      "league": "Serie A",
+      "severity": "INFO",
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=0.70, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+    },
+    {
+      "date": "02.11.2026",
+      "home": "Atalanta",
+      "away": "Parma",
+      "league": "Serie A",
+      "severity": "INFO",
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=0.70 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "02.11.2026",
