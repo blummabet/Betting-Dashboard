@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-02T04:31:57.165953+00:00",
+"generatedAt": "2026-11-02T04:47:04.330646+00:00",
 "n": 138,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
@@ -26,7 +26,7 @@
 "league": "Italian Serie A",
 "kickoff": "2026-11-02T17:30:00Z",
 "verdict": "konsens",
-"totVol": 15090
+"totVol": 15120
 },
 "36213102": {
 "moneySide": "home",
@@ -53,7 +53,7 @@
 "league": "Mongolian Premier League",
 "kickoff": "2026-11-02T05:00:00Z",
 "verdict": "no_anchor",
-"totVol": 176,
+"totVol": 182,
 "ankerGrund": {
 "spiel": "Hunters FC v FC Ulaanbaatar",
 "grund": "kein_kandidat"
@@ -75,21 +75,6 @@
 "naechster": "Platense v Central Córdoba"
 }
 },
-"36268285": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Ukrainian Persha Liga",
-"kickoff": "2026-11-02T10:00:00Z",
-"verdict": "no_anchor",
-"totVol": 56,
-"ankerGrund": {
-"spiel": "FC Kolos Kovalivka 2 v FK Metal Kharkiv",
-"grund": "kein_kandidat"
-}
-},
 "36261454": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -104,6 +89,21 @@
 "spiel": "Ulinzi Stars v Mathare United FC",
 "grund": "kein_kandidat",
 "naechster": "New York Red Bulls v Atlanta United FC"
+}
+},
+"36268285": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Ukrainian Persha Liga",
+"kickoff": "2026-11-02T10:00:00Z",
+"verdict": "no_anchor",
+"totVol": 142,
+"ankerGrund": {
+"spiel": "FC Kolos Kovalivka 2 v FK Metal Kharkiv",
+"grund": "kein_kandidat"
 }
 },
 "36223235": {
@@ -297,22 +297,6 @@
 "verdict": "konsens",
 "totVol": 6275
 },
-"36223262": {
-"moneySide": "home",
-"moneyName": "Dortmund",
-"poly": null,
-"pinn": {
-"home": 0.5593,
-"draw": 0.2266,
-"away": 0.2141,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "UEFA Champions League",
-"kickoff": "2026-11-04T20:00:00Z",
-"verdict": "konsens",
-"totVol": 5442
-},
 "36265084": {
 "moneySide": "away",
 "moneyName": "Al Nassr",
@@ -331,12 +315,28 @@
 "league": "AFC Champions League",
 "kickoff": "2026-11-02T13:45:00Z",
 "verdict": "no_anchor",
-"totVol": 4188,
+"totVol": 4307,
 "ankerGrund": {
 "spiel": "Pakhtakor v Al Nassr",
 "grund": "kein_kandidat",
 "naechster": "Al-Hazem v Al-Nassr"
 }
+},
+"36223262": {
+"moneySide": "home",
+"moneyName": "Dortmund",
+"poly": null,
+"pinn": {
+"home": 0.5593,
+"draw": 0.2266,
+"away": 0.2141,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "UEFA Champions League",
+"kickoff": "2026-11-04T20:00:00Z",
+"verdict": "konsens",
+"totVol": 5442
 },
 "36223248": {
 "moneySide": "away",
@@ -421,9 +421,9 @@
 "moneyName": "Rennes",
 "poly": null,
 "pinn": {
-"home": 0.4542,
-"draw": 0.2628,
-"away": 0.283,
+"home": 0.4484,
+"draw": 0.2639,
+"away": 0.2877,
 "fav": "home"
 },
 "pinnMove": null,
@@ -480,15 +480,15 @@
 }
 },
 "36262357": {
-"moneySide": "home",
-"moneyName": "Al Wasl",
+"moneySide": "away",
+"moneyName": "Al Quwa Al Jawiya",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "AFC Champions League",
 "kickoff": "2026-11-02T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 14,
+"totVol": 20,
 "ankerGrund": {
 "spiel": "Al Wasl v Al Quwa Al Jawiya",
 "kandidat": "Al-Kholood v Al-Khaleej",
@@ -515,19 +515,47 @@
 }
 },
 "36270559": {
-"moneySide": "home",
-"moneyName": "Jeonbuk Motors",
+"moneySide": "away",
+"moneyName": "Johor Darul Ta'zim",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "AFC Champions League",
 "kickoff": "2026-11-03T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 4,
 "ankerGrund": {
 "spiel": "Jeonbuk Motors v Johor Darul Ta'zim",
 "grund": "kein_kandidat",
 "naechster": "Gangwon FC v Jeonbuk Hyundai Motors"
+}
+},
+"36270563": {
+"moneySide": "home",
+"moneyName": "Al-Hilal",
+"poly": {
+"vol": 8945,
+"odd": 2.9,
+"sharePct": 34,
+"shareSrc": "preis",
+"key": "acle-sad-aas-2026-11-02",
+"sideKey": "Al Sadd SC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "AFC Champions League",
+"kickoff": "2026-11-03T18:15:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Al-Hilal v Al Ahli (UAE)",
+"kandidat": "Al-Ettifaq v Al-Hilal",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.33,
+"grund": "zeit",
+"abstandH": 92.2
 }
 },
 "36244691": {
@@ -548,7 +576,7 @@
 "league": "Argentinian Primera Nacional",
 "kickoff": "2026-11-02T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 14036,
+"totVol": 14096,
 "ankerGrund": {
 "spiel": "All Boys v Estudiantes de Caseros",
 "grund": "kein_kandidat",
@@ -578,7 +606,7 @@
 "league": "Brazilian Serie A",
 "kickoff": "2026-11-02T23:00:00Z",
 "verdict": "konsens",
-"totVol": 4127
+"totVol": 4194
 },
 "36266532": {
 "moneySide": "draw",
@@ -684,7 +712,7 @@
 "league": "Algerian Ligue 1",
 "kickoff": "2026-11-02T16:45:00Z",
 "verdict": "no_anchor",
-"totVol": 60,
+"totVol": 65,
 "ankerGrund": {
 "spiel": "Cr Temouchent v US Biskra",
 "grund": "kein_kandidat",
@@ -714,7 +742,7 @@
 "league": "Argentinian Primera Division",
 "kickoff": "2026-11-02T22:00:00Z",
 "verdict": "konsens",
-"totVol": 2496
+"totVol": 2527
 },
 "36241644": {
 "moneySide": "home",
@@ -750,7 +778,7 @@
 "league": "Egyptian League Cup",
 "kickoff": "2026-11-02T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 2383,
+"totVol": 2632,
 "ankerGrund": {
 "spiel": "Al Ahly Cairo v Al Mokawloon",
 "kandidat": "Al-Kholood v Al-Khaleej",
@@ -864,16 +892,16 @@
 "league": "Spanish Segunda Division",
 "kickoff": "2026-11-02T15:15:00Z",
 "verdict": "konsens",
-"totVol": 1012
+"totVol": 1034
 },
 "36211668": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": null,
 "pinn": {
-"home": 0.4347,
-"draw": 0.2988,
-"away": 0.2666,
+"home": 0.4366,
+"draw": 0.2969,
+"away": 0.2665,
 "fav": "home"
 },
 "pinnMove": null,
@@ -948,31 +976,6 @@
 "verdict": "uneinig",
 "totVol": 581
 },
-"36247546": {
-"moneySide": "away",
-"moneyName": "Slask Wroclaw",
-"poly": {
-"vol": 785,
-"odd": 3.28,
-"sharePct": 30,
-"shareSrc": "preis",
-"key": "pol-rad-sla-2026-11-02",
-"sideKey": "WKS Slask Wroclaw",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4425,
-"draw": 0.2547,
-"away": 0.3029,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Polish Ekstraklasa",
-"kickoff": "2026-11-02T17:00:00Z",
-"verdict": "uneinig",
-"totVol": 140
-},
 "36245965": {
 "moneySide": "home",
 "moneyName": "Landskrona",
@@ -997,6 +1000,31 @@
 "kickoff": "2026-11-02T18:05:00Z",
 "verdict": "konsens",
 "totVol": 846
+},
+"36247546": {
+"moneySide": "away",
+"moneyName": "Slask Wroclaw",
+"poly": {
+"vol": 785,
+"odd": 3.28,
+"sharePct": 30,
+"shareSrc": "preis",
+"key": "pol-rad-sla-2026-11-02",
+"sideKey": "WKS Slask Wroclaw",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4425,
+"draw": 0.2547,
+"away": 0.3029,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Polish Ekstraklasa",
+"kickoff": "2026-11-02T17:00:00Z",
+"verdict": "uneinig",
+"totVol": 140
 },
 "36261361": {
 "moneySide": "home",
@@ -1023,7 +1051,7 @@
 "league": "Georgian Umaglesi Liga",
 "kickoff": "2026-11-02T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 536,
+"totVol": 538,
 "ankerGrund": {
 "spiel": "Torpedo Kutaisi v Dila Gori",
 "grund": "kein_kandidat"
@@ -1038,7 +1066,7 @@
 "league": "Greek Super League 2",
 "kickoff": "2026-11-02T13:00:00Z",
 "verdict": "no_anchor",
-"totVol": 654,
+"totVol": 2427,
 "ankerGrund": {
 "spiel": "Marko v Apollon Kalamarias",
 "grund": "kein_kandidat"
@@ -1059,22 +1087,6 @@
 "kickoff": "2026-11-02T20:00:00Z",
 "verdict": "konsens",
 "totVol": 663
-},
-"36254382": {
-"moneySide": "away",
-"moneyName": "Koper",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Slovenian Premier League",
-"kickoff": "2026-11-02T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 108,
-"ankerGrund": {
-"spiel": "NK Bravo v Koper",
-"grund": "kein_kandidat",
-"naechster": "SK Sturm Graz v NK Celje"
-}
 },
 "36244205": {
 "moneySide": "away",
@@ -1098,6 +1110,22 @@
 "ankerGrund": {
 "spiel": "Radnicki Nis v Zeleznicar Pancevo",
 "grund": "kein_kandidat"
+}
+},
+"36254382": {
+"moneySide": "away",
+"moneyName": "Koper",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Slovenian Premier League",
+"kickoff": "2026-11-02T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 108,
+"ankerGrund": {
+"spiel": "NK Bravo v Koper",
+"grund": "kein_kandidat",
+"naechster": "SK Sturm Graz v NK Celje"
 }
 },
 "36242129": {
@@ -1271,6 +1299,22 @@
 "grund": "kein_kandidat"
 }
 },
+"36258200": {
+"moneySide": "away",
+"moneyName": "Melgar",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Peruvian Primera Division",
+"kickoff": "2026-11-02T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 61,
+"ankerGrund": {
+"spiel": "Sport Huancayo v Melgar",
+"grund": "kein_kandidat",
+"naechster": "Operario PR v Sport Recife"
+}
+},
 "36214487": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1311,22 +1355,6 @@
 "naechster": "New York Red Bulls v Atlanta United FC"
 }
 },
-"36258200": {
-"moneySide": "away",
-"moneyName": "Melgar",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Peruvian Primera Division",
-"kickoff": "2026-11-02T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 61,
-"ankerGrund": {
-"spiel": "Sport Huancayo v Melgar",
-"grund": "kein_kandidat",
-"naechster": "Operario PR v Sport Recife"
-}
-},
 "36213662": {
 "moneySide": "home",
 "moneyName": "Atromitos",
@@ -1342,6 +1370,21 @@
 "kickoff": "2026-11-02T16:00:00Z",
 "verdict": "konsens",
 "totVol": 191
+},
+"36247672": {
+"moneySide": "away",
+"moneyName": "Septemvri",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Bulgarian A League",
+"kickoff": "2026-11-02T17:30:00Z",
+"verdict": "no_anchor",
+"totVol": 186,
+"ankerGrund": {
+"spiel": "Arda v Septemvri",
+"grund": "kein_kandidat"
+}
 },
 "36244364": {
 "moneySide": "home",
@@ -1423,7 +1466,7 @@
 "league": "Israeli Premier League",
 "kickoff": "2026-11-02T18:30:00Z",
 "verdict": "no_anchor",
-"totVol": 116,
+"totVol": 120,
 "ankerGrund": {
 "spiel": "Hapoel Tel Aviv v Maccabi Haifa",
 "grund": "kein_kandidat",
@@ -1489,7 +1532,7 @@
 "league": "Ukrainian Premier League",
 "kickoff": "2026-11-02T11:00:00Z",
 "verdict": "no_anchor",
-"totVol": 159,
+"totVol": 168,
 "ankerGrund": {
 "spiel": "Zorya v FC Epicentr Dunaivtsi",
 "grund": "kein_kandidat"
@@ -1585,21 +1628,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36247672": {
-"moneySide": "away",
-"moneyName": "Septemvri",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Bulgarian A League",
-"kickoff": "2026-11-02T17:30:00Z",
-"verdict": "no_anchor",
-"totVol": 171,
-"ankerGrund": {
-"spiel": "Arda v Septemvri",
-"grund": "kein_kandidat"
-}
-},
 "36245992": {
 "moneySide": "away",
 "moneyName": "Radnik Surdulica",
@@ -1655,21 +1683,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36255506": {
-"moneySide": "home",
-"moneyName": "Kayserispor",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Turkish 1 Lig",
-"kickoff": "2026-11-02T17:00:00Z",
-"verdict": "no_anchor",
-"totVol": 46,
-"ankerGrund": {
-"spiel": "Kayserispor v Muglaspor",
-"grund": "kein_kandidat"
-}
-},
 "36242149": {
 "moneySide": "home",
 "moneyName": "Reims",
@@ -1695,6 +1708,21 @@
 "verdict": "konsens",
 "totVol": 35
 },
+"36255506": {
+"moneySide": "home",
+"moneyName": "Kayserispor",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Turkish 1 Lig",
+"kickoff": "2026-11-02T17:00:00Z",
+"verdict": "no_anchor",
+"totVol": 55,
+"ankerGrund": {
+"spiel": "Kayserispor v Muglaspor",
+"grund": "kein_kandidat"
+}
+},
 "36244209": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1711,6 +1739,22 @@
 "verdict": "uneinig",
 "totVol": 21
 },
+"36214488": {
+"moneySide": "away",
+"moneyName": "FCSB",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Romanian Liga I",
+"kickoff": "2026-11-02T18:30:00Z",
+"verdict": "no_anchor",
+"totVol": 54,
+"ankerGrund": {
+"spiel": "Universitatea Cluj v FCSB",
+"grund": "kein_kandidat",
+"naechster": "Universitatea Craiova v KF Egnatia"
+}
+},
 "36246458": {
 "moneySide": "home",
 "moneyName": "Novara",
@@ -1726,20 +1770,29 @@
 "grund": "kein_kandidat"
 }
 },
-"36214488": {
+"36244210": {
 "moneySide": "away",
-"moneyName": "FCSB",
-"poly": null,
+"moneyName": "Dynamo Kiev",
+"poly": {
+"vol": 535,
+"odd": 1.46,
+"sharePct": 68,
+"shareSrc": "preis",
+"key": "ukr1-kry-dyn-2026-11-02",
+"sideKey": "FK Dynamo Kyiv",
+"whales": null,
+"whaleUsd": null
+},
 "pinn": null,
 "pinnMove": null,
-"league": "Romanian Liga I",
-"kickoff": "2026-11-02T18:30:00Z",
+"league": "Ukrainian Premier League",
+"kickoff": "2026-11-02T11:00:00Z",
 "verdict": "no_anchor",
-"totVol": 54,
+"totVol": 128,
 "ankerGrund": {
-"spiel": "Universitatea Cluj v FCSB",
+"spiel": "Kryvbas Krivyi Rih v Dynamo Kiev",
 "grund": "kein_kandidat",
-"naechster": "Universitatea Craiova v KF Egnatia"
+"naechster": "Portland Timbers v Houston Dynamo"
 }
 },
 "36252589": {
@@ -1773,29 +1826,19 @@
 "grund": "kein_kandidat"
 }
 },
-"36244210": {
-"moneySide": "away",
-"moneyName": "Dynamo Kiev",
-"poly": {
-"vol": 535,
-"odd": 1.46,
-"sharePct": 68,
-"shareSrc": "preis",
-"key": "ukr1-kry-dyn-2026-11-02",
-"sideKey": "FK Dynamo Kyiv",
-"whales": null,
-"whaleUsd": null
-},
+"36243936": {
+"moneySide": "home",
+"moneyName": "Polonia Bytom",
+"poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Ukrainian Premier League",
-"kickoff": "2026-11-02T11:00:00Z",
+"league": "Polish I Liga",
+"kickoff": "2026-11-02T17:00:00Z",
 "verdict": "no_anchor",
-"totVol": 66,
+"totVol": 18,
 "ankerGrund": {
-"spiel": "Kryvbas Krivyi Rih v Dynamo Kiev",
-"grund": "kein_kandidat",
-"naechster": "Portland Timbers v Houston Dynamo"
+"spiel": "Polonia Bytom v Odra Opole",
+"grund": "kein_kandidat"
 }
 },
 "36267633": {
@@ -1839,7 +1882,7 @@
 "league": "Ethiopian Premier League",
 "kickoff": "2026-11-02T12:00:00Z",
 "verdict": "no_anchor",
-"totVol": 7,
+"totVol": 9,
 "ankerGrund": {
 "spiel": "Ethiopia Nigd Bank v Ethiopian Medhin",
 "grund": "kein_kandidat"
@@ -1861,19 +1904,39 @@
 "naechster": "Fortaleza v Atletico Goianiense"
 }
 },
-"36243936": {
+"36261485": {
 "moneySide": "home",
-"moneyName": "Polonia Bytom",
+"moneyName": "Posta Rangers",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Polish I Liga",
-"kickoff": "2026-11-02T17:00:00Z",
+"league": "Kenyan Premier League",
+"kickoff": "2026-11-02T11:00:00Z",
 "verdict": "no_anchor",
-"totVol": 17,
+"totVol": 1,
 "ankerGrund": {
-"spiel": "Polonia Bytom v Odra Opole",
-"grund": "kein_kandidat"
+"spiel": "Posta Rangers v 3K Football Club",
+"grund": "kein_kandidat",
+"naechster": "Stafford Rangers FC v Grimsby Town"
+}
+},
+"36267006": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Saudi 1st Division",
+"kickoff": "2026-11-02T14:55:00Z",
+"verdict": "no_anchor",
+"totVol": 18,
+"ankerGrund": {
+"spiel": "Al-Zulfi SC v Al-Jndal",
+"kandidat": "Al-Kholood v Al-Khaleej",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 70.5
 }
 },
 "36258190": {
@@ -1933,37 +1996,18 @@
 }
 },
 "36252794": {
-"moneySide": "home",
-"moneyName": "Zhytomyr 2",
+"moneySide": "away",
+"moneyName": "Oleksandria",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Ukrainian Persha Liga",
 "kickoff": "2026-11-02T11:30:00Z",
 "verdict": "no_anchor",
-"totVol": 6,
+"totVol": 60,
 "ankerGrund": {
 "spiel": "Zhytomyr 2 v Oleksandria",
 "grund": "kein_kandidat"
-}
-},
-"36267006": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Saudi 1st Division",
-"kickoff": "2026-11-02T14:55:00Z",
-"verdict": "no_anchor",
-"totVol": 18,
-"ankerGrund": {
-"spiel": "Al-Zulfi SC v Al-Jndal",
-"kandidat": "Al-Kholood v Al-Khaleej",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 70.5
 }
 },
 "36269546": {
@@ -2098,7 +2142,7 @@
 "league": "Dutch Eerste Divisie",
 "kickoff": "2026-11-02T19:00:00Z",
 "verdict": "no_anchor",
-"totVol": 14,
+"totVol": 287,
 "ankerGrund": {
 "spiel": "Jong Ajax Amsterdam v Vitesse Arnhem",
 "grund": "kein_kandidat",
@@ -2154,6 +2198,37 @@
 "spiel": "Hapoel Azor v MS Jerusalem",
 "grund": "kein_kandidat",
 "naechster": "Hapoel Be'er Sheva v OFI Crete"
+}
+},
+"36266714": {
+"moneySide": "home",
+"moneyName": "Hapoel Kfar Shelem",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli National League",
+"kickoff": "2026-11-02T17:00:00Z",
+"verdict": "no_anchor",
+"totVol": 11,
+"ankerGrund": {
+"spiel": "Hapoel Kfar Shelem v Ironi Modiin",
+"grund": "kein_kandidat",
+"naechster": "Hapoel Be'er Sheva v OFI Crete"
+}
+},
+"36266512": {
+"moneySide": "home",
+"moneyName": "Tusker FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Kenyan Premier League",
+"kickoff": "2026-11-02T12:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Tusker FC v Mara Sugar FC",
+"grund": "kein_kandidat"
 }
 },
 "36266706": {
@@ -2269,22 +2344,6 @@
 "abstandH": 70.8
 }
 },
-"36266714": {
-"moneySide": "home",
-"moneyName": "Hapoel Kfar Shelem",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli National League",
-"kickoff": "2026-11-02T17:00:00Z",
-"verdict": "no_anchor",
-"totVol": 11,
-"ankerGrund": {
-"spiel": "Hapoel Kfar Shelem v Ironi Modiin",
-"grund": "kein_kandidat",
-"naechster": "Hapoel Be'er Sheva v OFI Crete"
-}
-},
 "36266588": {
 "moneySide": "home",
 "moneyName": "Molynes United FC",
@@ -2315,37 +2374,6 @@
 "spiel": "Hapoel Nof HaGalil v Beitar Nahariya",
 "grund": "kein_kandidat",
 "naechster": "Hapoel Be'er Sheva v OFI Crete"
-}
-},
-"36261485": {
-"moneySide": "home",
-"moneyName": "Posta Rangers",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Kenyan Premier League",
-"kickoff": "2026-11-02T11:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Posta Rangers v 3K Football Club",
-"grund": "kein_kandidat",
-"naechster": "Stafford Rangers FC v Grimsby Town"
-}
-},
-"36266512": {
-"moneySide": "home",
-"moneyName": "Tusker FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Kenyan Premier League",
-"kickoff": "2026-11-02T12:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Tusker FC v Mara Sugar FC",
-"grund": "kein_kandidat"
 }
 },
 "36270558": {
@@ -2395,21 +2423,6 @@
 "naechster": "Al-Kholood v Al-Khaleej"
 }
 },
-"36261497": {
-"moneySide": "home",
-"moneyName": "Shabana",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Kenyan Premier League",
-"kickoff": "2026-11-02T13:15:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Shabana v Police FC",
-"grund": "kein_kandidat"
-}
-},
 "36268250": {
 "moneySide": "home",
 "moneyName": "Mashujaa FC",
@@ -2422,6 +2435,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Mashujaa FC v Pamba FC",
+"grund": "kein_kandidat"
+}
+},
+"36261497": {
+"moneySide": "home",
+"moneyName": "Shabana",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Kenyan Premier League",
+"kickoff": "2026-11-02T13:15:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Shabana v Police FC",
 "grund": "kein_kandidat"
 }
 },
@@ -2466,25 +2494,25 @@
 "naechster": "Al-Kholood v Al-Khaleej"
 }
 },
-"36268377": {
-"moneySide": "home",
-"moneyName": "Independiente Yumbo",
+"36267712": {
+"moneySide": "draw",
+"moneyName": "The Draw",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Colombian Primera B",
+"league": "English U21 Premier League Cup",
 "kickoff": "2026-11-02T19:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 5,
 "ankerGrund": {
-"spiel": "Independiente Yumbo v Boca Juniors de Cali",
+"spiel": "Wycombe Wanderers U21 v Brentford U21",
 "grund": "kein_kandidat",
-"naechster": "Boca Juniors v Defensa y Justicia"
+"naechster": "Accrington Stanley v Wycombe Wanderers"
 }
 },
-"36267653": {
+"36267714": {
 "moneySide": "home",
-"moneyName": "Bolton U21",
+"moneyName": "Preston North End U21",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -2493,9 +2521,9 @@
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Bolton U21 v Queens Park Rangers U21",
+"spiel": "Preston North End U21 v Fleetwood Town U21",
 "grund": "kein_kandidat",
-"naechster": "Queens Park Rangers v Burnley"
+"naechster": "Preston North End v Sheffield United"
 }
 },
 "36267710": {
@@ -2530,9 +2558,9 @@
 "naechster": "Cardiff City v West Ham United"
 }
 },
-"36267712": {
+"36267653": {
 "moneySide": "home",
-"moneyName": "Wycombe Wanderers U21",
+"moneyName": "Bolton U21",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -2541,25 +2569,9 @@
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Wycombe Wanderers U21 v Brentford U21",
+"spiel": "Bolton U21 v Queens Park Rangers U21",
 "grund": "kein_kandidat",
-"naechster": "Accrington Stanley v Wycombe Wanderers"
-}
-},
-"36267714": {
-"moneySide": "home",
-"moneyName": "Preston North End U21",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "English U21 Premier League Cup",
-"kickoff": "2026-11-02T19:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Preston North End U21 v Fleetwood Town U21",
-"grund": "kein_kandidat",
-"naechster": "Preston North End v Sheffield United"
+"naechster": "Queens Park Rangers v Burnley"
 }
 }
 }
