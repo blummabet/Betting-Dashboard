@@ -271,10 +271,12 @@ jobs:
         run: ${{ env.BETFAIR_PY }} build_betfair_overview.py
         continue-on-error: true
 
-      - name: 📣 Betfair-Alerts (Trades-Channel + öffentlicher Moneyflow)
+      # 02.11.2026 (Lucas): Public-Moneyflow aus — der Public-Kanal bekommt seine Signale aus dem Geldradar.
+      - name: 📣 Betfair-Alerts (Trades-Channel; Public aus seit 02.11.)
         run: ${{ env.BETFAIR_PY }} betfair_alerts.py
         continue-on-error: true
         env:
+          BF_PUBLIC_AUS:           "1"
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           # 🔴 21.09.2026: Diese Meldung ging in den OEFFENTLICHEN Kanal. `tg_send` faellt ohne
           # gesetzte TELEGRAM_CHAT_ID auf die feste oeffentliche ID zurueck, und dieses Secret
