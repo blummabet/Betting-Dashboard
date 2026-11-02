@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-02T02:46:51.322903+00:00",
+ "generatedAt": "2026-11-02T03:01:59.865055+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -1078,6 +1078,18 @@
    "belegte": 1
   },
   {
+   "strom": "poly",
+   "zerlegung": "nach Conviction",
+   "art": "conviction",
+   "gruppen": 8,
+   "basis": "1843 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1841,
+   "pl": 8.4,
+   "roi": 0.0046,
+   "clv": -0.153,
+   "belegte": 0
+  },
+  {
    "strom": "betfair",
    "zerlegung": "nach Markt",
    "art": "markt",
@@ -1088,18 +1100,6 @@
    "roi": 0.0038,
    "clv": 0.34,
    "belegte": 27
-  },
-  {
-   "strom": "poly",
-   "zerlegung": "nach Conviction",
-   "art": "conviction",
-   "gruppen": 8,
-   "basis": "1843 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1841,
-   "pl": 6.05,
-   "roi": 0.0033,
-   "clv": -0.153,
-   "belegte": 0
   }
  ],
  "spiele": [
@@ -5932,7 +5932,7 @@
     "nieAnteil": 0.115,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -6305,28 +6305,28 @@
   {
    "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
    "strom": "poly",
-   "n": 627,
+   "n": 628,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0092,
-   "pl": 5.77,
-   "roiLb": -0.0495,
+   "roi": 0.0113,
+   "pl": 7.12,
+   "roiLb": -0.0474,
    "clv": -0.172,
    "clvLb": -0.376,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": 0.032,
    "fehltN": 0,
-   "noetigNRoi": 25529,
+   "noetigNRoi": 16836,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 2644,
-    "lo": 390,
-    "hi": 211594,
-    "nieAnteil": 0.4,
+    "median": 2375,
+    "lo": 376,
+    "hi": 211182,
+    "nieAnteil": 0.37,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -6453,7 +6453,7 @@
     "nieAnteil": 0.258,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "mix",
    "wert": "money+sharp+steam"
   },
@@ -6640,6 +6640,62 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 743,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0206,
+   "pl": -15.28,
+   "roiLb": -0.0683,
+   "clv": 0.03,
+   "clvLb": -0.167,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.228,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": 17691,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 9545,
+    "lo": 776,
+    "hi": 1192918,
+    "nieAnteil": 0.723,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5
+  },
+  {
+   "schublade": "Mix money+steam",
+   "strom": "poly",
+   "n": 285,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.007,
+   "pl": 2.0,
+   "roiLb": -0.0686,
+   "clv": 0.001,
+   "clvLb": -0.763,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.764,
+   "fehltN": 0,
+   "noetigNRoi": 33001,
+   "noetigNClv": 160041862,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1477,
+    "lo": 178,
+    "hi": 234225,
+    "nieAnteil": 0.427,
+    "schaetzbar": false
+   },
+   "alterTage": 0.2,
+   "art": "mix",
+   "wert": "money+steam"
+  },
+  {
    "schublade": "Public · frisches Signal",
    "strom": "betfair",
    "n": 315,
@@ -6666,34 +6722,6 @@
    "avgOdd": 1.73
   },
   {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 743,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0237,
-   "pl": -17.63,
-   "roiLb": -0.0714,
-   "clv": 0.03,
-   "clvLb": -0.167,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.228,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": 17691,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 9416,
-    "lo": 716,
-    "hi": 811210,
-    "nieAnteil": 0.787,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5
-  },
-  {
    "schublade": "Italian Serie C · Both teams to Score?",
    "strom": "betfair",
    "n": 114,
@@ -6714,34 +6742,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+steam",
-   "strom": "poly",
-   "n": 286,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0035,
-   "pl": 1.0,
-   "roiLb": -0.072,
-   "clv": 0.001,
-   "clvLb": -0.763,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.764,
-   "fehltN": 0,
-   "noetigNRoi": 132983,
-   "noetigNClv": 160041862,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 2146,
-    "lo": 214,
-    "hi": 133154,
-    "nieAnteil": 0.5,
-    "schaetzbar": false
-   },
-   "alterTage": 0.2,
-   "art": "mix",
-   "wert": "money+steam"
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -7482,6 +7482,34 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 345,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.054,
+   "pl": -18.62,
+   "roiLb": -0.1337,
+   "clv": -0.123,
+   "clvLb": -0.414,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.167,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 6492,
+    "lo": 586,
+    "hi": 226964,
+    "nieAnteil": 0.85,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money"
+  },
+  {
    "schublade": "Spanish La Liga · First Half Goals 1.5",
    "strom": "betfair",
    "n": 34,
@@ -7524,34 +7552,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 344,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0581,
-   "pl": -19.97,
-   "roiLb": -0.1377,
-   "clv": -0.123,
-   "clvLb": -0.414,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.167,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 7753,
-    "lo": 829,
-    "hi": 264073,
-    "nieAnteil": 0.87,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "mix",
-   "wert": "bf+money"
   },
   {
    "schublade": "English Sky Bet League 1 · Half Time",
@@ -8200,7 +8200,7 @@
     "nieAnteil": 0.648,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "conviction",
    "wert": 8
   },
@@ -14321,7 +14321,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 10.1,
+   "alterTage": 10.2,
    "art": "conviction",
    "wert": 4
   },
