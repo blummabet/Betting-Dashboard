@@ -116,9 +116,10 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Man Utd v Roma (UEFA Champions League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $130521 fremdes Geld in einer Konsens-Zeile"
+        "Man Utd v Roma (UEFA Champions League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $144508 fremdes Geld in einer Konsens-Zeile",
+        "Genclerbirligi v Alanyaspor (Turkish Super League): Poly-Seite heisst „Draw“ und gehoert zu keinem der beiden Teams — $986 fremdes Geld in einer Konsens-Zeile"
       ],
-      "nFail": 1,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -126,10 +127,9 @@
       "label": "Poly-Markt gehoert zur selben Mannschaft",
       "severity": "error",
       "failures": [
-        "Poly-Markt acle-sad-aas-2026-11-02 haengt an 2 Betfair-Spielen: AFC Champions League/Al Ahli, AFC Champions League/Al-Hilal",
         "Poly-Markt isr-hta-mah-2026-11-02 haengt an 2 Betfair-Spielen: Israeli Premier League/Hapoel Tel Aviv, Israeli Liga Alef/Hapoel Al Fahm"
       ],
-      "nFail": 2,
+      "nFail": 1,
       "ok": false,
       "hinweis": "Nachwuchs- und Frauenteams teilen fast alle Tokens mit der ersten Mannschaft — der Namens-Score kann sie nicht trennen, der Marker schon."
     },
@@ -206,11 +206,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.5 %, UG +1.5 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+7.6 %, UG +1.6 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6543 (UG -5.9 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6540 (UG -6.0 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -263,8 +263,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 210 h — die Datei selbst ist 210 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 200 h — die Datei selbst ist 200 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 211 h — die Datei selbst ist 211 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 201 h — die Datei selbst ist 201 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -284,7 +284,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1070 Zeilen · 1057 abgerechnet · 3 offen"
+      "hinweis": "1072 Zeilen · 1058 abgerechnet · 4 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -332,7 +332,7 @@
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
       "failures": [
-        "liga-data.json: der Datenbau hat zuletzt vor 18 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+        "liga-data.json: der Datenbau hat zuletzt vor 19 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
       ],
       "nFail": 1,
       "ok": false,
@@ -342,7 +342,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 495.9 h, MLS 503.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 496.8 h, MLS 504.4 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -350,5 +350,5 @@
     }
   ],
   "nFail": 13,
-  "generatedAt": "2026-11-02T16:35:34.833752+00:00"
+  "generatedAt": "2026-11-02T17:31:14.699661+00:00"
 }
