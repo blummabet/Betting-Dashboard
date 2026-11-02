@@ -1626,6 +1626,10 @@ def build_public_message(a, trades=False) -> str:
 
 def _tg_public(text) -> bool:
     """An den ÖFFENTLICHEN CocoBet-Channel (TELEGRAM_CHAT_ID). Ohne Token/Chat → Vorschau (kein Send)."""
+    # 02.11.2026 (Lucas): der Public-Kanal bekommt seine Signale künftig aus dem Geldradar → BF_PUBLIC_AUS=1 schaltet hier ab
+    if os.environ.get("BF_PUBLIC_AUS") == "1":
+        print("PUBLIC abgeschaltet (BF_PUBLIC_AUS) — nichts gesendet")
+        return False
     token = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
     chat = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()   # 04.08.2026 (Lucas): Public-Channel-Fallback wie telegram_wm.py — TELEGRAM_CHAT_ID ist NICHT als Secret gesetzt; ohne Fallback lief der Public-Pfad still im Vorschau-Modus (nie gesendet).
     if not token or not chat:

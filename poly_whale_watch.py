@@ -2593,6 +2593,10 @@ def _log_dominanz_push(pkey, pos, scores, anteil, broad, ts) -> None:
 
 def _tg_public(text: str) -> bool:
     """An den ÖFFENTLICHEN CocoBet-Channel (TELEGRAM_CHAT_ID). Ohne Token/Chat → Vorschau."""
+    # 02.11.2026 (Lucas): der Public-Kanal bekommt seine Signale künftig aus dem Geldradar → POLY_PUBLIC_AUS=1 schaltet hier ab
+    if os.environ.get("POLY_PUBLIC_AUS") == "1":
+        print("PUBLIC abgeschaltet (POLY_PUBLIC_AUS) — nichts gesendet")
+        return False
     if not TELEGRAM_TOKEN or not PUB_CHAT:
         print("PUBLIC-Vorschau (kein TOKEN/CHAT_ID):")
         print(text); print()
