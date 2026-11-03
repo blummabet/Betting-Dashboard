@@ -253,6 +253,7 @@ jobs:
         continue-on-error: true
 
       - name: 🔓 Freigabe-Wechsel → Trades-Channel
+        if: false   # Lucas 03.11.2026: abgedreht („das brauchen wir nicht")
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -404,6 +405,7 @@ jobs:
       # faehrt zuverlaessig; das Skript entscheidet selbst, ob es dran ist (Fenster 06-10 UTC,
       # einmal je Tag), und schweigt, wenn nichts kaputt ist.
       - name: 🩺 Stoerungsmeldung (einmal am Tag, nur wenn etwas kaputt ist)
+        if: false   # Lucas 03.11.2026: abgedreht — altes Projekt wird zurückgebaut, die Meldung prüft v. a. tote Teile
         run: ${{ env.BETFAIR_PY }} stoerungsmeldung.py
         continue-on-error: true
         env:
