@@ -1,12 +1,12 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-02T19:52:13.113936+00:00",
+  "updatedAt": "2026-11-03T01:49:33.295106+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 25.0,
-    "proTag": 18.2,
+    "spanneH": 30.8,
+    "proTag": 14.8,
     "lueckeMinMin": 4.2,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 982.9,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 7,
-    "gelaufen": 7,
+    "erzeugt": 8,
+    "gelaufen": 8,
     "verdraengt": 0,
-    "spanneH": 51.1,
+    "spanneH": 57.5,
     "erzeugtProTag": 3.3,
-    "widerspruch": "erzeugtProTag 3.3 gegen eine gemessene Kadenz von 18.2/Tag (Faktor 5.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 3.3 gegen eine gemessene Kadenz von 14.8/Tag (Faktor 4.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-03T01:49:33.295106+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "41562181560",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/41562181560",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-03T01:49:03Z",
+      "startedAt": "2026-11-03T01:49:03Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 30.3,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-02T19:52:13.113936+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-11-01T19:00:00Z",
       "wartetS": 0.0,
       "laeuftSeitS": 41.5,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-01T18:52:21.594034+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "41338771018",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/41338771018",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-01T18:51:45Z",
-      "startedAt": "2026-11-01T18:51:45Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 36.6,
       "event": "workflow_dispatch"
     }
   ]
