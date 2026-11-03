@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-03T01:04:29.389707+00:00",
+ "generatedAt": "2026-11-03T01:19:27.673600+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -72,7 +72,7 @@
     "nieAnteil": 0.017,
     "schaetzbar": false
    },
-   "alterTage": 1.4,
+   "alterTage": 1.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -157,40 +157,6 @@
    }
   },
   {
-   "schublade": "Uruguayan Primera Division · First Half Goals 0.5",
-   "strom": "betfair",
-   "n": 32,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +16.5 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.5003,
-   "pl": 16.01,
-   "roiLb": 0.1654,
-   "clv": -0.06,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 36,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 398,
-    "erwartet": 19.9,
-    "nUeber": 29,
-    "ueberschuss": false
-   },
-   "zielN": 68,
-   "seitKandidat": {
-    "ab": "2026-10-24T13:03:11.310227+00:00",
-    "nBei": 38,
-    "nNeu": 0
-   }
-  },
-  {
    "schublade": "Brazilian Serie A · Match Odds",
    "strom": "betfair",
    "n": 50,
@@ -256,6 +222,40 @@
     "ab": "2026-10-27T17:04:48.538590+00:00",
     "nBei": 30,
     "nNeu": 20
+   }
+  },
+  {
+   "schublade": "Uruguayan Primera Division · First Half Goals 0.5",
+   "strom": "betfair",
+   "n": 33,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +12.2 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.4548,
+   "pl": 15.01,
+   "roiLb": 0.1217,
+   "clv": -0.06,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 35,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 398,
+    "erwartet": 19.9,
+    "nUeber": 29,
+    "ueberschuss": false
+   },
+   "zielN": 68,
+   "seitKandidat": {
+    "ab": "2026-10-24T13:03:11.310227+00:00",
+    "nBei": 38,
+    "nNeu": 0
    }
   },
   {
@@ -737,12 +737,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6458,
+   "n": 6457,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.5 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0517,
-   "pl": 333.88,
-   "roiLb": 0.0253,
+   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0522,
+   "pl": 337.06,
+   "roiLb": 0.0258,
    "clv": 0.33,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -765,7 +765,7 @@
    "seitKandidat": {
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
-    "nNeu": 121
+    "nNeu": 120
    }
   },
   {
@@ -1030,7 +1030,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -1058,7 +1058,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   }
@@ -1121,7 +1121,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 218.33,
+   "pl": 220.33,
    "roi": 0.0055,
    "clv": 0.33,
    "belegte": 28
@@ -2424,6 +2424,18 @@
    "belegt": false
   },
   {
+   "liga": "Uruguayan Primera Division",
+   "n": 230,
+   "wins": 114,
+   "hit": 0.4957,
+   "hitLb": 0.4418,
+   "roi": 0.0086,
+   "roiLb": -0.1252,
+   "pl": 1.97,
+   "clv": -0.024,
+   "belegt": false
+  },
+  {
    "liga": "English Women's Matches",
    "n": 32,
    "wins": 21,
@@ -2481,18 +2493,6 @@
    "roiLb": -0.1293,
    "pl": 2.22,
    "clv": -0.043,
-   "belegt": false
-  },
-  {
-   "liga": "Uruguayan Primera Division",
-   "n": 224,
-   "wins": 111,
-   "hit": 0.4955,
-   "hitLb": 0.441,
-   "roi": 0.0057,
-   "roiLb": -0.1295,
-   "pl": 1.28,
-   "clv": -0.008,
    "belegt": false
   },
   {
@@ -3060,18 +3060,6 @@
    "belegt": false
   },
   {
-   "liga": "Friendlies International U19",
-   "n": 86,
-   "wins": 43,
-   "hit": 0.5,
-   "hitLb": 0.4127,
-   "roi": 0.0677,
-   "roiLb": -0.1633,
-   "pl": 5.82,
-   "clv": -0.392,
-   "belegt": false
-  },
-  {
    "liga": "Turkish Cup",
    "n": 134,
    "wins": 69,
@@ -3201,6 +3189,18 @@
    "roiLb": -0.1775,
    "pl": 2.18,
    "clv": 0.377,
+   "belegt": false
+  },
+  {
+   "liga": "Friendlies International U19",
+   "n": 82,
+   "wins": 40,
+   "hit": 0.4878,
+   "hitLb": 0.3989,
+   "roi": 0.0611,
+   "roiLb": -0.179,
+   "pl": 5.01,
+   "clv": -0.411,
    "belegt": false
   },
   {
@@ -4744,7 +4744,7 @@
     "nieAnteil": 0.017,
     "schaetzbar": false
    },
-   "alterTage": 1.4,
+   "alterTage": 1.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4827,40 +4827,6 @@
    }
   },
   {
-   "schublade": "Uruguayan Primera Division · First Half Goals 0.5",
-   "strom": "betfair",
-   "n": 32,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +16.5 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.5003,
-   "pl": 16.01,
-   "roiLb": 0.1654,
-   "clv": -0.06,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 36,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 398,
-    "erwartet": 19.9,
-    "nUeber": 29,
-    "ueberschuss": false
-   },
-   "zielN": 68,
-   "seitKandidat": {
-    "ab": "2026-10-24T13:03:11.310227+00:00",
-    "nBei": 38,
-    "nNeu": 0
-   }
-  },
-  {
    "schublade": "Brazilian Serie A · Match Odds",
    "strom": "betfair",
    "n": 50,
@@ -4926,6 +4892,40 @@
     "ab": "2026-10-27T17:04:48.538590+00:00",
     "nBei": 30,
     "nNeu": 20
+   }
+  },
+  {
+   "schublade": "Uruguayan Primera Division · First Half Goals 0.5",
+   "strom": "betfair",
+   "n": 33,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +12.2 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.4548,
+   "pl": 15.01,
+   "roiLb": 0.1217,
+   "clv": -0.06,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 35,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 398,
+    "erwartet": 19.9,
+    "nUeber": 29,
+    "ueberschuss": false
+   },
+   "zielN": 68,
+   "seitKandidat": {
+    "ab": "2026-10-24T13:03:11.310227+00:00",
+    "nBei": 38,
+    "nNeu": 0
    }
   },
   {
@@ -5407,12 +5407,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6458,
+   "n": 6457,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.5 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0517,
-   "pl": 333.88,
-   "roiLb": 0.0253,
+   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 398 gleichzeitig geprüften Schubladen legt der Zufall allein 19.9 über diese Hürde, und drüber liegen 29. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0522,
+   "pl": 337.06,
+   "roiLb": 0.0258,
    "clv": 0.33,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -5435,7 +5435,7 @@
    "seitKandidat": {
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
-    "nNeu": 121
+    "nNeu": 120
    }
   },
   {
@@ -5700,7 +5700,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -5728,7 +5728,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -5844,7 +5844,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 4.1,
+   "alterTage": 4.2,
    "art": "mix",
    "wert": "sharp+steam"
   },
@@ -5873,12 +5873,12 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 4815,
+   "n": 4814,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0171,
-   "pl": 82.34,
-   "roiLb": -0.0163,
+   "roi": 0.0173,
+   "pl": 83.28,
+   "roiLb": -0.0161,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5898,9 +5898,9 @@
    "n": 5588,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0051,
-   "pl": 28.5,
-   "roiLb": -0.0166,
+   "roi": 0.0049,
+   "pl": 27.38,
+   "roiLb": -0.0168,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5984,12 +5984,12 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 6090,
+   "n": 6091,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0007,
-   "pl": -4.26,
-   "roiLb": -0.0213,
+   "roi": -0.0006,
+   "pl": -3.65,
+   "roiLb": -0.0212,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6143,7 +6143,7 @@
     "nieAnteil": 0.167,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -6154,9 +6154,9 @@
    "n": 4981,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0088,
-   "pl": -43.83,
-   "roiLb": -0.0334,
+   "roi": -0.009,
+   "pl": -44.83,
+   "roiLb": -0.0335,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6311,12 +6311,12 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 5858,
+   "n": 5859,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0192,
-   "pl": -112.47,
-   "roiLb": -0.0413,
+   "roi": -0.0193,
+   "pl": -113.08,
+   "roiLb": -0.0414,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6458,9 +6458,9 @@
    "n": 6540,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0177,
-   "pl": -115.93,
-   "roiLb": -0.0505,
+   "roi": -0.018,
+   "pl": -117.49,
+   "roiLb": -0.0508,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6470,10 +6470,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 105362,
-    "lo": 9722,
-    "hi": 19244618,
-    "nieAnteil": 0.817,
+    "median": 120862,
+    "lo": 7238,
+    "hi": 30990982,
+    "nieAnteil": 0.805,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -7600,7 +7600,7 @@
     "nieAnteil": 0.615,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -7636,6 +7636,28 @@
    "roi": 0.2067,
    "pl": 10.54,
    "roiLb": -0.1395,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Uruguayan Primera Division · Match Odds",
+   "strom": "betfair",
+   "n": 36,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.2353,
+   "pl": 8.47,
+   "roiLb": -0.1396,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -8500,28 +8522,6 @@
    "roi": -0.0481,
    "pl": -1.73,
    "roiLb": -0.2025,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Uruguayan Primera Division · Match Odds",
-   "strom": "betfair",
-   "n": 35,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1634,
-   "pl": 5.72,
-   "roiLb": -0.2026,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -10186,6 +10186,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Uruguayan Primera Division · Over/Under 3.5 Goals",
+   "strom": "betfair",
+   "n": 35,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0523,
+   "pl": -1.83,
+   "roiLb": -0.2852,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Mexican Liga MX · Match Odds",
    "strom": "betfair",
    "n": 42,
@@ -10414,28 +10436,6 @@
    "roi": 0.0058,
    "pl": 0.18,
    "roiLb": -0.3042,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Uruguayan Primera Division · Over/Under 3.5 Goals",
-   "strom": "betfair",
-   "n": 34,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0659,
-   "pl": -2.24,
-   "roiLb": -0.3047,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -11352,28 +11352,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Uruguayan Primera Division · Both teams to Score?",
-   "strom": "betfair",
-   "n": 35,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0674,
-   "pl": -2.36,
-   "roiLb": -0.355,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "UEFA Europa League · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 36,
@@ -11778,6 +11756,28 @@
    "roi": -0.1411,
    "pl": -6.49,
    "roiLb": -0.3755,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Uruguayan Primera Division · Both teams to Score?",
+   "strom": "betfair",
+   "n": 36,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0933,
+   "pl": -3.36,
+   "roiLb": -0.3761,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -12540,28 +12540,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Uruguayan Primera Division · Over/Under 2.5 Goals",
-   "strom": "betfair",
-   "n": 34,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1571,
-   "pl": -5.34,
-   "roiLb": -0.4325,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "English Premier League · Both teams to Score?",
    "strom": "betfair",
    "n": 40,
@@ -12816,6 +12794,28 @@
    "roi": -0.2285,
    "pl": -12.11,
    "roiLb": -0.45,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Uruguayan Primera Division · Over/Under 2.5 Goals",
+   "strom": "betfair",
+   "n": 35,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1811,
+   "pl": -6.34,
+   "roiLb": -0.4515,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -14057,7 +14057,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 4.5,
+   "alterTage": 4.6,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -14102,7 +14102,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 12.1,
+   "alterTage": 12.2,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -14234,7 +14234,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 106.5,
+   "alterTage": 106.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -14256,7 +14256,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 121.5,
+   "alterTage": 121.6,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
