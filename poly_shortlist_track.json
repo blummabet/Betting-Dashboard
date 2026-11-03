@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-03T03:47:24.476911+00:00",
+ "updatedAt": "2026-11-03T04:17:27.875305+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -36,12 +36,12 @@
    "needClvN": 19
   },
   "US-Sport": {
-   "n": 113,
-   "clvN": 31,
-   "clvAvg": -0.07,
-   "roi": 0.0388,
-   "hit": 0.708,
-   "roiUg": -0.069,
+   "n": 114,
+   "clvN": 32,
+   "clvAvg": 0.02,
+   "roi": 0.0409,
+   "hit": 0.7105,
+   "roiUg": -0.0661,
    "eligible": false,
    "kriterium": "Rendite-Untergrenze über null (der CLV wird angezeigt, entscheidet aber nicht)",
    "needN": 0,
@@ -299,66 +299,8 @@
    "Bündel: Auflösung nennt einen anderen Markt": 1
   }
  },
- "open": {
-  "nba-mil-min-2026-11-02|Timberwolves": {
-   "key": "nba-mil-min-2026-11-02",
-   "side": "Timberwolves",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "NBA",
-   "cat": "US-Sport",
-   "entryPrice": 0.785,
-   "firstTs": "2026-11-02T22:18:38.768351+00:00",
-   "lastPrice": 0.815,
-   "lastTs": "2026-11-03T03:47:24.476911+00:00",
-   "htkAtEntry": 2.689287777777778,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Timberwolves (78%) → $114K",
-    "🔥 scharfe Wallets (faktisch belegt) (3 Wallets, zusammen 201/341, 59% · 30 T Sport +$132K) · zählt 97%"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": -2.0,
-   "cond": "0xe4a383ec9db56fb2ae6f919bc77fd31cfe92661bf34c9e5389fc6d8e5364e4a9",
-   "frage": "Bucks vs. Timberwolves",
-   "closeRef": 0.815,
-   "closeRefTs": "2026-11-03T00:47:02.687543+00:00",
-   "closeQuelle": "close"
-  }
- },
+ "open": {},
  "settled": [
-  {
-   "key": "uzb1-nas-nef-2026-09-04-exact-score",
-   "side": "PFC Nasaf 0 - 0 FK Neftchi Fargona",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.075,
-   "closePrice": null,
-   "result": "loss",
-   "winner": "Any Other Score",
-   "pnl": -10.0,
-   "clvPP": null,
-   "stake": 10.0,
-   "public": false,
-   "signals": [
-    "money",
-    "bf"
-   ],
-   "firstTs": "2026-09-04T14:00:06.938528+00:00",
-   "ev": "2026-09-01",
-   "settledTs": "2026-09-04T18:34:05.954419+00:00",
-   "resolvedTs": "2026-09-04T18:34:04.835659+00:00",
-   "clvPPalt": 0.0,
-   "clvGrund": "schluss_vor_einstieg"
-  },
   {
    "key": "fl1-lyo-aja-2026-09-04",
    "side": "Olympique Lyonnais",
@@ -57739,20 +57681,49 @@
    "settledTs": "2026-11-03T03:47:24.476911+00:00",
    "resolvedTs": "2026-11-03T03:47:23.323708+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "nba-mil-min-2026-11-02",
+   "side": "Timberwolves",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "NBA",
+   "cat": "US-Sport",
+   "entryPrice": 0.785,
+   "closePrice": 0.815,
+   "closeRefTs": "2026-11-03T00:47:02.687543+00:00",
+   "closeQuelle": "close",
+   "result": "win",
+   "winner": "Timberwolves",
+   "pnl": 2.74,
+   "clvPP": 3.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-11-02T22:18:38.768351+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 2.689287777777778,
+   "settledTs": "2026-11-03T04:17:27.875305+00:00",
+   "resolvedTs": "2026-11-03T04:17:26.871036+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
    "n": 2000,
-   "wins": 1317,
-   "hit": 0.6585,
-   "pnl": 75.21,
+   "wins": 1318,
+   "hit": 0.659,
+   "pnl": 87.95,
    "stake": 20000.0,
-   "roi": 0.0038,
-   "roiUg": -0.0248,
+   "roi": 0.0044,
+   "roiUg": -0.0241,
    "belegt": false,
    "clvAvg": -0.17,
-   "clvN": 1164,
+   "clvN": 1165,
    "clvUg": -0.32
   },
   "public": {
@@ -57804,30 +57775,30 @@
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1841,
+   "n": 1840,
    "wins": 1203,
-   "hit": 0.6534,
-   "pnl": 65.34,
-   "stake": 18410.0,
-   "roi": 0.0035,
-   "roiUg": -0.0266,
+   "hit": 0.6538,
+   "pnl": 75.34,
+   "stake": 18400.0,
+   "roi": 0.0041,
+   "roiUg": -0.026,
    "belegt": false,
    "clvAvg": -0.17,
    "clvN": 1080,
    "clvUg": -0.32
   },
   "blocked": {
-   "n": 159,
-   "wins": 114,
-   "hit": 0.717,
-   "pnl": 9.87,
-   "stake": 1590.0,
-   "roi": 0.0062,
-   "roiUg": -0.0797,
+   "n": 160,
+   "wins": 115,
+   "hit": 0.7188,
+   "pnl": 12.61,
+   "stake": 1600.0,
+   "roi": 0.0079,
+   "roiUg": -0.0775,
    "belegt": false,
-   "clvAvg": -0.23,
-   "clvN": 84,
-   "clvUg": -0.7
+   "clvAvg": -0.19,
+   "clvN": 85,
+   "clvUg": -0.66
   },
   "byCat": {
    "Cricket": {
@@ -57857,13 +57828,13 @@
     "clvUg": -0.46
    },
    "Fußball": {
-    "n": 1094,
+    "n": 1093,
     "wins": 658,
-    "hit": 0.6015,
-    "pnl": 128.3,
-    "stake": 10940.0,
-    "roi": 0.0117,
-    "roiUg": -0.0322,
+    "hit": 0.602,
+    "pnl": 138.3,
+    "stake": 10930.0,
+    "roi": 0.0127,
+    "roiUg": -0.0313,
     "belegt": false,
     "clvAvg": -0.18,
     "clvN": 644,
@@ -57909,28 +57880,28 @@
     "clvUg": -0.46
    },
    "US-Sport": {
-    "n": 113,
-    "wins": 80,
-    "hit": 0.708,
-    "pnl": 43.88,
-    "stake": 1130.0,
-    "roi": 0.0388,
-    "roiUg": -0.069,
+    "n": 114,
+    "wins": 81,
+    "hit": 0.7105,
+    "pnl": 46.62,
+    "stake": 1140.0,
+    "roi": 0.0409,
+    "roiUg": -0.0661,
     "belegt": false,
-    "clvAvg": -0.04,
-    "clvN": 53,
-    "clvUg": -0.5
+    "clvAvg": 0.01,
+    "clvN": 54,
+    "clvUg": -0.44
    }
   },
   "bettableByCat": {
    "Fußball": {
-    "n": 1094,
+    "n": 1093,
     "wins": 658,
-    "hit": 0.6015,
-    "pnl": 128.3,
-    "stake": 10940.0,
-    "roi": 0.0117,
-    "roiUg": -0.0322,
+    "hit": 0.602,
+    "pnl": 138.3,
+    "stake": 10930.0,
+    "roi": 0.0127,
+    "roiUg": -0.0313,
     "belegt": false,
     "clvAvg": -0.18,
     "clvN": 644,
@@ -58113,16 +58084,16 @@
    },
    "5": {
     "n": 834,
-    "wins": 537,
-    "hit": 0.6439,
-    "pnl": -217.05,
+    "wins": 538,
+    "hit": 0.6451,
+    "pnl": -204.31,
     "stake": 8340.0,
-    "roi": -0.026,
-    "roiUg": -0.0703,
+    "roi": -0.0245,
+    "roiUg": -0.0688,
     "belegt": false,
-    "clvAvg": 0.02,
-    "clvN": 456,
-    "clvUg": -0.16
+    "clvAvg": 0.03,
+    "clvN": 457,
+    "clvUg": -0.15
    },
    "6": {
     "n": 852,
@@ -58193,27 +58164,27 @@
   "byVerdict": {
    "BET": {
     "n": 2000,
-    "wins": 1317,
-    "hit": 0.6585,
-    "pnl": 75.21,
+    "wins": 1318,
+    "hit": 0.659,
+    "pnl": 87.95,
     "stake": 20000.0,
-    "roi": 0.0038,
-    "roiUg": -0.0248,
+    "roi": 0.0044,
+    "roiUg": -0.0241,
     "belegt": false,
     "clvAvg": -0.17,
-    "clvN": 1164,
+    "clvN": 1165,
     "clvUg": -0.32
    }
   },
   "bySignal": {
    "bf": {
-    "n": 632,
+    "n": 631,
     "wins": 375,
-    "hit": 0.5934,
-    "pnl": 90.4,
-    "stake": 6320.0,
-    "roi": 0.0143,
-    "roiUg": -0.0443,
+    "hit": 0.5943,
+    "pnl": 100.4,
+    "stake": 6310.0,
+    "roi": 0.0159,
+    "roiUg": -0.0427,
     "belegt": false,
     "clvAvg": -0.17,
     "clvN": 370,
@@ -58221,15 +58192,15 @@
    },
    "money": {
     "n": 1916,
-    "wins": 1265,
-    "hit": 0.6602,
-    "pnl": -27.99,
+    "wins": 1266,
+    "hit": 0.6608,
+    "pnl": -15.25,
     "stake": 19160.0,
-    "roi": -0.0015,
-    "roiUg": -0.0304,
+    "roi": -0.0008,
+    "roiUg": -0.0297,
     "belegt": false,
     "clvAvg": -0.17,
-    "clvN": 1124,
+    "clvN": 1125,
     "clvUg": -0.32
    },
    "pinn": {
@@ -58246,17 +58217,17 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 1299,
-    "wins": 892,
-    "hit": 0.6867,
-    "pnl": 193.66,
-    "stake": 12990.0,
-    "roi": 0.0149,
-    "roiUg": -0.0187,
+    "n": 1300,
+    "wins": 893,
+    "hit": 0.6869,
+    "pnl": 196.4,
+    "stake": 13000.0,
+    "roi": 0.0151,
+    "roiUg": -0.0185,
     "belegt": false,
-    "clvAvg": -0.21,
-    "clvN": 809,
-    "clvUg": -0.36
+    "clvAvg": -0.2,
+    "clvN": 810,
+    "clvUg": -0.35
    },
    "steam": {
     "n": 616,
