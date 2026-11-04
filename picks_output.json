@@ -179,19 +179,22 @@
         }
       },
       {
-        "market": "1. HZ: Beide Teams treffen",
-        "marketKey": "ht_btts",
-        "icon": "⏱️",
-        "conf": "low",
-        "sc": 0.54,
-        "odds": 3.93,
-        "modelOdds": 3.46,
+        "market": "Über 3.5 Karten",
+        "marketKey": "cards35",
+        "icon": "🟨",
+        "conf": "medium",
+        "sc": 0.66,
+        "odds": 1.66,
+        "modelOdds": 1.78,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Fulham (Ø 1.3 Tore/Spiel) und Newcastle (Ø 1.4) starten offensiv — beide Teams könnten schon in der ersten Halbzeit getroffen haben.",
+        "reason": "Abstieg trifft Titelkampf, noch 29 Spieltage — Relegations-Team spielt aggressiv, Elite-Team diktiert Tempo. Intensives Pressing auf beiden Seiten.",
         "mods": [],
         "saferAlt": null,
-        "boldAlt": null
+        "boldAlt": {
+          "market": "Über 4.5 Karten",
+          "estOdds": 2.22
+        }
       }
     ]
   },
@@ -293,18 +296,21 @@
         }
       },
       {
-        "market": "Unter 9.5 Ecken",
-        "marketKey": "corners_under:9.5",
-        "icon": "🚩",
-        "conf": "medium",
-        "sc": 0.47,
-        "odds": 2,
-        "modelOdds": 1.4,
-        "value": "hot",
+        "market": "Über 3.5 Karten",
+        "marketKey": "cards35",
+        "icon": "🟨",
+        "conf": "low",
+        "sc": 0.66,
+        "odds": 2.09,
+        "modelOdds": 2.25,
+        "value": null,
         "oddsIsEst": false,
-        "reason": "Taktisch defensives Spiel mit erwarteten ~8 Ecken.",
+        "reason": "Abstieg trifft Titelkampf, noch 29 Spieltage — Relegations-Team spielt aggressiv, Elite-Team diktiert Tempo. Intensives Pressing auf beiden Seiten.",
         "mods": [],
-        "saferAlt": null,
+        "saferAlt": {
+          "market": "Über 2.5 Karten",
+          "estOdds": 1.51
+        },
         "boldAlt": null
       }
     ]
@@ -583,12 +589,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.448,
-        "odds": 1.74,
-        "modelOdds": 1.77,
+        "sc": 0.413,
+        "odds": 1.73,
+        "modelOdds": 1.75,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Aston Villa zeigt starke Auswärtsform (60% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Aston Villa geht der Einsatz verloren.",
+        "reason": "Aston Villa zeigt starke Auswärtsform (53% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Aston Villa geht der Einsatz verloren.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Aston Villa 1.0 (MF1)</span>"
         ],
@@ -663,7 +669,7 @@
         "icon": "⚽",
         "conf": "high",
         "sc": 0.9,
-        "odds": 1.68,
+        "odds": 1.67,
         "modelOdds": 1.48,
         "value": "value",
         "oddsIsEst": false,
@@ -676,7 +682,7 @@
         "saferAlt": null,
         "boldAlt": {
           "market": "Over 3.5 Tore",
-          "estOdds": 2.42
+          "estOdds": 2.4
         }
       },
       {
@@ -724,22 +730,19 @@
         "boldAlt": null
       },
       {
-        "market": "Über 9.5 Ecken",
-        "marketKey": "corners_over:9.5",
-        "icon": "🚩",
-        "conf": "medium",
-        "sc": 0.58,
-        "odds": 1.68,
-        "modelOdds": 1.81,
+        "market": "Handicap Auswärts -0.75",
+        "marketKey": "ah_away:-0.75",
+        "icon": "✈️",
+        "conf": "high",
+        "sc": 0.752,
+        "odds": 1.6,
+        "modelOdds": 1.61,
         "value": null,
-        "oddsIsEst": false,
-        "reason": "Beide Teams spielen offensiv — ca. 10 Ecken werden in diesem Spiel erwartet. Beide Defensiven sind anfällig, was viele Angriffe und damit mehr Ecken begünstigt.",
+        "oddsIsEst": true,
+        "reason": "Bayern München ist mit ~71% Siegwahrscheinlichkeit klarer Favorit (@ 1.35). Das -0.75 Handicap bietet mehr Wert. Ø 3.5 Tore/Spiel auswärts bestätigen die Klasse.",
         "mods": [],
         "saferAlt": null,
-        "boldAlt": {
-          "market": "Über 11.5 Ecken",
-          "estOdds": 2.54
-        }
+        "boldAlt": null
       }
     ]
   },
@@ -927,7 +930,7 @@
         "icon": "🎯",
         "conf": "low",
         "sc": 0.281,
-        "odds": 2.59,
+        "odds": 2.53,
         "modelOdds": 2.51,
         "value": null,
         "oddsIsEst": false,
@@ -1541,7 +1544,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.2,
-        "odds": 1.4,
+        "odds": 1.41,
         "modelOdds": 1.4,
         "value": null,
         "oddsIsEst": false,
@@ -1608,8 +1611,8 @@
         "icon": "✈️",
         "conf": "low",
         "sc": 1.116,
-        "odds": 3.94,
-        "modelOdds": 3.76,
+        "odds": 3.96,
+        "modelOdds": 3.78,
         "value": null,
         "oddsIsEst": false,
         "reason": "Como ist in Topform (zuletzt 5 Siege) und gewinnt 74% seiner Auswärtsspiele. Das Angriffsspiel (Ø 2.0 Tore/Spiel) trifft auf eine anfällige Inter-Abwehr (kassiert Ø 1.5 Tore/Spiel). · H2H: 5H/1U/0A (6 Duelle)<br>📊 Auswärtsstatistik (Saison): 67% Siege · 0% Clean Sheets.<br>🔥 Aktueller Lauf: Como 4× ungeschlagen.",
@@ -1623,7 +1626,7 @@
         "icon": "⚽",
         "conf": "high",
         "sc": 0.87,
-        "odds": 1.51,
+        "odds": 1.48,
         "modelOdds": 1.38,
         "value": null,
         "oddsIsEst": false,
@@ -1635,7 +1638,7 @@
         "saferAlt": null,
         "boldAlt": {
           "market": "Over 3.5 Tore",
-          "estOdds": 2.07
+          "estOdds": 2.02
         }
       },
       {
@@ -1674,7 +1677,7 @@
         "conf": "medium",
         "sc": 0.427,
         "odds": 1.37,
-        "modelOdds": 1.38,
+        "modelOdds": 1.37,
         "value": null,
         "oddsIsEst": false,
         "reason": "Juventus zeigt starke Auswärtsform (47% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Juventus geht der Einsatz verloren.",
@@ -1878,7 +1881,7 @@
         "icon": "⚽",
         "conf": "medium",
         "sc": 0.603,
-        "odds": 1.85,
+        "odds": 1.81,
         "modelOdds": 1.88,
         "value": null,
         "oddsIsEst": false,
@@ -2236,12 +2239,12 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "medium",
-        "sc": 0.696,
-        "odds": 1.92,
-        "modelOdds": 1.87,
+        "sc": 1.266,
+        "odds": 1.88,
+        "modelOdds": 1.84,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Barcelona kämpft im Titelkampf um Punkte auswärts. Gewinnt 85% der Auswärtsspiele und erzielt Ø 4.7 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 3H/1U/6A (10 Duelle)<br>📊 Auswärtsstatistik (Saison): 100% Siege · 40% Clean Sheets.",
+        "reason": "Barcelona ist in Topform (zuletzt 2 Siege) und gewinnt 85% seiner Auswärtsspiele. Das Angriffsspiel (Ø 4.7 Tore/Spiel) trifft auf eine anfällige Atletico Madrid-Abwehr (kassiert Ø 0.6 Tore/Spiel). · H2H: 3H/1U/6A (10 Duelle)<br>📊 Auswärtsstatistik (Saison): 100% Siege · 40% Clean Sheets.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -2449,7 +2452,7 @@
         "modelOdds": 1.23,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Der Heimsieg ist mit ~85% so klar eingepreist (@ 1.14), dass ein -1.0 Handicap besser quotiert ist. Paris Saint Germain erzielt Ø 3.5 Heimtore/Spiel — Siege mit ≥2 Toren Vorsprung sind realistisch.",
+        "reason": "Der Heimsieg ist mit ~85% so klar eingepreist (@ 1.14), dass ein -1.0 Handicap besser quotiert ist. Paris Saint Germain erzielt Ø 4.0 Heimtore/Spiel — Siege mit ≥2 Toren Vorsprung sind realistisch.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Paris Saint Germain 1.0 (MF1)</span>"
         ],
@@ -2471,24 +2474,21 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Auswärtssieg",
-        "marketKey": "awayWin",
-        "icon": "✈️",
-        "conf": "low",
-        "sc": 0.524,
-        "odds": 3.26,
-        "modelOdds": 3.46,
+        "market": "Doppelte Chance: X2",
+        "marketKey": "dcX2",
+        "icon": "🎯",
+        "conf": "medium",
+        "sc": 0.443,
+        "odds": 1.82,
+        "modelOdds": 1.8,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Lille kämpft im Titelkampf um Punkte auswärts. Gewinnt 47% der Auswärtsspiele und erzielt Ø 1.1 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 1H/4U/5A (10 Duelle)<br>📊 Auswärtsstatistik (Saison): 50% Siege · 50% Clean Sheets.",
+        "reason": "Lille zeigt starke Auswärtsform (42% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Lille geht der Einsatz verloren.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Lille 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Lille nahezu gesichert (-8% xG)</span>"
         ],
-        "saferAlt": {
-          "market": "AH -0.25 Auswärts",
-          "estOdds": 2.61
-        },
+        "saferAlt": null,
         "boldAlt": null
       },
       {
@@ -2658,7 +2658,7 @@
         "conf": "medium",
         "sc": 0.441,
         "odds": 1.52,
-        "modelOdds": 1.52,
+        "modelOdds": 1.51,
         "value": null,
         "oddsIsEst": false,
         "reason": "Lorient zeigt starke Auswärtsform (34% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Lorient geht der Einsatz verloren.",
@@ -2968,19 +2968,19 @@
     "date": "07.11.2026",
     "dateIso": "2026-11-07",
     "eventId": 1561962,
-    "matchScore": 6.9,
+    "matchScore": 7.1,
     "picks": [
       {
         "market": "Auswärtssieg",
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 0.769,
+        "sc": 0.945,
         "odds": null,
         "modelOdds": 2.63,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Lask Linz ist in Topform (zuletzt 2 Siege) und gewinnt 63% seiner Auswärtsspiele. Das Angriffsspiel (Ø 2.2 Tore/Spiel) trifft auf eine anfällige Ried-Abwehr (kassiert Ø 1.2 Tore/Spiel). · H2H: 5H/5U/6A (16 Duelle)<br>📊 Auswärtsstatistik (Saison): 60% Siege · 40% Clean Sheets.",
+        "reason": "Lask Linz ist in Topform (zuletzt 3 Siege) und gewinnt 70% seiner Auswärtsspiele. Das Angriffsspiel (Ø 2.2 Tore/Spiel) trifft auf eine anfällige Ried-Abwehr (kassiert Ø 1.2 Tore/Spiel). · H2H: 5H/5U/6A (16 Duelle)<br>📊 Auswärtsstatistik (Saison): 60% Siege · 40% Clean Sheets.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Lask Linz 2.6 (Ang1/MF1)</span>"
         ],
@@ -3488,12 +3488,12 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 0.762,
+        "sc": 0.67,
         "odds": null,
         "modelOdds": 1.69,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Feyenoord kämpft im Titelkampf um Punkte auswärts. Gewinnt 73% der Auswärtsspiele und erzielt Ø 3.7 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 4H/3U/13A (20 Duelle)<br>📊 Auswärtsstatistik (Saison): 83% Siege · 33% Clean Sheets.",
+        "reason": "Feyenoord kämpft im Titelkampf um Punkte auswärts. Gewinnt 66% der Auswärtsspiele und erzielt Ø 3.7 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 4H/3U/13A (20 Duelle)<br>📊 Auswärtsstatistik (Saison): 83% Siege · 33% Clean Sheets.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3962,12 +3962,12 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 0.998,
+        "sc": 1.088,
         "odds": null,
         "modelOdds": 1.55,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Sporting CP ist in Topform (zuletzt 2 Siege) und gewinnt 63% seiner Heimspiele. Das Angriffsspiel (Ø 2.0 Tore/Spiel) trifft auf eine anfällige Moreirense-Abwehr (kassiert Ø 1.7 Tore/Spiel). · H2H: 16H/3U/1A (20 Duelle)<br>📊 Heimstatistik (Saison): 60% Siege · 20% Clean Sheets.",
+        "reason": "Sporting CP ist in Topform (zuletzt 3 Siege) und gewinnt 63% seiner Heimspiele. Das Angriffsspiel (Ø 2.0 Tore/Spiel) trifft auf eine anfällige Moreirense-Abwehr (kassiert Ø 1.7 Tore/Spiel). · H2H: 16H/3U/1A (20 Duelle)<br>📊 Heimstatistik (Saison): 60% Siege · 20% Clean Sheets.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -4826,12 +4826,12 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.459,
+        "sc": 1.549,
         "odds": null,
         "modelOdds": 1.91,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Galatasaray ist in Topform (zuletzt 4 Siege) und gewinnt 81% seiner Heimspiele. Das Angriffsspiel (Ø 1.8 Tore/Spiel) trifft auf eine anfällige Amed-Abwehr (kassiert Ø 2.0 Tore/Spiel).<br>📊 Heimstatistik (Saison): 80% Siege · 20% Clean Sheets.<br>🔥 Aktueller Lauf: Galatasaray 4× ungeschlagen.",
+        "reason": "Galatasaray ist in Topform (zuletzt 5 Siege) und gewinnt 81% seiner Heimspiele. Das Angriffsspiel (Ø 1.8 Tore/Spiel) trifft auf eine anfällige Amed-Abwehr (kassiert Ø 2.0 Tore/Spiel).<br>📊 Heimstatistik (Saison): 80% Siege · 20% Clean Sheets.<br>🔥 Aktueller Lauf: Galatasaray 4× ungeschlagen.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Galatasaray 1.6 (Ang1)</span>"
         ],
@@ -6914,7 +6914,7 @@
     "date": "07.11.2026",
     "dateIso": "2026-11-07",
     "eventId": 1548558,
-    "matchScore": 7,
+    "matchScore": 6.3,
     "picks": [
       {
         "market": "Doppelte Chance: 1X",
