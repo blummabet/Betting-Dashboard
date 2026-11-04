@@ -6,8 +6,9 @@ name: 📊 MLS Track-Record-Card (Daily Telegram)
 # Trades-Channel — aber nur, wenn seit dem letzten Post genug neue Picks resolved sind (Schwellen).
 on:
   # 07:00 UTC = nach den US-Abend/Nacht-Spielen (MLS-Anpfiffe 23:00–02:00 UTC)
-  schedule:
-    - cron: '0 7 * * *'
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
+  # - cron: '0 7 * * *'
   workflow_dispatch:
     inputs:
       force:

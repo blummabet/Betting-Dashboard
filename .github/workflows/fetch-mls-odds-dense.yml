@@ -6,13 +6,14 @@ name: 📈 MLS Odds Refresh (dicht)
 # Kein voller Pipeline-Lauf (keine Form/xG/Lineups). fetch_liga_odds ist dataset-aware und holt bei
 # COCOBET_DATASET=mls ausschließlich MLS (Ligen ohne Fixtures werden übersprungen).
 on:
-  schedule:
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
     # 30.08.2026: von :00 auf :23. Beleg aus health/liga-odds-dense.json (derselbe Cron):
     # die tatsächlichen Abstände waren 4,93h · 3,10h · 4,18h · 6,36h · 7,17h gegen einen
     # 2h-Takt — bei durchweg `ok: true` und null Fehlern. Die Läufe scheitern nicht, sie
     # werden gar nicht erst gestartet: GitHub verwirft geplante Läufe unter Last, und :00
     # ist global die vollste Minute. Dieselbe Lehre wie beim Digest am 28.08. (:00 -> :07).
-    - cron: '23 */2 * * *'   # alle 2h, bewusst NICHT auf der vollen Stunde
+  # - cron: '23 */2 * * *'   # alle 2h, bewusst NICHT auf der vollen Stunde
   workflow_dispatch:
 
 permissions:

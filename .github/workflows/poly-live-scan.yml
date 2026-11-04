@@ -26,8 +26,9 @@ name: ⚡ Poly Live-Scan (nur laufende Spiele, schnell)
 # AUS: ein Lauf von wenigen Minuten muss seinen Vorgaenger nicht verdraengen, und genau das
 # Verdraengen war Teil der Krankheit.
 on:
-  schedule:
-    - cron: '4,19,34,49 * * * *'   # 15-Min-Takt, versetzt zu Betfair (*/15) und Global-Scan (:15/:45)
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
+  # - cron: '4,19,34,49 * * * *'   # 15-Min-Takt, versetzt zu Betfair (*/15) und Global-Scan (:15/:45)
   workflow_dispatch:
 
 permissions:

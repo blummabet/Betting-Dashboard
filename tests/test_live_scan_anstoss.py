@@ -35,7 +35,8 @@ def test_live_scan_ist_anstossbar_und_behaelt_seinen_rueckfall():
     d = yaml.safe_load((WF / "poly-live-scan.yml").read_text(encoding="utf-8"))
     on = d.get(True) or d.get("on")
     assert "workflow_dispatch" in on, "ohne workflow_dispatch laeuft der Anstoss ins Leere"
-    assert on.get("schedule"), "der Cron bleibt als Rueckfall"
+    # 04.11.2026 Paket 1: Live-Scan abgedreht (seit 25.10. ohne Anstoss) — kein Cron mehr als Rückfall
+    assert not on.get("schedule"), "Live-Scan ist abgedreht — kein Zeitplan"
     assert d["concurrency"]["group"] == "poly-live-scan", "doppelte Ticks faengt die Gruppe ab"
 
 

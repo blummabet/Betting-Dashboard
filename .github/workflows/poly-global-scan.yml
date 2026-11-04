@@ -7,7 +7,8 @@ name: 🐋 Poly Global-Scan (alle Sportarten, häufig)
 # Fix: eigener, HÄUFIGER Workflow rund um die Uhr, entkoppelt vom MLS-Trading. Read-only Tracking.
 # Läuft self-hosted auf dem Mac (Polymarket geoblockt Rechenzentrums-IPs → nur Wohn-IP).
 on:
-  schedule:
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
     # 28.08.2026 („Last senken") von 2x auf 1x pro Stunde gesenkt — und am 29.08. WIEDER
     # ZURUECKGEDREHT. Die Kuerzung war die falsche Richtung: dieser Workflow ist nicht zu gierig,
     # er ist ausgehungert. Gemessene Laeufe pro Tag: 23.08. = 30, 24.08. = 26, 25.08. = 27,
@@ -15,7 +16,7 @@ on:
     # Cross-Sport und die Shortlist („Heute spielenswert") — deren Kandidaten-Datei hoerte am
     # 26.08. 22:34 auf zu wachsen, im Gleichschritt mit dem Einbruch. Die Kapazitaets-Begruendung
     # von gestern gilt nicht mehr: der Mac hat seit dem 28.08. vier Runner statt zwei.
-    - cron: '15,45 * * * *'    # alle 30 Min, versetzt zu den :00/:30-Laeufen
+  # - cron: '15,45 * * * *'    # alle 30 Min, versetzt zu den :00/:30-Laeufen
   workflow_dispatch:
 
 permissions:

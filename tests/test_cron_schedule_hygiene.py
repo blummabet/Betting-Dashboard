@@ -81,7 +81,8 @@ def kickoff_stunden(datei):
 class TestScheduleBedingungenPassenZuDenCrons:
     """Der Cron und das `if:` müssen zusammen wandern — sonst läuft der Digest nie wieder."""
 
-    @pytest.mark.parametrize("datei", ["update-liga.yml", "update-mls.yml"])
+    # 04.11.2026 Paket 1: update-mls.yml hat keinen Zeitplan mehr (MLS abgedreht)
+    @pytest.mark.parametrize("datei", ["update-liga.yml"])
     def test_jede_if_bedingung_hat_einen_cron(self, datei):
         src = lies(datei)
         genutzt = set(re.findall(r"github\.event\.schedule\s*==\s*'([^']+)'", src))
@@ -113,6 +114,7 @@ class TestAnpfiffFensterDeckenDieSpieleAb:
             f"Top-5-Anpfiffe ohne Capture-Vorlauf (Stunde UTC → Anzahl Fixtures): {offen}. "
             f"Fenster deckt {sorted(abgedeckt)} ab.")
 
+    @pytest.mark.skip(reason="04.11.2026 Paket 1: MLS abgedreht, capture-closing-mls ohne Zeitplan")
     def test_mls_capture_deckt_alle_anpfiffe(self):
         abgedeckt = set()
         for c in crons("capture-closing-mls.yml"):

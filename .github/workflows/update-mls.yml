@@ -7,15 +7,16 @@ name: ⚽ MLS aktualisieren (Brücken-Liga)
 # Reise/Höhe/Wetter (Phase 2) folgen mit MLS-Venue-Geodaten. Kein Poly/Trading.
 # Takt an US-Anpfiffe: 19:00 UTC (Pre-Match für Abendspiele ET) + 07:00 UTC (Ergebnisse über Nacht).
 on:
-  schedule:
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
     # GETRENNT (nicht '0 7,19') — nur so unterscheidet github.event.schedule PRE- vs POST-Match:
     # 30.08.2026: von :00 auf :11 — gleiche Lehre wie beim Liga-Digest am 28.08. (:00 -> :07):
     # auf der vollen Stunde starten repo-weit die meisten Jobs, und :00 ist auch GitHub-global
     # die vollste Minute; geplante Läufe werden dort unter Last verworfen. Die beiden Crons
     # bleiben GETRENNT (nicht '11 7,19'), weil nur so github.event.schedule PRE von POST
     # unterscheidet.
-    - cron: '11 19 * * *'   # PRE-Match: Abends CET, vor den US-Abendspielen (Digest + Previews)
-    - cron: '11 7 * * *'    # POST-Match: Morgens CET, nach den Nachtspielen (Recap + Reviews)
+  # - cron: '11 19 * * *'   # PRE-Match: Abends CET, vor den US-Abendspielen (Digest + Previews)
+  # - cron: '11 7 * * *'    # POST-Match: Morgens CET, nach den Nachtspielen (Recap + Reviews)
   workflow_dispatch:
 
 permissions:

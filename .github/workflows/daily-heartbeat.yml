@@ -2,8 +2,9 @@ name: 🤖 Poly Auto-Trader · Daily Heartbeat
 
 on:
   # 06:00 UTC = 08:00 Wien. Status-Snapshot direkt nach den ersten Tages-Crons.
-  schedule:
-    - cron: '0 6 * * *'
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
+  # - cron: '0 6 * * *'
 
   workflow_dispatch:
 

@@ -15,10 +15,11 @@ name: 💹 MLS Poly Positionen überwachen
 # US UND EU-VPS → 403). Nur Wohn-/Privat-IPs dürfen Orders platzieren. (Die reinen DATEN-
 # Fetcher — Preise/Smart-Money — laufen dagegen in update-mls.yml auf ubuntu, das geht.)
 on:
-  schedule:
-    - cron: '0,30 22,23 * * *'   # Vorlauf US-Abend-Anpfiffe (UTC)
-    - cron: '0,30 0-5 * * *'     # MLS-Anpfiffe US-Abend = UTC-Nacht
-    - cron: '0 12 * * *'         # Tages-Housekeeping (lang gehaltene Positionen)
+  # 04.11.2026 Paket 1 (Lucas: „abdrehen, weil wertlos"): Zeitplan aus. Von Hand startbar.
+  # schedule:
+  # - cron: '0,30 22,23 * * *'   # Vorlauf US-Abend-Anpfiffe (UTC)
+  # - cron: '0,30 0-5 * * *'     # MLS-Anpfiffe US-Abend = UTC-Nacht
+  # - cron: '0 12 * * *'         # Tages-Housekeeping (lang gehaltene Positionen)
   workflow_dispatch:
     inputs:
       reason:
