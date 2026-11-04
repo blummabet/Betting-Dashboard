@@ -4,12 +4,14 @@ name: 📊 Pinnacle × Poly Lag-Scanner
 # nachhinkendem Preis bei Pinnacle-Move, Ausstieg bei Konvergenz). Reines Messen, keine Trades.
 # Nach der Auswertung (1–2 Wochen) einfach deaktivieren. Takt/Kosten frei justierbar.
 on:
-  schedule:
+  # 04.11.2026 (Lucas: „braucht man nicht mehr … das verwenden wir ja nirgends"): Zeitplan abgedreht. Der Geldradar
+  # liest pinnacle_poly_scan.json nicht (pinnacle_konsens dort arbeitet ohne). Von Hand startbar bleibt er.
+  # schedule:
     # 28.08.2026 (Lucas: „Last senken"): von */30 auf stündlich, -24 Läufe/Tag. Der gemessene
     # Poly-Lag gegenüber Pinnacle bewegt sich in Stunden, nicht in halben — für die Lag-Statistik
     # reicht ein Snapshot pro Stunde. Minute 25 statt 0: weg von der vollen Stunde, auf der
     # repo-weit bis zu 11 Jobs gleichzeitig starten.
-    - cron: '25 * * * *'     # stündlich, versetzt zur vollen Stunde
+    # - cron: '25 * * * *'     # stündlich, versetzt zur vollen Stunde
   workflow_dispatch:
 
 permissions:
