@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 04.11.2026 09:16
+# 🟡 Picks Validator — 04.11.2026 18:23
 
-**64 Spiele geprüft** · 🔴 0 Fehler · 🟡 50 Warnungen · 🔵 216 Hinweise
+**64 Spiele geprüft** · 🔴 0 Fehler · 🟡 50 Warnungen · 🔵 214 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  04.11.2026 09:16
+  04.11.2026 18:23
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -832,16 +832,10 @@
      Gaziantep FK expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 07.11.2026  Eyüpspor vs Kocaelispor
-     Eyüpspor: formScore=0.00 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 07.11.2026  Eyüpspor vs Kocaelispor
-     Ø gpg=1.70, H2H Ø=2.0 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 07.11.2026  Eyüpspor vs Kocaelispor
-     Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Eyüpspor: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 07.11.2026  Eyüpspor vs Kocaelispor
-     Eyüpspor expH≈0.50 (statischer Proxy) → FV über 1.5 = 9.0%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Eyüpspor expH≈0.80 (statischer Proxy) → FV über 1.5 = 19.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
      📅 07.11.2026  Samsunspor vs Konyaspor
      Kellerduell-Narrativ aber asymmetrischer Druck: Samsunspor pressureRatio=0.32 vs Konyaspor pressureRatio=0.27. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
@@ -870,7 +864,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 64 Spiele
   🟡 50 Warnungen — manuelle Prüfung empfohlen
-  🔵 216 Hinweise — Pick-Richtung kontrollieren
+  🔵 214 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
