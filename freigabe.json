@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-04T15:24:29.331051+00:00",
+ "generatedAt": "2026-11-04T15:39:38.910276+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -72,7 +72,7 @@
     "nieAnteil": 0.017,
     "schaetzbar": false
    },
-   "alterTage": 3.0,
+   "alterTage": 3.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -962,7 +962,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 2.9,
+   "alterTage": 3.0,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -1051,7 +1051,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 243.02,
+   "pl": 243.57,
    "roi": 0.0061,
    "clv": 0.36,
    "belegte": 26
@@ -3626,18 +3626,6 @@
    "belegt": false
   },
   {
-   "liga": "Omani Professional League",
-   "n": 55,
-   "wins": 29,
-   "hit": 0.5273,
-   "hitLb": 0.4179,
-   "roi": 0.0178,
-   "roiLb": -0.2461,
-   "pl": 0.98,
-   "clv": 0.14,
-   "belegt": false
-  },
-  {
    "liga": "Indian Mizoram Premier League",
    "n": 39,
    "wins": 23,
@@ -3647,6 +3635,18 @@
    "roiLb": -0.2464,
    "pl": 0.22,
    "clv": 0.405,
+   "belegt": false
+  },
+  {
+   "liga": "Omani Professional League",
+   "n": 61,
+   "wins": 32,
+   "hit": 0.5246,
+   "hitLb": 0.4206,
+   "roi": -0.0036,
+   "roiLb": -0.248,
+   "pl": -0.22,
+   "clv": 0.076,
    "belegt": false
   },
   {
@@ -4142,6 +4142,18 @@
    "belegt": false
   },
   {
+   "liga": "Swedish Division 1",
+   "n": 161,
+   "wins": 70,
+   "hit": 0.4348,
+   "hitLb": 0.3721,
+   "roi": -0.2003,
+   "roiLb": -0.3267,
+   "pl": -32.25,
+   "clv": 0.153,
+   "belegt": false
+  },
+  {
    "liga": "Chilean Primera Division",
    "n": 119,
    "wins": 53,
@@ -4151,18 +4163,6 @@
    "roiLb": -0.3277,
    "pl": -21.42,
    "clv": 0.016,
-   "belegt": false
-  },
-  {
-   "liga": "Swedish Division 1",
-   "n": 167,
-   "wins": 72,
-   "hit": 0.4311,
-   "hitLb": 0.3697,
-   "roi": -0.2069,
-   "roiLb": -0.3308,
-   "pl": -34.55,
-   "clv": 0.217,
    "belegt": false
   },
   {
@@ -4649,7 +4649,7 @@
     "nieAnteil": 0.017,
     "schaetzbar": false
    },
-   "alterTage": 3.0,
+   "alterTage": 3.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5537,7 +5537,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 2.9,
+   "alterTage": 3.0,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -5710,12 +5710,12 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 4794,
+   "n": 4795,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0194,
-   "pl": 93.0,
-   "roiLb": -0.014,
+   "roi": 0.0192,
+   "pl": 92.06,
+   "roiLb": -0.0142,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5848,7 +5848,7 @@
    "grund": "ROI nicht belegt über null",
    "roi": 0.0027,
    "pl": 15.09,
-   "roiLb": -0.019,
+   "roiLb": -0.0189,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5890,9 +5890,9 @@
    "n": 6092,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0009,
-   "pl": -5.48,
-   "roiLb": -0.0215,
+   "roi": -0.0007,
+   "pl": -4.26,
+   "roiLb": -0.0213,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5912,22 +5912,22 @@
    "n": 6511,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0151,
-   "pl": 98.21,
-   "roiLb": -0.0244,
+   "roi": 0.0147,
+   "pl": 95.87,
+   "roiLb": -0.0247,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 44548,
+   "noetigNRoi": 46747,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 21258,
-    "lo": 3912,
-    "hi": 1094134,
-    "nieAnteil": 0.24,
+    "median": 19736,
+    "lo": 3783,
+    "hi": 1216111,
+    "nieAnteil": 0.26,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -6063,7 +6063,7 @@
     "nieAnteil": 0.167,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -6121,12 +6121,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 4991,
+   "n": 4990,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0109,
-   "pl": -54.4,
-   "roiLb": -0.0355,
+   "roi": -0.0112,
+   "pl": -55.89,
+   "roiLb": -0.0358,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6190,9 +6190,9 @@
    "n": 5862,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0184,
-   "pl": -107.86,
-   "roiLb": -0.0406,
+   "roi": -0.0181,
+   "pl": -106.1,
+   "roiLb": -0.0403,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -7679,7 +7679,7 @@
     "nieAnteil": 0.615,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -13899,6 +13899,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Swedish Division 1 · Match Odds",
+   "strom": "betfair",
+   "n": 30,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.236,
+   "pl": -7.08,
+   "roiLb": -0.5657,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Mexican Liga MX · Half Time",
    "strom": "betfair",
    "n": 40,
@@ -13929,28 +13951,6 @@
    "roi": -0.247,
    "pl": -7.41,
    "roiLb": -0.5785,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Swedish Division 1 · Match Odds",
-   "strom": "betfair",
-   "n": 31,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.2606,
-   "pl": -8.08,
-   "roiLb": -0.5821,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -14268,7 +14268,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 6.1,
+   "alterTage": 6.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -14445,7 +14445,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 108.1,
+   "alterTage": 108.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -14467,7 +14467,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 123.1,
+   "alterTage": 123.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
