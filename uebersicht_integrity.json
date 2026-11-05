@@ -115,12 +115,9 @@
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [
-        "Rennes v Olympiakos (UEFA Europa League): Poly-Seite heisst „Stade Rennais FC 1901“ und gehoert zu keinem der beiden Teams — $366294 fremdes Geld in einer Konsens-Zeile",
-        "Bristol City v Wolves (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $3334 fremdes Geld in einer Konsens-Zeile"
-      ],
-      "nFail": 2,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -206,7 +203,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=6511 (UG -2.5 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6513 (UG -2.5 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -258,8 +255,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 257 h — die Datei selbst ist 257 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 247 h — die Datei selbst ist 247 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 266 h — die Datei selbst ist 266 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 255 h — die Datei selbst ist 255 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -281,7 +278,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1127 Zeilen · 1112 abgerechnet · 5 offen"
+      "hinweis": "1151 Zeilen · 1139 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -337,13 +334,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 543.1 h, MLS 550.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 551.3 h, MLS 558.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 11,
-  "generatedAt": "2026-11-04T15:49:34.342832+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-11-05T00:02:31.192920+00:00"
 }
