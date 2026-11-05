@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-05T20:43:20.423598+00:00",
+"generatedAt": "2026-11-05T20:58:07.930926+00:00",
 "byVerdict": {
 "konsens": {
-"n": 766,
-"wins": 454,
-"hitRate": 0.5927,
-"polyN": 749,
-"polyWins": 436,
-"polyHitRate": 0.5821,
-"pinnN": 682,
-"pinnHitRate": 0.5938,
-"nRoi": 766,
-"roi": 0.0794,
-"roiLb": 0.0227,
-"nClv": 766,
-"clv": 0.14,
-"clvLb": -0.0141
+"n": 772,
+"wins": 457,
+"hitRate": 0.592,
+"polyN": 753,
+"polyWins": 439,
+"polyHitRate": 0.583,
+"pinnN": 687,
+"pinnHitRate": 0.5924,
+"nRoi": 772,
+"roi": 0.0784,
+"roiLb": 0.0218,
+"nClv": 772,
+"clv": 0.13,
+"clvLb": -0.0282
 },
 "uneinig": {
 "n": 41,
@@ -87,9 +87,9 @@
 "hitRate": 0.6053
 },
 "UEFA Europa League": {
-"n": 34,
+"n": 36,
 "wins": 21,
-"hitRate": 0.6176
+"hitRate": 0.5833
 },
 "German Bundesliga": {
 "n": 32,
@@ -101,6 +101,11 @@
 "wins": 20,
 "hitRate": 0.6897
 },
+"UEFA Conference League": {
+"n": 28,
+"wins": 19,
+"hitRate": 0.6786
+},
 "Spanish Segunda Division": {
 "n": 25,
 "wins": 14,
@@ -110,11 +115,6 @@
 "n": 24,
 "wins": 11,
 "hitRate": 0.4583
-},
-"UEFA Conference League": {
-"n": 24,
-"wins": 16,
-"hitRate": 0.6667
 },
 "German Bundesliga 2": {
 "n": 21,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 544,
-"wins": 333,
-"hitRate": 0.6121,
-"nRoi": 544,
-"roi": 0.0298,
-"roiLb": -0.0314,
-"nClv": 544,
+"n": 545,
+"wins": 334,
+"hitRate": 0.6128,
+"nRoi": 545,
+"roi": 0.0299,
+"roiLb": -0.0312,
+"nClv": 545,
 "clv": 0.17,
-"clvLb": -0.0268
+"clvLb": -0.0237
 },
 "weak": {
-"n": 264,
-"wins": 136,
-"hitRate": 0.5152,
-"nRoi": 264,
-"roi": 0.1754,
-"roiLb": 0.0557,
-"nClv": 264,
-"clv": 0.05,
-"clvLb": -0.178
+"n": 269,
+"wins": 138,
+"hitRate": 0.513,
+"nRoi": 269,
+"roi": 0.1706,
+"roiLb": 0.052,
+"nClv": 269,
+"clv": 0.0,
+"clvLb": -0.2234
 }
 },
 "divergence": {
@@ -450,6 +450,120 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36229652",
+"home": "AC Milan",
+"away": "Ferencvaros",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "AC Milan",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
+{
+"matchId": "36243001",
+"home": "Crvena Zvezda",
+"away": "Inter Club Escaldes",
+"league": "UEFA Conference League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Crvena Zvezda",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
+{
+"matchId": "36243071",
+"home": "Trabzonspor",
+"away": "Freiburg",
+"league": "UEFA Conference League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Trabzonspor",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
+{
+"matchId": "36242992",
+"home": "Midtjylland",
+"away": "Ajax",
+"league": "UEFA Conference League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Ajax",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+6
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
+{
+"matchId": "36229702",
+"home": "Real Sociedad",
+"away": "Lyon",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Real Sociedad",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
+{
+"matchId": "36243016",
+"home": "Mjallby",
+"away": "Borac Banja Luka",
+"league": "UEFA Conference League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Mjallby",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-05T17:45:00Z",
+"settledAt": "2026-11-05T20:58:07.683966+00:00"
+},
 {
 "matchId": "36229711",
 "home": "Sparta Prague",
@@ -1095,133 +1209,19 @@
 ],
 "kickoff": "2026-11-03T19:45:00Z",
 "settledAt": "2026-11-03T22:52:19.406421+00:00"
-},
-{
-"matchId": "36253457",
-"home": "Derby",
-"away": "Norwich",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Norwich",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-11-03T19:45:00Z",
-"settledAt": "2026-11-03T22:52:19.406421+00:00"
-},
-{
-"matchId": "36253466",
-"home": "Charlton",
-"away": "Bolton",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Charlton",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-11-03T19:45:00Z",
-"settledAt": "2026-11-03T22:52:19.406421+00:00"
-},
-{
-"matchId": "36253461",
-"home": "Watford",
-"away": "Lincoln",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Watford",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-03T19:45:00Z",
-"settledAt": "2026-11-03T22:52:19.406421+00:00"
-},
-{
-"matchId": "36253455",
-"home": "Blackburn",
-"away": "Stoke",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Blackburn",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-03T19:45:00Z",
-"settledAt": "2026-11-03T22:52:19.406421+00:00"
-},
-{
-"matchId": "36223238",
-"home": "Feyenoord",
-"away": "Inter",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Inter",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-11-03T20:00:00Z",
-"settledAt": "2026-11-03T22:03:06.599488+00:00"
-},
-{
-"matchId": "36223250",
-"home": "LASK Linz",
-"away": "Slovan Bratislava",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "LASK Linz",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-11-03T20:00:00Z",
-"settledAt": "2026-11-03T22:03:06.599488+00:00"
 }
 ],
 "global": {
-"n": 808,
-"wins": 469,
-"hitRate": 0.5804,
-"nRoi": 808,
-"roi": 0.0774,
-"roiLb": 0.0204,
-"nClv": 808,
-"clv": 0.13,
-"clvLb": -0.022
+"n": 814,
+"wins": 472,
+"hitRate": 0.5799,
+"nRoi": 814,
+"roi": 0.0764,
+"roiLb": 0.0197,
+"nClv": 814,
+"clv": 0.11,
+"clvLb": -0.0352
 },
-"pending": 39,
+"pending": 33,
 "ausgeschlossenLive": 1153
 }
