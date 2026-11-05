@@ -1,12 +1,12 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-05T17:19:21.241609+00:00",
+  "updatedAt": "2026-11-05T22:44:31.639803+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 89.4,
-    "proTag": 5.1,
+    "spanneH": 78.4,
+    "proTag": 5.8,
     "lueckeMinMin": 4.2,
     "lueckeMedianMin": 15.4,
     "lueckeMaxMin": 1130.2,
@@ -16,13 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 13,
-    "gelaufen": 13,
+    "erzeugt": 14,
+    "gelaufen": 14,
     "verdraengt": 0,
-    "spanneH": 121.0,
-    "erzeugtProTag": 2.6
+    "spanneH": 126.4,
+    "erzeugtProTag": 2.7,
+    "widerspruch": "erzeugtProTag 2.7 gegen eine gemessene Kadenz von 5.8/Tag (Faktor 2.1) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-05T22:44:31.639803+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "42123946528",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42123946528",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-05T22:43:54Z",
+      "startedAt": "2026-11-05T22:43:54Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 37.6,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-05T17:19:21.241609+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -307,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 50.6,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-01T23:55:26.269503+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "41364404382",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/41364404382",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-01T23:54:58Z",
-      "startedAt": "2026-11-01T23:54:58Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 28.3,
-      "event": "schedule"
     }
   ]
 }
