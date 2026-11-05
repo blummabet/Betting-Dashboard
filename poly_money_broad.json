@@ -1,15 +1,15 @@
 {
- "n": 710,
+ "n": 709,
  "minOdds": 1.35,
- "moneyHitRate": 0.413,
- "priceHitRate": 0.427,
- "brierMoney": 0.8278,
- "brierPrice": 0.6741,
+ "moneyHitRate": 0.412,
+ "priceHitRate": 0.42,
+ "brierMoney": 0.829,
+ "brierPrice": 0.6746,
  "disagree": {
   "n": 172,
-  "moneyWon": 26,
+  "moneyWon": 30,
   "priceWon": 36,
-  "neither": 110
+  "neither": 106
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -47,14 +47,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "SOCCER:UCL",
-   "n": 53,
-   "moneyHitRate": 0.208,
-   "brierMoney": 0.9252,
-   "brierPrice": 0.8253,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "SAUDI-PROFESSIONAL-LEAGUE",
    "n": 24,
    "moneyHitRate": 0.5,
@@ -76,6 +68,14 @@
    "moneyHitRate": 0.522,
    "brierMoney": 0.6938,
    "brierPrice": 0.5872,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "SOCCER:UCL",
+   "n": 52,
+   "moneyHitRate": 0.192,
+   "brierMoney": 0.943,
+   "brierPrice": 0.8352,
    "verdict": "preis_besser"
   },
   {
@@ -136,25 +136,13 @@
   }
  ],
  "guete": {
-  "belastbar": 710,
+  "belastbar": 709,
   "preis_echo": 413,
   "abgeschnitten": 191,
   "unbekannt": 0,
   "leer": 0
  },
  "rows": [
-  {
-   "key": "ucl-atm-mnu-2026-10-13",
-   "league": "SOCCER:UCL",
-   "winner": "Club Atlético de Madrid",
-   "moneyFav": "Club Atlético de Madrid",
-   "priceFav": "Club Atlético de Madrid",
-   "moneyShare": 0.965,
-   "priceProb": 0.542,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 4437954
-  },
   {
    "key": "epl-bri-cry-2026-10-18",
    "league": "EPL",
@@ -556,7 +544,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -622,9 +610,21 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 387875
+  },
+  {
+   "key": "ucl-liv-vil-2026-10-20",
+   "league": "SOCCER:UCL",
+   "winner": "Liverpool FC",
+   "moneyFav": "Liverpool FC",
+   "priceFav": "Liverpool FC",
+   "moneyShare": 0.844,
+   "priceProb": 0.622,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 387669
   }
  ],
- "generatedAt": "2026-11-05T09:22:19.404479+00:00",
+ "generatedAt": "2026-11-05T09:52:35.582550+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -635,7 +635,7 @@
   "mls": 519,
   "epl": 534,
   "soccer": 800,
-  "tennis": 728,
+  "tennis": 724,
   "ucl": 418,
   "la-liga": 520,
   "bundesliga": 478,
@@ -721,12 +721,12 @@
   "sweepAdded": 420
  },
  "vorStats": {
-  "kandidaten": 10,
-  "budgetLeer": 0,
-  "ohneGeldSplit": 10,
+  "kandidaten": 38,
+  "budgetLeer": 16,
+  "ohneGeldSplit": 22,
   "nachgelegt": 0,
   "mitAnteilen": 0,
-  "calls": 10
+  "calls": 22
  },
  "whaleAusserhalb": {}
 }
