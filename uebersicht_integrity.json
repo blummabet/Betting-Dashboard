@@ -171,7 +171,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "149 Picks im Fenster, 25 % ohne Preis-Signal."
+      "hinweis": "137 Picks im Fenster, 23 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -203,7 +203,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=6513 (UG -2.5 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6512 (UG -2.6 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -255,8 +255,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 266 h — die Datei selbst ist 266 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 255 h — die Datei selbst ist 255 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 280 h — die Datei selbst ist 280 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 270 h — die Datei selbst ist 270 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -266,7 +266,7 @@
       "label": "Public-Stille ist erklaert",
       "severity": "warn",
       "failures": [
-        "Betfair-Public schweigt seit 2 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (58), fix (20), leader (12)"
+        "Betfair-Public schweigt seit 3 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (77), fix (66), drift (25)"
       ],
       "nFail": 1,
       "ok": false,
@@ -278,7 +278,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1151 Zeilen · 1139 abgerechnet · 1 offen"
+      "hinweis": "1159 Zeilen · 1146 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -334,7 +334,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 551.3 h, MLS 558.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 565.9 h, MLS 573.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -342,5 +342,5 @@
     }
   ],
   "nFail": 10,
-  "generatedAt": "2026-11-05T00:02:31.192920+00:00"
+  "generatedAt": "2026-11-05T14:36:50.238634+00:00"
 }
