@@ -1,15 +1,15 @@
 {
- "n": 708,
+ "n": 706,
  "minOdds": 1.35,
  "moneyHitRate": 0.412,
  "priceHitRate": 0.422,
  "brierMoney": 0.8287,
- "brierPrice": 0.6746,
+ "brierPrice": 0.6753,
  "disagree": {
-  "n": 168,
+  "n": 169,
   "moneyWon": 28,
   "priceWon": 35,
-  "neither": 105
+  "neither": 106
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -47,6 +47,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:UCL",
+   "n": 50,
+   "moneyHitRate": 0.18,
+   "brierMoney": 0.9473,
+   "brierPrice": 0.8513,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "SAUDI-PROFESSIONAL-LEAGUE",
    "n": 24,
    "moneyHitRate": 0.5,
@@ -68,14 +76,6 @@
    "moneyHitRate": 0.522,
    "brierMoney": 0.6938,
    "brierPrice": 0.5872,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "SOCCER:UCL",
-   "n": 52,
-   "moneyHitRate": 0.192,
-   "brierMoney": 0.943,
-   "brierPrice": 0.8352,
    "verdict": "preis_besser"
   },
   {
@@ -136,7 +136,7 @@
   }
  ],
  "guete": {
-  "belastbar": 708,
+  "belastbar": 706,
   "preis_echo": 401,
   "abgeschnitten": 191,
   "unbekannt": 0,
@@ -160,11 +160,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -408,18 +408,6 @@
    "totalUsd": 688374
   },
   {
-   "key": "ucl-fey-com-2026-10-14",
-   "league": "SOCCER:UCL",
-   "winner": "Feyenoord Rotterdam",
-   "moneyFav": "Como 1907",
-   "priceFav": "Como 1907",
-   "moneyShare": 0.896,
-   "priceProb": 0.427,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 634244
-  },
-  {
    "key": "lal-bar-rea-2026-10-25-exact-score",
    "league": "LA-LIGA",
    "winner": "FC Barcelona 1 - 2 Real Madrid CF",
@@ -516,18 +504,6 @@
    "totalUsd": 475612
   },
   {
-   "key": "ucl-lin2-liv-2026-10-14",
-   "league": "SOCCER:UCL",
-   "winner": "Liverpool FC",
-   "moneyFav": "Liverpool FC",
-   "priceFav": "Liverpool FC",
-   "moneyShare": 0.983,
-   "priceProb": 0.688,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 455983
-  },
-  {
    "key": "mls-nas-phi-2026-10-28",
    "league": "MLS",
    "winner": "Draw (Nashville SC vs. Philadelphia Union)",
@@ -622,9 +598,33 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 387669
+  },
+  {
+   "key": "bra-cam-san-2026-10-11",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "CA Mineiro",
+   "moneyFav": "Santos FC",
+   "priceFav": "CA Mineiro",
+   "moneyShare": 0.578,
+   "priceProb": 0.383,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 359607
+  },
+  {
+   "key": "lal-bil-rso-2026-11-01",
+   "league": "LA-LIGA",
+   "winner": "Athletic Club",
+   "moneyFav": "Athletic Club",
+   "priceFav": "Athletic Club",
+   "moneyShare": 0.907,
+   "priceProb": 0.487,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 341940
   }
  ],
- "generatedAt": "2026-11-05T17:54:13.526867+00:00",
+ "generatedAt": "2026-11-05T18:24:10.110348+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -635,7 +635,7 @@
   "mls": 519,
   "epl": 534,
   "soccer": 800,
-  "tennis": 612,
+  "tennis": 613,
   "ucl": 418,
   "la-liga": 520,
   "bundesliga": 478,
@@ -721,12 +721,12 @@
   "sweepAdded": 420
  },
  "vorStats": {
-  "kandidaten": 17,
+  "kandidaten": 19,
   "budgetLeer": 0,
-  "ohneGeldSplit": 17,
+  "ohneGeldSplit": 19,
   "nachgelegt": 0,
   "mitAnteilen": 0,
-  "calls": 17
+  "calls": 19
  },
  "whaleAusserhalb": {}
 }
