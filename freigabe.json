@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-06T23:16:37.865309+00:00",
+ "generatedAt": "2026-11-06T23:31:34.966825+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.01,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -968,10 +968,10 @@
    "art": "verdict",
    "gruppen": 4,
    "basis": null,
-   "n": 483,
-   "pl": 6.97,
-   "roi": 0.0144,
-   "clv": -1.736,
+   "n": 487,
+   "pl": 4.37,
+   "roi": 0.009,
+   "clv": -1.74,
    "belegte": 1
   },
   {
@@ -4457,7 +4457,7 @@
     "nieAnteil": 0.01,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -5729,7 +5729,7 @@
     "nieAnteil": 0.247,
     "schaetzbar": false
    },
-   "alterTage": 4.0,
+   "alterTage": 4.1,
    "art": "conviction",
    "wert": 6
   },
@@ -5815,35 +5815,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Liga · ABWÄGEN",
-   "strom": "cards",
-   "n": 313,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.045,
-   "pl": 14.09,
-   "roiLb": -0.0317,
-   "clv": -1.393,
-   "clvLb": -1.633,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.152,
-   "fehltN": 0,
-   "noetigNRoi": 909,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 609,
-    "lo": 104,
-    "hi": 42588,
-    "nieAnteil": 0.167,
-    "schaetzbar": false
-   },
-   "alterTage": 4.5,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "Liga"
   },
   {
    "schublade": "First Half Goals 1.5",
@@ -6006,6 +5977,35 @@
    "naeherung": false
   },
   {
+   "schublade": "Liga · ABWÄGEN",
+   "strom": "cards",
+   "n": 317,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0362,
+   "pl": 11.49,
+   "roiLb": -0.0401,
+   "clv": -1.403,
+   "clvLb": -1.641,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.165,
+   "fehltN": 0,
+   "noetigNRoi": 1406,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 618,
+    "lo": 119,
+    "hi": 20573,
+    "nieAnteil": 0.217,
+    "schaetzbar": false
+   },
+   "alterTage": 0.5,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "Liga"
+  },
+  {
    "schublade": "English National League North · Match Odds",
    "strom": "betfair",
    "n": 33,
@@ -6087,45 +6087,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "🔒 Liga · Conviction ab 5",
-   "strom": "cards",
-   "n": 186,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.051,
-   "pl": 9.49,
-   "roiLb": -0.0469,
-   "clv": -1.043,
-   "clvLb": -1.301,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.785,
-   "fehltN": 0,
-   "noetigNRoi": 685,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 428,
-    "lo": 71,
-    "hi": 23473,
-    "nieAnteil": 0.235,
-    "schaetzbar": false
-   },
-   "alterTage": null,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-11T12:51:19.660813+00:00",
-   "zielN": 80,
-   "warum": "BELEGT ist nur, dass die Schwelle falsch SITZT: `steam_bet_threshold` stand fuer die Liga auf 8, und in 326 Liga-Picks wurde die 8 NIE erreicht — hoechster Wert 6, also null BET seit Bestehen. Grund ist eine kuerzere Skala, nicht Strenge: die Kontext-Saeule feuert in der Liga in 7 von 326 Picks (2,2 %), weil ihre Mitglieder Turnierdruck/Reise/Hitze messen und im Herbst einer 34er-Liga per Konstruktion schweigen. Die WM lief mit 6 bei einer Decke von 8, die Liga bekam 8 bei einer Decke von 6.\n\nNICHT belegt ist, welcher Wert richtig waere — und der naheliegende ist der falsche. Nach Datensatz GETRENNT gerechnet (96 abgerechnete Liga-Picks):\n    Conv 4  n=50  Treffer 68,0 %  ROI +18,0 %  UG  -3,0 %\n    Conv 5  n=34  Treffer 76,5 %  ROI +37,2 %  UG +12,9 %\n    Conv 6  n=11  Treffer 45,5 %  ROI -28,6 %  UG -69,8 %\nDie 6 — also genau das Band, das eine Absenkung auf 6 neu zulassen wuerde — ist in der Liga das SCHLECHTESTE. Die Schwelle wurde deshalb NICHT gesenkt.\n\n⚠️ Anlass dieser Anmeldung ist mein eigener Fehler: ich hatte Liga und MLS gepoolt und daraus „Conviction 6: n=25, ROI +13,1 %\" gemeldet. Die +45,9 % bei Conv 6 stammen vollstaendig aus der MLS. Getrennt kippt das Bild.\n⚠️ Und die 5 ist genauso rueckwaerts geschnitten wie die 6 — sie sieht nur besser aus. n=34 und eine Untergrenze von +12,9 % sind ein Anlass, kein Beleg. Genau dafuer steht sie hier: ab jetzt zaehlt nur, was NACH der Anmeldung abgerechnet wird. zielN=80, weil die Streuung je Play bei Quoten um 1,5-2,0 alles darunter wieder zum Punktschaetzer macht.",
-   "quelle": "liga_signal_ledger.json → freigabe._liga_conv5_plays()",
-   "nDavor": 44,
-   "rueckblick": {
-    "n": 45,
-    "roi": 0.2113,
-    "roiLb": -0.0077,
-    "clv": -0.961,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -6236,6 +6197,45 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Liga · Conviction ab 5",
+   "strom": "cards",
+   "n": 189,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0417,
+   "pl": 7.89,
+   "roiLb": -0.0555,
+   "clv": -1.053,
+   "clvLb": -1.308,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.798,
+   "fehltN": 0,
+   "noetigNRoi": 1026,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 518,
+    "lo": 84,
+    "hi": 32721,
+    "nieAnteil": 0.237,
+    "schaetzbar": false
+   },
+   "alterTage": null,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-11T12:51:19.660813+00:00",
+   "zielN": 80,
+   "warum": "BELEGT ist nur, dass die Schwelle falsch SITZT: `steam_bet_threshold` stand fuer die Liga auf 8, und in 326 Liga-Picks wurde die 8 NIE erreicht — hoechster Wert 6, also null BET seit Bestehen. Grund ist eine kuerzere Skala, nicht Strenge: die Kontext-Saeule feuert in der Liga in 7 von 326 Picks (2,2 %), weil ihre Mitglieder Turnierdruck/Reise/Hitze messen und im Herbst einer 34er-Liga per Konstruktion schweigen. Die WM lief mit 6 bei einer Decke von 8, die Liga bekam 8 bei einer Decke von 6.\n\nNICHT belegt ist, welcher Wert richtig waere — und der naheliegende ist der falsche. Nach Datensatz GETRENNT gerechnet (96 abgerechnete Liga-Picks):\n    Conv 4  n=50  Treffer 68,0 %  ROI +18,0 %  UG  -3,0 %\n    Conv 5  n=34  Treffer 76,5 %  ROI +37,2 %  UG +12,9 %\n    Conv 6  n=11  Treffer 45,5 %  ROI -28,6 %  UG -69,8 %\nDie 6 — also genau das Band, das eine Absenkung auf 6 neu zulassen wuerde — ist in der Liga das SCHLECHTESTE. Die Schwelle wurde deshalb NICHT gesenkt.\n\n⚠️ Anlass dieser Anmeldung ist mein eigener Fehler: ich hatte Liga und MLS gepoolt und daraus „Conviction 6: n=25, ROI +13,1 %\" gemeldet. Die +45,9 % bei Conv 6 stammen vollstaendig aus der MLS. Getrennt kippt das Bild.\n⚠️ Und die 5 ist genauso rueckwaerts geschnitten wie die 6 — sie sieht nur besser aus. n=34 und eine Untergrenze von +12,9 % sind ein Anlass, kein Beleg. Genau dafuer steht sie hier: ab jetzt zaehlt nur, was NACH der Anmeldung abgerechnet wird. zielN=80, weil die Streuung je Play bei Quoten um 1,5-2,0 alles darunter wieder zum Punktschaetzer macht.",
+   "quelle": "liga_signal_ledger.json → freigabe._liga_conv5_plays()",
+   "nDavor": 44,
+   "rueckblick": {
+    "n": 45,
+    "roi": 0.2113,
+    "roiLb": -0.0077,
+    "clv": -0.961,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Spanish Copa del Rey · Match Odds",
@@ -7091,34 +7091,6 @@
    "naeherung": false
   },
   {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 424,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0438,
-   "pl": -18.58,
-   "roiLb": -0.1106,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 6579,
-    "lo": 680,
-    "hi": 1499401,
-    "nieAnteil": 0.857,
-    "schaetzbar": false
-   },
-   "alterTage": 3.9,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
-  },
-  {
    "schublade": "UEFA Conference League · First Half Goals 0.5",
    "strom": "betfair",
    "n": 54,
@@ -7139,6 +7111,34 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 428,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0495,
+   "pl": -21.18,
+   "roiLb": -0.116,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 9564,
+    "lo": 1200,
+    "hi": 680294,
+    "nieAnteil": 0.897,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "English Sky Bet League 2 · First Half Goals 1.5",
