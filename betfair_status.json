@@ -88,20 +88,22 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 340502 verbraucht, 4659498 uebrig"
+      "note": "Kontingent: 341102 verbraucht, 4658898 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 5,
       "failures": [
         "Swansea U21 v Bristol City U21 (English U21 Pro Development League): zeit — bester Kandidat „Birmingham City v Swansea City“ · 20.0h Anpfiff-Abstand",
         "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
+        "Changwon City v Gangneung City (South Korean K3 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 7.5h Anpfiff-Abstand",
+        "Yokohama FC v Fujieda Myfc (Japanese J League 2): name — bester Kandidat „Yokohama F Marinos v Fagiano Okayama“",
         "Hamburger SV v Mgladbach (German Bundesliga): name — bester Kandidat „Hamburger SV v Borussia Monchengladbach“"
       ],
-      "note": "ohne Anker: kein_kandidat 48 · kein_pinnacle 1 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 48 · kein_pinnacle 3 · name 3 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -110,7 +112,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Hammarby v Elfsborg (7 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Montpellier v Metz (25 Buecher, ohne Pinnacle); Boulogne v Annecy (21 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -119,7 +121,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 14 gewollt, 14 abgerufen, 0 mit Daten"
+      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -186,5 +188,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-06T20:31:46.754575+00:00"
+  "generatedAt": "2026-11-06T20:46:33.520827+00:00"
 }
