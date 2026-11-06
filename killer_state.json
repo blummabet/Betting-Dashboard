@@ -1,76 +1,109 @@
 {
  "latch": {
-  "36267146|Match Odds": {
-   "matchId": "36267146",
-   "home": "Adelaide United (W)",
-   "away": "Wellington Phoenix (W)",
-   "league": "Australian A-League Women",
-   "kickoff": "2026-11-06T08:00:00Z",
+  "36239361|Match Odds": {
+   "matchId": "36239361",
+   "home": "Sydney FC",
+   "away": "Central Coast Mariners",
+   "league": "Australian A-League Men",
+   "kickoff": "2026-11-06T08:40:00Z",
    "markt": "Match Odds",
-   "seite": "away",
-   "name": "Wellington Phoenix (W)",
-   "odd": 1.77,
-   "entryOdd": 1.77,
-   "anteilPct": 73,
-   "stufe": 2,
-   "verstaerker": [],
-   "rang": 57.3,
+   "seite": "home",
+   "name": "Sydney FC",
+   "odd": 1.59,
+   "entryOdd": 1.56,
+   "anteilPct": 70,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 64%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 79.0,
    "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
-   "pinnMovePP": null,
+   "poly": {
+    "anteilPct": 64,
+    "usd": 10526,
+    "odd": 1.57
+   },
+   "polyStatus": "ja",
+   "polyKey": "aus-syd-ccm-2026-11-06",
+   "polySide": "Sydney FC",
+   "pinnMovePP": -1.8,
    "punkte": {
-    "punkte": 0,
-    "moeglich": 4,
-    "dauerH": 2.01,
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.42,
     "teile": [
      {
       "buch": "BF",
       "name": "Betfair",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Geld 62% auf der Seite"
+       "ok": true,
+       "text": "Geld 70% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.622,
-       "betrag": 3380,
-       "gesamt": 5434,
+       "anteil": 0.696,
+       "betrag": 12883,
+       "gesamt": 18510,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 62% auf der Seite"
+      "text": "Geld 70% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 64% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.64,
+       "betrag": null,
+       "gesamt": 10526,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 64% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "Move -1.8pp in unsere Richtung"
+      },
       "geld": null,
-      "text": "Pinnacle nicht erhoben"
+      "text": "hat dieselbe Seite als Favorit"
      },
      {
       "buch": "STAKE",
@@ -91,18 +124,18 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 2.0h vor Anpfiff"
+       "text": "steht seit 0.4h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 0.4h vor Anpfiff"
      }
     ]
    },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-11-06T05:59:06.112779+00:00",
-   "zuletztAktiv": "2026-11-06T05:59:06.112779+00:00",
-   "haltePreis": 1.77,
-   "aktiv": false
+   "wertVsPinn": -0.0233,
+   "gehaltenSeit": "2026-11-06T08:14:45.203741+00:00",
+   "zuletztAktiv": "2026-11-06T08:14:45.203741+00:00",
+   "haltePreis": 1.59,
+   "aktiv": true
   }
  }
 }
