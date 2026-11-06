@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-06T22:16:22.534434+00:00",
+"generatedAt": "2026-11-06T22:31:28.631221+00:00",
 "byVerdict": {
 "konsens": {
-"n": 792,
+"n": 794,
 "wins": 467,
-"hitRate": 0.5896,
-"polyN": 773,
+"hitRate": 0.5882,
+"polyN": 775,
 "polyWins": 449,
-"polyHitRate": 0.5809,
-"pinnN": 705,
-"pinnHitRate": 0.5915,
-"nRoi": 792,
-"roi": 0.0717,
-"roiLb": 0.016,
-"nClv": 792,
+"polyHitRate": 0.5794,
+"pinnN": 707,
+"pinnHitRate": 0.5898,
+"nRoi": 794,
+"roi": 0.069,
+"roiLb": 0.0134,
+"nClv": 794,
 "clv": 0.09,
-"clvLb": -0.0559
+"clvLb": -0.0566
 },
 "uneinig": {
 "n": 41,
@@ -111,15 +111,15 @@
 "wins": 14,
 "hitRate": 0.56
 },
+"Italian Serie B": {
+"n": 24,
+"wins": 10,
+"hitRate": 0.4167
+},
 "German Bundesliga 2": {
 "n": 23,
 "wins": 11,
 "hitRate": 0.4783
-},
-"Italian Serie B": {
-"n": 23,
-"wins": 10,
-"hitRate": 0.4348
 },
 "English Sky Bet League 1": {
 "n": 16,
@@ -371,6 +371,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"English FA Cup": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "Greek Super League": {
 "n": 1,
 "wins": 0,
@@ -430,15 +435,15 @@
 "clvLb": -0.0462
 },
 "weak": {
-"n": 279,
+"n": 281,
 "wins": 140,
-"hitRate": 0.5018,
-"nRoi": 279,
-"roi": 0.1449,
-"roiLb": 0.0287,
-"nClv": 279,
+"hitRate": 0.4982,
+"nRoi": 281,
+"roi": 0.1368,
+"roiLb": 0.021,
+"nClv": 281,
 "clv": -0.03,
-"clvLb": -0.2525
+"clvLb": -0.253
 }
 },
 "divergence": {
@@ -450,6 +455,44 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36272077",
+"home": "Bristol Rovers",
+"away": "Cambridge Utd",
+"league": "English FA Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Cambridge Utd",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-06T19:30:00Z",
+"settledAt": "2026-11-06T22:31:28.409717+00:00"
+},
+{
+"matchId": "36269753",
+"home": "Ascoli",
+"away": "Palermo",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Palermo",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-06T19:30:00Z",
+"settledAt": "2026-11-06T22:31:28.409717+00:00"
+},
 {
 "matchId": "36239851",
 "home": "Sevilla",
@@ -1171,57 +1214,19 @@
 ],
 "kickoff": "2026-11-05T00:30:00Z",
 "settledAt": "2026-11-05T03:40:54.667480+00:00"
-},
-{
-"matchId": "36239714",
-"home": "Flamengo",
-"away": "Gremio",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Flamengo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-04T22:30:00Z",
-"settledAt": "2026-11-05T01:40:34.119441+00:00"
-},
-{
-"matchId": "36223236",
-"home": "PSV",
-"away": "Club Brugge",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "PSV",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-04T20:00:00Z",
-"settledAt": "2026-11-04T23:10:19.062128+00:00"
 }
 ],
 "global": {
-"n": 834,
+"n": 836,
 "wins": 482,
-"hitRate": 0.5779,
-"nRoi": 834,
-"roi": 0.0701,
-"roiLb": 0.0142,
-"nClv": 834,
+"hitRate": 0.5766,
+"nRoi": 836,
+"roi": 0.0676,
+"roiLb": 0.0117,
+"nClv": 836,
 "clv": 0.08,
-"clvLb": -0.0613
+"clvLb": -0.0619
 },
-"pending": 34,
-"ausgeschlossenLive": 1132
+"pending": 33,
+"ausgeschlossenLive": 1131
 }
