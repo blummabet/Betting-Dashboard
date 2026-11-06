@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-06T06:29:24.488257+00:00",
+"generatedAt": "2026-11-06T06:44:26.474592+00:00",
 "count": 16,
 "covered": 16,
 "leaguesKuratiert": [
@@ -56,8 +56,8 @@
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
-"oddsKeysMitDaten": 46,
-"oddsEvents": 478,
+"oddsKeysMitDaten": 45,
+"oddsEvents": 475,
 "oddsTotals": {
 "versucht": 5,
 "mitDaten": 0,
@@ -66,11 +66,11 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 305484,
-"remaining": 4694516,
+"used": 306033,
+"remaining": 4693967,
 "letzterFehler": null,
-"netzFehler": 0,
-"letzterNetzfehler": null
+"netzFehler": 1,
+"letzterNetzfehler": "<urlopen error [Errno 54] Connection reset by peer>"
 },
 "ankerQuote": 0.973,
 "games": [
@@ -87,7 +87,7 @@
 "moneySharePct": 55,
 "moneyOdd": 2.26,
 "moneyDir": "flat",
-"totVol": 87857,
+"totVol": 87861,
 "pinnOdd": 2.21,
 "softOdd": 2.16,
 "softN": 48,
@@ -127,58 +127,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36239861",
-"home": "Osasuna",
-"away": "Athletic Bilbao",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-11-07T17:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Athletic Bilbao",
-"moneySharePct": 89,
-"moneyOdd": 2.14,
-"moneyDir": "flat",
-"totVol": 61354,
-"pinnOdd": 2.08,
-"softOdd": 2.05,
-"softN": 43,
-"poly": {
-"vol": 1831,
-"odd": 2.11,
-"sharePct": 48,
-"shareSrc": "preis",
-"key": "lal-osa-bil-2026-11-07",
-"sideKey": "Athletic Club",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.263,
-"draw": 0.2704,
-"away": 0.4666,
-"fav": "away"
-},
-"soft": {
-"home": 0.2633,
-"draw": 0.277,
-"away": 0.4597,
-"fav": "away",
-"n": 43
-},
-"pinnMovePP": 0.1,
-"pinnMove": {
-"movePP": 0.1,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36239851",
 "home": "Sevilla",
 "away": "Alaves",
@@ -191,10 +139,10 @@
 "moneySharePct": 85,
 "moneyOdd": 1.98,
 "moneyDir": "flat",
-"totVol": 60553,
+"totVol": 62824,
 "pinnOdd": 1.91,
 "softOdd": 1.91,
-"softN": 43,
+"softN": 44,
 "poly": {
 "vol": 23485,
 "odd": 1.98,
@@ -216,7 +164,7 @@
 "draw": 0.2766,
 "away": 0.2242,
 "fav": "home",
-"n": 43
+"n": 44
 },
 "pinnMovePP": 1.1,
 "pinnMove": {
@@ -224,6 +172,58 @@
 "stepPP": 0.0,
 "n": 25,
 "move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36239861",
+"home": "Osasuna",
+"away": "Athletic Bilbao",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-11-07T17:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Athletic Bilbao",
+"moneySharePct": 89,
+"moneyOdd": 2.14,
+"moneyDir": "flat",
+"totVol": 61354,
+"pinnOdd": 2.08,
+"softOdd": 2.05,
+"softN": 44,
+"poly": {
+"vol": 1831,
+"odd": 2.11,
+"sharePct": 48,
+"shareSrc": "preis",
+"key": "lal-osa-bil-2026-11-07",
+"sideKey": "Athletic Club",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.263,
+"draw": 0.2704,
+"away": 0.4666,
+"fav": "away"
+},
+"soft": {
+"home": 0.2631,
+"draw": 0.2771,
+"away": 0.4598,
+"fav": "away",
+"n": 44
+},
+"pinnMovePP": 0.1,
+"pinnMove": {
+"movePP": 0.1,
+"stepPP": 0.0,
+"n": 25,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -316,16 +316,16 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8577,
-"draw": 0.0918,
-"away": 0.0505,
+"home": 0.858,
+"draw": 0.0916,
+"away": 0.0504,
 "fav": "home",
 "n": 46
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
 "movePP": 0.3,
-"stepPP": 0.0,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -346,8 +346,8 @@
 "moneyName": "Everton",
 "moneySharePct": 64,
 "moneyOdd": 1.74,
-"moneyDir": "in",
-"totVol": 50761,
+"moneyDir": "flat",
+"totVol": 50934,
 "pinnOdd": 1.7,
 "softOdd": 1.68,
 "softN": 49,
@@ -368,17 +368,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5639,
-"draw": 0.2395,
-"away": 0.1965,
+"home": 0.5642,
+"draw": 0.2396,
+"away": 0.1962,
 "fav": "home",
 "n": 49
 },
 "pinnMovePP": 0.6,
 "pinnMove": {
 "movePP": 0.6,
-"stepPP": 0.1,
-"n": 21,
+"stepPP": 0.0,
+"n": 22,
 "move": false,
 "laeuft": false
 },
@@ -398,8 +398,8 @@
 "moneyName": "Man City",
 "moneySharePct": 80,
 "moneyOdd": 1.76,
-"moneyDir": "out",
-"totVol": 46157,
+"moneyDir": "flat",
+"totVol": 46197,
 "pinnOdd": 1.71,
 "softOdd": 1.7,
 "softN": 49,
@@ -420,9 +420,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2068,
+"home": 0.2066,
 "draw": 0.2358,
-"away": 0.5574,
+"away": 0.5576,
 "fav": "away",
 "n": 49
 },
@@ -451,7 +451,7 @@
 "moneySharePct": 91,
 "moneyOdd": 1.18,
 "moneyDir": "flat",
-"totVol": 43298,
+"totVol": 43685,
 "pinnOdd": 1.16,
 "softOdd": 1.16,
 "softN": 49,
@@ -503,7 +503,7 @@
 "moneySharePct": 47,
 "moneyOdd": 2.66,
 "moneyDir": "flat",
-"totVol": 39267,
+"totVol": 39287,
 "pinnOdd": 2.62,
 "softOdd": 2.55,
 "softN": 49,
@@ -524,9 +524,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3478,
-"draw": 0.2824,
-"away": 0.3698,
+"home": 0.3468,
+"draw": 0.2828,
+"away": 0.3704,
 "fav": "away",
 "n": 49
 },
@@ -555,10 +555,10 @@
 "moneySharePct": 57,
 "moneyOdd": 2.42,
 "moneyDir": "flat",
-"totVol": 32258,
+"totVol": 32268,
 "pinnOdd": 2.36,
 "softOdd": 2.25,
-"softN": 47,
+"softN": 48,
 "poly": {
 "vol": 14003,
 "odd": 2.35,
@@ -576,11 +576,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4164,
-"draw": 0.266,
-"away": 0.3175,
+"home": 0.4163,
+"draw": 0.2661,
+"away": 0.3176,
 "fav": "home",
-"n": 47
+"n": 48
 },
 "pinnMovePP": -1.4,
 "pinnMove": {
@@ -609,8 +609,8 @@
 "moneyDir": "flat",
 "totVol": 29931,
 "pinnOdd": 1.29,
-"softOdd": 1.28,
-"softN": 43,
+"softOdd": 1.27,
+"softN": 44,
 "poly": {
 "vol": 51667,
 "odd": 1.29,
@@ -628,17 +628,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1025,
-"draw": 0.1529,
-"away": 0.7446,
+"home": 0.1026,
+"draw": 0.1528,
+"away": 0.7447,
 "fav": "away",
-"n": 43
+"n": 44
 },
 "pinnMovePP": -0.3,
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": 0.0,
-"n": 20,
+"n": 21,
 "move": false,
 "laeuft": false
 },
@@ -659,7 +659,7 @@
 "moneySharePct": 89,
 "moneyOdd": 2.02,
 "moneyDir": "flat",
-"totVol": 26448,
+"totVol": 27208,
 "pinnOdd": 2.01,
 "softOdd": 1.98,
 "softN": 49,
@@ -690,7 +690,7 @@
 "pinnMove": {
 "movePP": 0.6,
 "stepPP": 0.0,
-"n": 19,
+"n": 20,
 "move": false,
 "laeuft": false
 },
@@ -710,7 +710,7 @@
 "moneyName": "Stuttgart",
 "moneySharePct": 81,
 "moneyOdd": 1.73,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 25591,
 "pinnOdd": 1.7,
 "softOdd": 1.62,
@@ -742,7 +742,7 @@
 "pinnMove": {
 "movePP": -2.4,
 "stepPP": -0.0,
-"n": 21,
+"n": 22,
 "move": true,
 "laeuft": false
 },
@@ -761,12 +761,12 @@
 "moneySide": "draw",
 "moneyName": "The Draw",
 "moneySharePct": 45,
-"moneyOdd": 3.6,
-"moneyDir": "flat",
-"totVol": 25098,
+"moneyOdd": 3.55,
+"moneyDir": "in",
+"totVol": 25198,
 "pinnOdd": 3.49,
 "softOdd": 3.4,
-"softN": 47,
+"softN": 48,
 "poly": {
 "vol": 19831,
 "odd": null,
@@ -784,17 +784,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4232,
-"draw": 0.2739,
-"away": 0.3029,
+"home": 0.423,
+"draw": 0.2743,
+"away": 0.3027,
 "fav": "home",
-"n": 47
+"n": 48
 },
 "pinnMovePP": 0.8,
 "pinnMove": {
 "movePP": 0.8,
 "stepPP": 0.0,
-"n": 18,
+"n": 19,
 "move": false,
 "laeuft": false
 },
@@ -815,7 +815,7 @@
 "moneySharePct": 73,
 "moneyOdd": 2.14,
 "moneyDir": "flat",
-"totVol": 24266,
+"totVol": 24278,
 "pinnOdd": 2.1,
 "softOdd": 2.05,
 "softN": 49,
@@ -836,9 +836,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4606,
-"draw": 0.2604,
-"away": 0.279,
+"home": 0.4605,
+"draw": 0.2608,
+"away": 0.2787,
 "fav": "home",
 "n": 49
 },
@@ -846,7 +846,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -867,10 +867,10 @@
 "moneySharePct": 52,
 "moneyOdd": 1.94,
 "moneyDir": "flat",
-"totVol": 22507,
+"totVol": 22519,
 "pinnOdd": 1.86,
 "softOdd": 1.83,
-"softN": 47,
+"softN": 48,
 "poly": {
 "vol": 32673,
 "odd": 1.94,
@@ -888,17 +888,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.513,
+"home": 0.5129,
 "draw": 0.2322,
-"away": 0.2548,
+"away": 0.2549,
 "fav": "home",
-"n": 47
+"n": 48
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
