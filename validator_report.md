@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 06.11.2026 09:31
+# 🟡 Picks Validator — 06.11.2026 17:31
 
-**118 Spiele geprüft** · 🔴 0 Fehler · 🟡 85 Warnungen · 🔵 375 Hinweise
+**115 Spiele geprüft** · 🔴 0 Fehler · 🟡 82 Warnungen · 🔵 366 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  06.11.2026 09:31
+  06.11.2026 17:31
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -176,18 +176,6 @@
 ─────────────────────────────────────────────────────────────────
   🇭🇷 HNL  (rl=24)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 06.11.2026  NK Lokomotiva Zagreb vs Rudes
-     Rudes: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 06.11.2026  NK Lokomotiva Zagreb vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 06.11.2026  NK Lokomotiva Zagreb vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 06.11.2026  NK Lokomotiva Zagreb vs Rudes
-     NK Lokomotiva Zagreb expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 07.11.2026  HNK Gorica vs NK Slaven Belupo
      HNK Gorica: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -1048,21 +1036,6 @@
 ─────────────────────────────────────────────────────────────────
   🇵🇱 Ekstraklasa  (rl=21)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 06.11.2026  Motor Lublin vs Wisla Plock
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 06.11.2026  Motor Lublin vs Wisla Plock
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 06.11.2026  Motor Lublin vs Wisla Plock
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 06.11.2026  Motor Lublin vs Wisla Plock
-     Ø gpg=1.30, H2H Ø=3.0 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 06.11.2026  Motor Lublin vs Wisla Plock
-     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 06.11.2026  Wisla Krakow vs Cracovia Krakow
      Cracovia Krakow: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -1320,9 +1293,12 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 08.11.2026  Heart Of Midlothian vs Falkirk
      Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+  🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 08.11.2026  Heart Of Midlothian vs Falkirk
-     Heart Of Midlothian expH≈0.95 (statischer Proxy) → FV über 1.5 = 24.6%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Ø gpg=2.00, H2H Ø=2.9 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+  🔵 HINWEIS [OVER35_LOW_FV]
+     📅 08.11.2026  Heart Of Midlothian vs Falkirk
+     Ø gpg=2.00 (statischer Proxy) → Poisson FV für Over 3.5 = 14.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 08.11.2026  Celtic vs Kilmarnock
      Celtic dominiert H2H 16W/2X/2L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -1404,18 +1380,6 @@
   🇹🇷 Süper Lig  (rl=28)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 06.11.2026  Gaziantep FK vs Kasımpaşa
-     Gaziantep FK: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 06.11.2026  Gaziantep FK vs Kasımpaşa
-     Gaziantep FK: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 06.11.2026  Gaziantep FK vs Kasımpaşa
-     H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 06.11.2026  Gaziantep FK vs Kasımpaşa
-     Gaziantep FK expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 07.11.2026  Eyüpspor vs Kocaelispor
      Eyüpspor: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
@@ -1450,9 +1414,9 @@
      Gençlerbirliği S.K.: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 118 Spiele
-  🟡 85 Warnungen — manuelle Prüfung empfohlen
-  🔵 375 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 115 Spiele
+  🟡 82 Warnungen — manuelle Prüfung empfohlen
+  🔵 366 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
