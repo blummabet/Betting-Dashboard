@@ -1,15 +1,15 @@
 {
- "n": 676,
+ "n": 675,
  "minOdds": 1.35,
- "moneyHitRate": 0.414,
- "priceHitRate": 0.426,
- "brierMoney": 0.8291,
- "brierPrice": 0.6738,
+ "moneyHitRate": 0.413,
+ "priceHitRate": 0.424,
+ "brierMoney": 0.8303,
+ "brierPrice": 0.6741,
  "disagree": {
-  "n": 162,
+  "n": 160,
   "moneyWon": 24,
-  "priceWon": 32,
-  "neither": 106
+  "priceWon": 31,
+  "neither": 105
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -47,14 +47,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EPL",
-   "n": 59,
-   "moneyHitRate": 0.271,
-   "brierMoney": 0.8672,
-   "brierPrice": 0.7777,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "SOCCER:COL",
    "n": 33,
    "moneyHitRate": 0.515,
@@ -68,6 +60,14 @@
    "moneyHitRate": 0.18,
    "brierMoney": 0.9473,
    "brierPrice": 0.8513,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EPL",
+   "n": 58,
+   "moneyHitRate": 0.259,
+   "brierMoney": 0.882,
+   "brierPrice": 0.7839,
    "verdict": "preis_besser"
   },
   {
@@ -136,8 +136,8 @@
   }
  ],
  "guete": {
-  "belastbar": 676,
-  "preis_echo": 363,
+  "belastbar": 675,
+  "preis_echo": 362,
   "abgeschnitten": 190,
   "unbekannt": 0,
   "leer": 0
@@ -238,18 +238,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1068825
-  },
-  {
-   "key": "epl-liv-mac-2026-10-11",
-   "league": "EPL",
-   "winner": "Manchester City FC",
-   "moneyFav": "Manchester City FC",
-   "priceFav": "Manchester City FC",
-   "moneyShare": 0.922,
-   "priceProb": 0.473,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 1063015
   },
   {
    "key": "sea-rom-cag-2026-10-27",
@@ -508,7 +496,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Leeds United FC",
+   "priceFav": "Sunderland AFC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -616,15 +604,27 @@
    "league": "SOCCER:UCL",
    "winner": "Paris Saint-Germain FC 4 - 2 FC Barcelona",
    "moneyFav": "Paris Saint-Germain FC 3 - 2 FC Barcelona",
-   "priceFav": "Paris Saint-Germain FC 2 - 2 FC Barcelona",
+   "priceFav": "Any Other Score",
    "moneyShare": 0.071,
    "priceProb": 0.072,
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 339034
+  },
+  {
+   "key": "sea-laz-cag-2026-11-01",
+   "league": "SEA",
+   "winner": "SS Lazio",
+   "moneyFav": "SS Lazio",
+   "priceFav": "SS Lazio",
+   "moneyShare": 0.896,
+   "priceProb": 0.642,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 336511
   }
  ],
- "generatedAt": "2026-11-06T23:25:48.109646+00:00",
+ "generatedAt": "2026-11-06T23:55:32.709419+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -633,21 +633,21 @@
   "mlb": 418,
   "nhl": 632,
   "mls": 519,
-  "epl": 525,
+  "epl": 524,
   "soccer": 800,
-  "tennis": 513,
+  "tennis": 512,
   "ucl": 490,
   "la-liga": 511,
-  "bundesliga": 473,
+  "bundesliga": 472,
   "serie-a": 52,
-  "ligue-1": 496,
+  "ligue-1": 495,
   "primeira-liga": 455,
   "brazil-serie-a": 465,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 687,
+  "esports": 685,
   "cs2": 424,
   "lol": 434,
   "dota": 30,
@@ -656,7 +656,7 @@
   "mma": 65,
   "boxing": 334,
   "golf": 432,
-  "f1": 451,
+  "f1": 452,
   "cricket": 647,
   "afc-champions-league-elite": 369,
   "allsvenskan": 1,
@@ -683,20 +683,20 @@
   "k-league": 435,
   "la-liga-2": 511,
   "liga-mx-apertura": 2,
-  "ligue-2": 421,
+  "ligue-2": 419,
   "naitons-league": 1,
   "national-league": 463,
   "nations-league": 25,
   "norway-eliteserien": 451,
   "peru-liga-1": 207,
-  "poland-ekstraklasa": 440,
-  "premier-league": 498,
+  "poland-ekstraklasa": 435,
+  "premier-league": 497,
   "romania-superliga": 190,
-  "saudi-professional-league": 457,
+  "saudi-professional-league": 452,
   "scotland-league-cup": 203,
   "scottish-premiership": 440,
   "serbian-superliga": 440,
-  "serie-b": 452,
+  "serie-b": 446,
   "slovenia-prvaliga": 410,
   "sweden-allsvenskan": 442,
   "switzerland-super-league": 436,
@@ -709,10 +709,10 @@
   "womens-champions-league": 490
  },
  "rawBySeries": {
-  "10188": 491,
+  "10188": 490,
   "10193": 491,
-  "10194": 458,
-  "10195": 481,
+  "10194": 457,
+  "10195": 480,
   "10203": 491
  },
  "sweepStats": {
@@ -721,12 +721,12 @@
   "sweepAdded": 421
  },
  "vorStats": {
-  "kandidaten": 4,
+  "kandidaten": 5,
   "budgetLeer": 0,
-  "ohneGeldSplit": 4,
+  "ohneGeldSplit": 5,
   "nachgelegt": 0,
   "mitAnteilen": 0,
-  "calls": 4
+  "calls": 5
  },
  "whaleAusserhalb": {}
 }
