@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-06T22:31:28.631221+00:00",
+"generatedAt": "2026-11-06T22:46:20.012203+00:00",
 "byVerdict": {
 "konsens": {
-"n": 794,
-"wins": 467,
-"hitRate": 0.5882,
-"polyN": 775,
-"polyWins": 449,
-"polyHitRate": 0.5794,
-"pinnN": 707,
-"pinnHitRate": 0.5898,
-"nRoi": 794,
-"roi": 0.069,
-"roiLb": 0.0134,
-"nClv": 794,
-"clv": 0.09,
-"clvLb": -0.0566
+"n": 798,
+"wins": 471,
+"hitRate": 0.5902,
+"polyN": 779,
+"polyWins": 453,
+"polyHitRate": 0.5815,
+"pinnN": 711,
+"pinnHitRate": 0.5921,
+"nRoi": 798,
+"roi": 0.074,
+"roiLb": 0.0184,
+"nClv": 798,
+"clv": 0.1,
+"clvLb": -0.052
 },
 "uneinig": {
 "n": 41,
@@ -62,9 +62,9 @@
 "hitRate": 0.5849
 },
 "Italian Serie A": {
-"n": 50,
-"wins": 36,
-"hitRate": 0.72
+"n": 51,
+"wins": 37,
+"hitRate": 0.7255
 },
 "UEFA Europa League": {
 "n": 45,
@@ -102,9 +102,9 @@
 "hitRate": 0.7097
 },
 "French Ligue 1": {
-"n": 29,
-"wins": 20,
-"hitRate": 0.6897
+"n": 30,
+"wins": 21,
+"hitRate": 0.7
 },
 "Spanish Segunda Division": {
 "n": 25,
@@ -286,6 +286,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"Belgian Pro League": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Finnish Veikkausliiga": {
 "n": 3,
 "wins": 0,
@@ -302,11 +307,6 @@
 "hitRate": 0.3333
 },
 "Azerbaijan 1st Division": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
-},
-"Belgian Pro League": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -330,6 +330,11 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
+},
+"English FA Cup": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
 },
 "Estonian Premier League": {
 "n": 2,
@@ -370,11 +375,6 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
-},
-"English FA Cup": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
 },
 "Greek Super League": {
 "n": 1,
@@ -424,26 +424,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 555,
-"wins": 342,
-"hitRate": 0.6162,
-"nRoi": 555,
-"roi": 0.0325,
-"roiLb": -0.0278,
-"nClv": 555,
-"clv": 0.14,
-"clvLb": -0.0462
+"n": 556,
+"wins": 343,
+"hitRate": 0.6169,
+"nRoi": 556,
+"roi": 0.0332,
+"roiLb": -0.027,
+"nClv": 556,
+"clv": 0.15,
+"clvLb": -0.0405
 },
 "weak": {
-"n": 281,
-"wins": 140,
-"hitRate": 0.4982,
-"nRoi": 281,
-"roi": 0.1368,
-"roiLb": 0.021,
-"nClv": 281,
+"n": 284,
+"wins": 143,
+"hitRate": 0.5035,
+"nRoi": 284,
+"roi": 0.1489,
+"roiLb": 0.0337,
+"nClv": 284,
 "clv": -0.03,
-"clvLb": -0.253
+"clvLb": -0.2502
 }
 },
 "divergence": {
@@ -455,6 +455,82 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36267044",
+"home": "Venezia",
+"away": "Udinese",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Venezia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-06T19:45:00Z",
+"settledAt": "2026-11-06T22:46:19.746931+00:00"
+},
+{
+"matchId": "36239916",
+"home": "Toulouse",
+"away": "Strasbourg",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Toulouse",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-06T19:45:00Z",
+"settledAt": "2026-11-06T22:46:19.746931+00:00"
+},
+{
+"matchId": "36272078",
+"home": "Oxford City",
+"away": "Leicester",
+"league": "English FA Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Leicester",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-11-06T19:45:00Z",
+"settledAt": "2026-11-06T22:46:19.746931+00:00"
+},
+{
+"matchId": "36264997",
+"home": "Standard",
+"away": "Waasland-Beveren",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Standard",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-11-06T19:45:00Z",
+"settledAt": "2026-11-06T22:46:19.746931+00:00"
+},
 {
 "matchId": "36272077",
 "home": "Bristol Rovers",
@@ -1138,95 +1214,19 @@
 ],
 "kickoff": "2026-11-05T17:45:00Z",
 "settledAt": "2026-11-05T19:42:55.846643+00:00"
-},
-{
-"matchId": "36243000",
-"home": "Lincoln Red Imps",
-"away": "Hajduk Split",
-"league": "UEFA Conference League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hajduk Split",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-05T17:45:00Z",
-"settledAt": "2026-11-05T19:42:55.846643+00:00"
-},
-{
-"matchId": "36281015",
-"home": "Kuching FA",
-"away": "Gangwon",
-"league": "AFC Champions League Two",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Kuching FA",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-05T12:15:00Z",
-"settledAt": "2026-11-05T15:27:27.457164+00:00"
-},
-{
-"matchId": "36256741",
-"home": "Millonarios",
-"away": "America de Cali S.A",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Millonarios",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-11-05T01:30:00Z",
-"settledAt": "2026-11-05T04:40:59.535793+00:00"
-},
-{
-"matchId": "36239721",
-"home": "Sao Paulo",
-"away": "Corinthians",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sao Paulo",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-11-05T00:30:00Z",
-"settledAt": "2026-11-05T03:40:54.667480+00:00"
 }
 ],
 "global": {
-"n": 836,
-"wins": 482,
-"hitRate": 0.5766,
-"nRoi": 836,
-"roi": 0.0676,
-"roiLb": 0.0117,
-"nClv": 836,
-"clv": 0.08,
-"clvLb": -0.0619
+"n": 840,
+"wins": 486,
+"hitRate": 0.5786,
+"nRoi": 840,
+"roi": 0.0723,
+"roiLb": 0.0165,
+"nClv": 840,
+"clv": 0.09,
+"clvLb": -0.0576
 },
-"pending": 33,
+"pending": 29,
 "ausgeschlossenLive": 1131
 }
