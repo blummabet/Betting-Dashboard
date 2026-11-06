@@ -52,8 +52,8 @@
    "polySide": "AS Monaco FC",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
+    "punkte": 5,
+    "moeglich": 10,
     "dauerH": 53.5,
     "teile": [
      {
@@ -64,42 +64,60 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 83% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.818,
-       "betrag": null,
-       "gesamt": null,
+       "anteil": 0.831,
+       "betrag": 6235,
+       "gesamt": 7503,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 83% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
+      "status": "nein",
       "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 57% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.57,
+       "betrag": null,
+       "gesamt": 893,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 57% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
       "geld": null,
-      "text": "Pinnacle nicht erhoben"
+      "text": "hat dieselbe Seite als Favorit"
      },
      {
       "buch": "STAKE",
@@ -132,6 +150,134 @@
    "zuletztAktiv": "2026-11-06T10:45:00.669563+00:00",
    "haltePreis": 1.76,
    "aktiv": false
+  },
+  "36270772|Match Odds": {
+   "matchId": "36270772",
+   "home": "Grenoble",
+   "away": "Reims",
+   "league": "French Ligue 2",
+   "kickoff": "2026-11-06T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Reims",
+   "odd": 1.87,
+   "entryOdd": 1.94,
+   "anteilPct": 76,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 67.6,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "fr2-gre-rei-2026-11-06",
+   "polySide": "Stade de Reims",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 10,
+    "dauerH": 0.48,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 76% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.761,
+       "betrag": 4471,
+       "gesamt": 5875,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 76% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 52% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.52,
+       "betrag": null,
+       "gesamt": 492,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 52% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.5h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.5h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-11-06T18:31:13.158500+00:00",
+   "zuletztAktiv": "2026-11-06T18:31:13.158500+00:00",
+   "haltePreis": 1.87,
+   "aktiv": true
   }
  }
 }
