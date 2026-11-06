@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-06T21:46:10.794131+00:00",
+"generatedAt": "2026-11-06T22:01:37.677363+00:00",
 "byVerdict": {
 "konsens": {
-"n": 787,
-"wins": 466,
-"hitRate": 0.5921,
-"polyN": 768,
-"polyWins": 448,
-"polyHitRate": 0.5833,
-"pinnN": 701,
-"pinnHitRate": 0.5934,
-"nRoi": 787,
-"roi": 0.0764,
-"roiLb": 0.0205,
-"nClv": 787,
-"clv": 0.11,
-"clvLb": -0.0434
+"n": 792,
+"wins": 467,
+"hitRate": 0.5896,
+"polyN": 773,
+"polyWins": 449,
+"polyHitRate": 0.5809,
+"pinnN": 705,
+"pinnHitRate": 0.5915,
+"nRoi": 792,
+"roi": 0.0717,
+"roiLb": 0.016,
+"nClv": 792,
+"clv": 0.09,
+"clvLb": -0.0559
 },
 "uneinig": {
 "n": 41,
@@ -87,9 +87,9 @@
 "hitRate": 0.525
 },
 "Spanish La Liga": {
-"n": 38,
+"n": 39,
 "wins": 23,
-"hitRate": 0.6053
+"hitRate": 0.5897
 },
 "German Bundesliga": {
 "n": 32,
@@ -156,6 +156,11 @@
 "wins": 4,
 "hitRate": 0.3333
 },
+"French Ligue 2": {
+"n": 10,
+"wins": 6,
+"hitRate": 0.6
+},
 "Australian A-League Men": {
 "n": 9,
 "wins": 4,
@@ -165,11 +170,6 @@
 "n": 9,
 "wins": 5,
 "hitRate": 0.5556
-},
-"French Ligue 2": {
-"n": 8,
-"wins": 5,
-"hitRate": 0.625
 },
 "Norwegian Eliteserien": {
 "n": 8,
@@ -195,6 +195,11 @@
 "n": 7,
 "wins": 2,
 "hitRate": 0.2857
+},
+"Dutch Eredivisie": {
+"n": 7,
+"wins": 3,
+"hitRate": 0.4286
 },
 "English Football League Cup": {
 "n": 7,
@@ -226,11 +231,6 @@
 "wins": 3,
 "hitRate": 0.5
 },
-"Dutch Eredivisie": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
-},
 "English Sky Bet League 2": {
 "n": 6,
 "wins": 1,
@@ -245,6 +245,11 @@
 "n": 5,
 "wins": 3,
 "hitRate": 0.6
+},
+"Dutch Eerste Divisie": {
+"n": 5,
+"wins": 2,
+"hitRate": 0.4
 },
 "Friendlies International": {
 "n": 5,
@@ -270,11 +275,6 @@
 "n": 4,
 "wins": 0,
 "hitRate": 0.0
-},
-"Dutch Eerste Divisie": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
 },
 "UEFA Nations League": {
 "n": 4,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 554,
-"wins": 341,
-"hitRate": 0.6155,
-"nRoi": 554,
-"roi": 0.0314,
-"roiLb": -0.0291,
-"nClv": 554,
+"n": 555,
+"wins": 342,
+"hitRate": 0.6162,
+"nRoi": 555,
+"roi": 0.0325,
+"roiLb": -0.0278,
+"nClv": 555,
 "clv": 0.14,
-"clvLb": -0.0463
+"clvLb": -0.0462
 },
 "weak": {
-"n": 275,
+"n": 279,
 "wins": 140,
-"hitRate": 0.5091,
-"nRoi": 275,
-"roi": 0.1616,
-"roiLb": 0.0444,
-"nClv": 275,
-"clv": 0.0,
-"clvLb": -0.2178
+"hitRate": 0.5018,
+"nRoi": 279,
+"roi": 0.1449,
+"roiLb": 0.0287,
+"nClv": 279,
+"clv": -0.03,
+"clvLb": -0.2525
 }
 },
 "divergence": {
@@ -450,6 +450,101 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36239851",
+"home": "Sevilla",
+"away": "Alaves",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sevilla",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-11-06T20:00:00Z",
+"settledAt": "2026-11-06T22:01:37.385911+00:00"
+},
+{
+"matchId": "36238714",
+"home": "Willem II",
+"away": "PEC Zwolle",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "PEC Zwolle",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-06T19:00:00Z",
+"settledAt": "2026-11-06T22:01:37.385911+00:00"
+},
+{
+"matchId": "36263387",
+"home": "Montpellier",
+"away": "Metz",
+"league": "French Ligue 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Montpellier",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-11-06T19:00:00Z",
+"settledAt": "2026-11-06T22:01:37.385911+00:00"
+},
+{
+"matchId": "36270788",
+"home": "Nancy",
+"away": "Sochaux",
+"league": "French Ligue 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Nancy",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-06T19:00:00Z",
+"settledAt": "2026-11-06T22:01:37.385911+00:00"
+},
+{
+"matchId": "36273277",
+"home": "FC Oss",
+"away": "RKC Waalwijk",
+"league": "Dutch Eerste Divisie",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "RKC Waalwijk",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-06T19:00:00Z",
+"settledAt": "2026-11-06T22:01:37.385911+00:00"
+},
 {
 "matchId": "36267729",
 "home": "Silkeborg",
@@ -1114,114 +1209,19 @@
 ],
 "kickoff": "2026-11-04T20:00:00Z",
 "settledAt": "2026-11-04T23:10:19.062128+00:00"
-},
-{
-"matchId": "36223251",
-"home": "Lens",
-"away": "Como",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Como",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-9
-],
-"kickoff": "2026-11-04T20:00:00Z",
-"settledAt": "2026-11-04T23:10:19.062128+00:00"
-},
-{
-"matchId": "36253508",
-"home": "Bristol City",
-"away": "Wolves",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Wolves",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-04T20:00:00Z",
-"settledAt": "2026-11-04T23:10:19.062128+00:00"
-},
-{
-"matchId": "36223262",
-"home": "Dortmund",
-"away": "Betis",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Dortmund",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-11-04T20:00:00Z",
-"settledAt": "2026-11-04T23:10:19.062128+00:00"
-},
-{
-"matchId": "36253490",
-"home": "Wrexham",
-"away": "Middlesbrough",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Middlesbrough",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-04T19:45:00Z",
-"settledAt": "2026-11-04T22:53:54.717930+00:00"
-},
-{
-"matchId": "36253507",
-"home": "Cardiff",
-"away": "West Ham",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "West Ham",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-11-04T19:45:00Z",
-"settledAt": "2026-11-04T22:53:54.717930+00:00"
 }
 ],
 "global": {
-"n": 829,
-"wins": 481,
-"hitRate": 0.5802,
-"nRoi": 829,
-"roi": 0.0746,
-"roiLb": 0.0185,
-"nClv": 829,
-"clv": 0.1,
-"clvLb": -0.0495
+"n": 834,
+"wins": 482,
+"hitRate": 0.5779,
+"nRoi": 834,
+"roi": 0.0701,
+"roiLb": 0.0142,
+"nClv": 834,
+"clv": 0.08,
+"clvLb": -0.0613
 },
-"pending": 36,
-"ausgeschlossenLive": 1135
+"pending": 34,
+"ausgeschlossenLive": 1132
 }
