@@ -88,21 +88,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 341707 verbraucht, 4658293 uebrig"
+      "note": "Kontingent: 343047 verbraucht, 4656953 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
         "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
         "Yokohama FC v Fujieda Myfc (Japanese J League 2): name — bester Kandidat „Yokohama F Marinos v Fagiano Okayama“",
-        "Changwon City v Gangneung City (South Korean K3 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 7.5h Anpfiff-Abstand",
-        "Hamburger SV v Mgladbach (German Bundesliga): name — bester Kandidat „Hamburger SV v Borussia Monchengladbach“"
+        "Changwon City v Gangneung City (South Korean K3 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 7.5h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 51 · name 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 52 · kein_pinnacle 4 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -111,7 +110,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 4 — Toulouse v Strasbourg (25 Buecher, ohne Pinnacle); Oxford City v Leicester (20 Buecher, ohne Pinnacle); Standard v Waasland-Beveren (10 Buecher, ohne Pinnacle); Wisla Krakow v Cracovia Krakow (33 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -120,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
+      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -187,5 +186,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-06T21:01:47.317544+00:00"
+  "generatedAt": "2026-11-06T21:31:38.281955+00:00"
 }
