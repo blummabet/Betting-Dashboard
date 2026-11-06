@@ -88,21 +88,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 346234 verbraucht, 4653766 uebrig"
+      "note": "Kontingent: 347550 verbraucht, 4652450 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
-        "Club Independiente Petrolero v Real Tomayapo (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Independiente v Deportivo Riestra“",
-        "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
         "Yokohama FC v Fujieda Myfc (Japanese J League 2): name — bester Kandidat „Yokohama F Marinos v Fagiano Okayama“",
-        "Changwon City v Gangneung City (South Korean K3 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 7.5h Anpfiff-Abstand"
+        "Changwon City v Gangneung City (South Korean K3 League): zeit — bester Kandidat „Bristol City v Norwich City“ · 7.5h Anpfiff-Abstand",
+        "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“"
       ],
-      "note": "ohne Anker: kein_kandidat 62 · name 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 64 · kein_pinnacle 1 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -111,7 +110,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Union Santa Fe v Velez Sarsfield (20 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -120,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
+      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -187,5 +186,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-06T22:46:41.333901+00:00"
+  "generatedAt": "2026-11-06T23:02:07.764491+00:00"
 }

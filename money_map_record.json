@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-11-06T22:46:20.012203+00:00",
+"generatedAt": "2026-11-06T23:01:45.052918+00:00",
 "byVerdict": {
 "konsens": {
-"n": 798,
-"wins": 471,
-"hitRate": 0.5902,
-"polyN": 779,
-"polyWins": 453,
-"polyHitRate": 0.5815,
-"pinnN": 711,
-"pinnHitRate": 0.5921,
-"nRoi": 798,
-"roi": 0.074,
-"roiLb": 0.0184,
-"nClv": 798,
+"n": 799,
+"wins": 472,
+"hitRate": 0.5907,
+"polyN": 780,
+"polyWins": 454,
+"polyHitRate": 0.5821,
+"pinnN": 712,
+"pinnHitRate": 0.5927,
+"nRoi": 799,
+"roi": 0.0748,
+"roiLb": 0.0193,
+"nClv": 799,
 "clv": 0.1,
-"clvLb": -0.052
+"clvLb": -0.0503
 },
 "uneinig": {
-"n": 41,
+"n": 42,
 "wins": 15,
-"hitRate": 0.3659,
-"polyN": 40,
-"polyWins": 15,
-"polyHitRate": 0.375,
-"pinnN": 30,
-"pinnHitRate": 0.3,
-"nRoi": 41,
-"roi": 0.0654,
-"roiLb": -0.3049,
-"nClv": 41,
-"clv": -0.12,
-"clvLb": -0.716
+"hitRate": 0.3571,
+"polyN": 41,
+"polyWins": 16,
+"polyHitRate": 0.3902,
+"pinnN": 31,
+"pinnHitRate": 0.3226,
+"nRoi": 42,
+"roi": 0.04,
+"roiLb": -0.3237,
+"nClv": 42,
+"clv": -0.19,
+"clvLb": -0.7788
 },
 "teil": {
 "n": 1,
@@ -51,15 +51,15 @@
 }
 },
 "byLeague": {
+"English Sky Bet Championship": {
+"n": 54,
+"wins": 31,
+"hitRate": 0.5741
+},
 "UEFA Champions League": {
 "n": 54,
 "wins": 38,
 "hitRate": 0.7037
-},
-"English Sky Bet Championship": {
-"n": 53,
-"wins": 31,
-"hitRate": 0.5849
 },
 "Italian Serie A": {
 "n": 51,
@@ -82,9 +82,9 @@
 "hitRate": 0.6829
 },
 "English Premier League": {
-"n": 40,
-"wins": 21,
-"hitRate": 0.525
+"n": 41,
+"wins": 22,
+"hitRate": 0.5366
 },
 "Spanish La Liga": {
 "n": 39,
@@ -424,37 +424,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 556,
-"wins": 343,
-"hitRate": 0.6169,
-"nRoi": 556,
-"roi": 0.0332,
-"roiLb": -0.027,
-"nClv": 556,
+"n": 557,
+"wins": 344,
+"hitRate": 0.6176,
+"nRoi": 557,
+"roi": 0.0345,
+"roiLb": -0.0257,
+"nClv": 557,
 "clv": 0.15,
-"clvLb": -0.0405
+"clvLb": -0.0381
 },
 "weak": {
-"n": 284,
+"n": 285,
 "wins": 143,
-"hitRate": 0.5035,
-"nRoi": 284,
-"roi": 0.1489,
-"roiLb": 0.0337,
-"nClv": 284,
-"clv": -0.03,
-"clvLb": -0.2502
+"hitRate": 0.5018,
+"nRoi": 285,
+"roi": 0.1448,
+"roiLb": 0.0299,
+"nClv": 285,
+"clv": -0.04,
+"clvLb": -0.2603
 }
 },
 "divergence": {
-"n": 41,
+"n": 42,
 "betfairWins": 15,
-"betfairRate": 0.3659,
-"polyN": 40,
-"polyWins": 15,
-"polyRate": 0.375
+"betfairRate": 0.3571,
+"polyN": 41,
+"polyWins": 16,
+"polyRate": 0.3902
 },
 "recent": [
+{
+"matchId": "36234720",
+"home": "Everton",
+"away": "Coventry",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Everton",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-06T20:00:00Z",
+"settledAt": "2026-11-06T23:01:44.737362+00:00"
+},
+{
+"matchId": "36272387",
+"home": "Derby",
+"away": "Bolton",
+"league": "English Sky Bet Championship",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Bolton",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-06T20:00:00Z",
+"settledAt": "2026-11-06T23:01:44.737362+00:00"
+},
 {
 "matchId": "36267044",
 "home": "Venezia",
@@ -1176,57 +1214,19 @@
 ],
 "kickoff": "2026-11-05T17:45:00Z",
 "settledAt": "2026-11-05T19:42:55.846643+00:00"
-},
-{
-"matchId": "36229679",
-"home": "Anderlecht",
-"away": "Red Bull Salzburg",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Anderlecht",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-05T17:45:00Z",
-"settledAt": "2026-11-05T19:42:55.846643+00:00"
-},
-{
-"matchId": "36228997",
-"home": "PFC Levski Sofia",
-"away": "Jagiellonia Bialystock",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "PFC Levski Sofia",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-05T17:45:00Z",
-"settledAt": "2026-11-05T19:42:55.846643+00:00"
 }
 ],
 "global": {
-"n": 840,
-"wins": 486,
-"hitRate": 0.5786,
-"nRoi": 840,
-"roi": 0.0723,
-"roiLb": 0.0165,
-"nClv": 840,
+"n": 842,
+"wins": 487,
+"hitRate": 0.5784,
+"nRoi": 842,
+"roi": 0.0718,
+"roiLb": 0.0161,
+"nClv": 842,
 "clv": 0.09,
-"clvLb": -0.0576
+"clvLb": -0.0595
 },
-"pending": 29,
+"pending": 27,
 "ausgeschlossenLive": 1131
 }
