@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-06T17:01:05.131944+00:00",
+ "generatedAt": "2026-11-06T17:15:58.974148+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -87,28 +87,28 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 1271,
+   "n": 1272,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +0.4 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.0467,
-   "pl": 59.34,
-   "roiLb": 0.0043,
+   "roi": 0.0459,
+   "pl": 58.34,
+   "roiLb": 0.0035,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1047,
+   "noetigNRoi": 1085,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 982,
-    "lo": 272,
-    "hi": 20348,
-    "nieAnteil": 0.028,
+    "median": 1036,
+    "lo": 274,
+    "hi": 21351,
+    "nieAnteil": 0.03,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -116,8 +116,8 @@
     "nBei": 1214,
     "roiBei": 0.0437,
     "rausgefallen": 0,
-    "nNeu": 57,
-    "roiNeu": 0.1106
+    "nNeu": 58,
+    "roiNeu": 0.0919
    }
   }
  ],
@@ -565,40 +565,6 @@
    }
   },
   {
-   "schublade": "Match Odds",
-   "strom": "betfair",
-   "n": 6451,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 422 gleichzeitig geprüften Schubladen legt der Zufall allein 21.1 über diese Hürde, und drüber liegen 27. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0477,
-   "pl": 307.71,
-   "roiLb": 0.0216,
-   "clv": 0.37,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 422,
-    "erwartet": 21.1,
-    "nUeber": 27,
-    "ueberschuss": false
-   },
-   "zielN": 6367,
-   "seitKandidat": {
-    "ab": "2026-10-18T01:30:25.357275+00:00",
-    "nBei": 6337,
-    "nNeu": 114
-   }
-  },
-  {
    "schublade": "French Ligue 1 · Match Odds",
    "strom": "betfair",
    "n": 36,
@@ -630,6 +596,40 @@
     "ab": "2026-11-01T18:30:51.517450+00:00",
     "nBei": 34,
     "nNeu": 2
+   }
+  },
+  {
+   "schublade": "Match Odds",
+   "strom": "betfair",
+   "n": 6451,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 422 gleichzeitig geprüften Schubladen legt der Zufall allein 21.1 über diese Hürde, und drüber liegen 27. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0472,
+   "pl": 304.49,
+   "roiLb": 0.0211,
+   "clv": 0.37,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 422,
+    "erwartet": 21.1,
+    "nUeber": 27,
+    "ueberschuss": false
+   },
+   "zielN": 6367,
+   "seitKandidat": {
+    "ab": "2026-10-18T01:30:25.357275+00:00",
+    "nBei": 6337,
+    "nNeu": 114
    }
   },
   {
@@ -1051,8 +1051,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 291.17,
-   "roi": 0.0073,
+   "pl": 279.51,
+   "roi": 0.007,
    "clv": 0.37,
    "belegte": 26
   },
@@ -1095,7 +1095,7 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "roiLb": 0.0043,
+   "roiLb": 0.0035,
    "clvUrteil": "nicht erhoben",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -2006,18 +2006,6 @@
    "belegt": false
   },
   {
-   "liga": "Bulgarian A League",
-   "n": 116,
-   "wins": 65,
-   "hit": 0.5603,
-   "hitLb": 0.484,
-   "roi": 0.0637,
-   "roiLb": -0.0995,
-   "pl": 7.39,
-   "clv": 0.179,
-   "belegt": false
-  },
-  {
    "liga": "Portuguese Cup",
    "n": 118,
    "wins": 64,
@@ -2111,18 +2099,6 @@
    "roiLb": -0.1076,
    "pl": 4.74,
    "clv": -0.259,
-   "belegt": false
-  },
-  {
-   "liga": "Greek Super League 2",
-   "n": 146,
-   "wins": 80,
-   "hit": 0.5479,
-   "hitLb": 0.4799,
-   "roi": 0.0355,
-   "roiLb": -0.1086,
-   "pl": 5.19,
-   "clv": -0.208,
    "belegt": false
   },
   {
@@ -2267,6 +2243,18 @@
    "roiLb": -0.1244,
    "pl": 3.64,
    "clv": 0.01,
+   "belegt": false
+  },
+  {
+   "liga": "Bulgarian A League",
+   "n": 123,
+   "wins": 67,
+   "hit": 0.5447,
+   "hitLb": 0.4707,
+   "roi": 0.0315,
+   "roiLb": -0.1262,
+   "pl": 3.88,
+   "clv": 0.139,
    "belegt": false
   },
   {
@@ -2495,6 +2483,18 @@
    "roiLb": -0.1328,
    "pl": 3.35,
    "clv": 0.516,
+   "belegt": false
+  },
+  {
+   "liga": "Greek Super League 2",
+   "n": 140,
+   "wins": 75,
+   "hit": 0.5357,
+   "hitLb": 0.4664,
+   "roi": 0.013,
+   "roiLb": -0.1346,
+   "pl": 1.82,
+   "clv": -0.184,
    "belegt": false
   },
   {
@@ -3170,18 +3170,6 @@
    "belegt": false
   },
   {
-   "liga": "Armenian Premier League",
-   "n": 140,
-   "wins": 74,
-   "hit": 0.5286,
-   "hitLb": 0.4593,
-   "roi": -0.0471,
-   "roiLb": -0.1896,
-   "pl": -6.59,
-   "clv": 0.237,
-   "belegt": false
-  },
-  {
    "liga": "Polish I Liga",
    "n": 215,
    "wins": 98,
@@ -3410,6 +3398,18 @@
    "belegt": false
   },
   {
+   "liga": "Armenian Premier League",
+   "n": 147,
+   "wins": 75,
+   "hit": 0.5102,
+   "hitLb": 0.4428,
+   "roi": -0.0809,
+   "roiLb": -0.2193,
+   "pl": -11.89,
+   "clv": 0.231,
+   "belegt": false
+  },
+  {
    "liga": "Austrian Bundesliga",
    "n": 144,
    "wins": 71,
@@ -3551,6 +3551,18 @@
    "roiLb": -0.2336,
    "pl": -31.77,
    "clv": 0.231,
+   "belegt": false
+  },
+  {
+   "liga": "Serbian First League",
+   "n": 87,
+   "wins": 42,
+   "hit": 0.4828,
+   "hitLb": 0.3965,
+   "roi": -0.0364,
+   "roiLb": -0.2343,
+   "pl": -3.17,
+   "clv": -0.678,
    "belegt": false
   },
   {
@@ -3755,18 +3767,6 @@
    "roiLb": -0.2631,
    "pl": 1.28,
    "clv": -0.165,
-   "belegt": false
-  },
-  {
-   "liga": "Serbian First League",
-   "n": 94,
-   "wins": 43,
-   "hit": 0.4574,
-   "hitLb": 0.3753,
-   "roi": -0.0736,
-   "roiLb": -0.2655,
-   "pl": -6.92,
-   "clv": -0.641,
    "belegt": false
   },
   {
@@ -4627,28 +4627,28 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 1271,
+   "n": 1272,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +0.4 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.0467,
-   "pl": 59.34,
-   "roiLb": 0.0043,
+   "roi": 0.0459,
+   "pl": 58.34,
+   "roiLb": 0.0035,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1047,
+   "noetigNRoi": 1085,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 982,
-    "lo": 272,
-    "hi": 20348,
-    "nieAnteil": 0.028,
+    "median": 1036,
+    "lo": 274,
+    "hi": 21351,
+    "nieAnteil": 0.03,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -4656,8 +4656,8 @@
     "nBei": 1214,
     "roiBei": 0.0437,
     "rausgefallen": 0,
-    "nNeu": 57,
-    "roiNeu": 0.1106
+    "nNeu": 58,
+    "roiNeu": 0.0919
    }
   },
   {
@@ -5103,40 +5103,6 @@
    }
   },
   {
-   "schublade": "Match Odds",
-   "strom": "betfair",
-   "n": 6451,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 422 gleichzeitig geprüften Schubladen legt der Zufall allein 21.1 über diese Hürde, und drüber liegen 27. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0477,
-   "pl": 307.71,
-   "roiLb": 0.0216,
-   "clv": 0.37,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 422,
-    "erwartet": 21.1,
-    "nUeber": 27,
-    "ueberschuss": false
-   },
-   "zielN": 6367,
-   "seitKandidat": {
-    "ab": "2026-10-18T01:30:25.357275+00:00",
-    "nBei": 6337,
-    "nNeu": 114
-   }
-  },
-  {
    "schublade": "French Ligue 1 · Match Odds",
    "strom": "betfair",
    "n": 36,
@@ -5168,6 +5134,40 @@
     "ab": "2026-11-01T18:30:51.517450+00:00",
     "nBei": 34,
     "nNeu": 2
+   }
+  },
+  {
+   "schublade": "Match Odds",
+   "strom": "betfair",
+   "n": 6451,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 422 gleichzeitig geprüften Schubladen legt der Zufall allein 21.1 über diese Hürde, und drüber liegen 27. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0472,
+   "pl": 304.49,
+   "roiLb": 0.0211,
+   "clv": 0.37,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 422,
+    "erwartet": 21.1,
+    "nUeber": 27,
+    "ueberschuss": false
+   },
+   "zielN": 6367,
+   "seitKandidat": {
+    "ab": "2026-10-18T01:30:25.357275+00:00",
+    "nBei": 6337,
+    "nNeu": 114
    }
   },
   {
@@ -5604,9 +5604,9 @@
    "n": 4806,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0232,
-   "pl": 111.5,
-   "roiLb": -0.0103,
+   "roi": 0.0236,
+   "pl": 113.42,
+   "roiLb": -0.0098,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5623,12 +5623,12 @@
   {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 5589,
+   "n": 5588,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0096,
-   "pl": 53.65,
-   "roiLb": -0.012,
+   "roi": 0.009,
+   "pl": 50.29,
+   "roiLb": -0.0125,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5853,9 +5853,9 @@
    "n": 6077,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0021,
-   "pl": -12.76,
-   "roiLb": -0.0228,
+   "roi": -0.0027,
+   "pl": -16.41,
+   "roiLb": -0.0234,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5894,25 +5894,25 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6483,
+   "n": 6484,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0157,
-   "pl": 101.64,
-   "roiLb": -0.0239,
+   "roi": 0.0159,
+   "pl": 103.39,
+   "roiLb": -0.0236,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 41271,
+   "noetigNRoi": 39899,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 20358,
-    "lo": 3682,
-    "hi": 931154,
-    "nieAnteil": 0.257,
+    "median": 18492,
+    "lo": 3464,
+    "hi": 2410123,
+    "nieAnteil": 0.277,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -6056,12 +6056,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 5016,
+   "n": 5017,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0088,
-   "pl": -44.14,
-   "roiLb": -0.0333,
+   "roi": -0.009,
+   "pl": -45.15,
+   "roiLb": -0.0335,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6126,28 +6126,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Both teams to Score?",
-   "strom": "betfair",
-   "n": 5865,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0161,
-   "pl": -94.43,
-   "roiLb": -0.0384,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Spanish Primera Federación - Group 2 · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 31,
@@ -6167,6 +6145,28 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Both teams to Score?",
+   "strom": "betfair",
+   "n": 5865,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0165,
+   "pl": -96.77,
+   "roiLb": -0.0387,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
    "naeherung": false
   },
   {
@@ -6931,7 +6931,7 @@
     "nieAnteil": 0.422,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
@@ -14518,7 +14518,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 17.7,
+   "alterTage": 17.8,
    "art": "mix",
    "wert": "steam"
   },
