@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-07T11:33:04.762313+00:00",
+"generatedAt": "2026-11-07T11:48:04.994554+00:00",
 "byVerdict": {
 "konsens": {
 "n": 802,
-"wins": 474,
-"hitRate": 0.591,
+"wins": 475,
+"hitRate": 0.5923,
 "polyN": 783,
-"polyWins": 457,
-"polyHitRate": 0.5837,
-"pinnN": 715,
-"pinnHitRate": 0.593,
+"polyWins": 458,
+"polyHitRate": 0.5849,
+"pinnN": 716,
+"pinnHitRate": 0.5936,
 "nRoi": 802,
-"roi": 0.0771,
-"roiLb": 0.0216,
+"roi": 0.08,
+"roiLb": 0.0244,
 "nClv": 802,
 "clv": 0.1,
-"clvLb": -0.0501
+"clvLb": -0.0538
 },
 "uneinig": {
 "n": 43,
@@ -156,6 +156,11 @@
 "wins": 4,
 "hitRate": 0.3333
 },
+"Australian A-League Men": {
+"n": 10,
+"wins": 5,
+"hitRate": 0.5
+},
 "French Ligue 2": {
 "n": 10,
 "wins": 6,
@@ -165,11 +170,6 @@
 "n": 10,
 "wins": 6,
 "hitRate": 0.6
-},
-"Australian A-League Men": {
-"n": 9,
-"wins": 4,
-"hitRate": 0.4444
 },
 "Norwegian Eliteserien": {
 "n": 8,
@@ -336,11 +336,6 @@
 "wins": 1,
 "hitRate": 0.5
 },
-"Estonian Premier League": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
-},
 "Greek Cup": {
 "n": 2,
 "wins": 2,
@@ -375,6 +370,11 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
+},
+"Estonian Premier League": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
 },
 "Greek Super League": {
 "n": 1,
@@ -424,26 +424,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 557,
+"n": 556,
 "wins": 344,
-"hitRate": 0.6176,
-"nRoi": 557,
-"roi": 0.0345,
-"roiLb": -0.0257,
-"nClv": 557,
+"hitRate": 0.6187,
+"nRoi": 556,
+"roi": 0.0363,
+"roiLb": -0.0239,
+"nClv": 556,
 "clv": 0.15,
-"clvLb": -0.0381
+"clvLb": -0.0427
 },
 "weak": {
-"n": 289,
-"wins": 146,
-"hitRate": 0.5052,
-"nRoi": 289,
-"roi": 0.1578,
-"roiLb": 0.043,
-"nClv": 289,
+"n": 290,
+"wins": 147,
+"hitRate": 0.5069,
+"nRoi": 290,
+"roi": 0.1616,
+"roiLb": 0.047,
+"nClv": 290,
 "clv": -0.04,
-"clvLb": -0.2567
+"clvLb": -0.2572
 }
 },
 "divergence": {
@@ -455,6 +455,25 @@
 "polyRate": 0.381
 },
 "recent": [
+{
+"matchId": "36239339",
+"home": "Melbourne City",
+"away": "Western Sydney Wanderers",
+"league": "Australian A-League Men",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Melbourne City",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-07T08:40:00Z",
+"settledAt": "2026-11-07T11:48:04.798231+00:00"
+},
 {
 "matchId": "36270335",
 "home": "Atlante",
@@ -1195,37 +1214,18 @@
 ],
 "kickoff": "2026-11-05T17:45:00Z",
 "settledAt": "2026-11-05T20:58:07.683966+00:00"
-},
-{
-"matchId": "36242992",
-"home": "Midtjylland",
-"away": "Ajax",
-"league": "UEFA Conference League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Ajax",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-6
-],
-"kickoff": "2026-11-05T17:45:00Z",
-"settledAt": "2026-11-05T20:58:07.683966+00:00"
 }
 ],
 "global": {
 "n": 846,
-"wins": 490,
-"hitRate": 0.5792,
+"wins": 491,
+"hitRate": 0.5804,
 "nRoi": 846,
-"roi": 0.0766,
-"roiLb": 0.0208,
+"roi": 0.0793,
+"roiLb": 0.0235,
 "nClv": 846,
-"clv": 0.09,
-"clvLb": -0.0592
+"clv": 0.08,
+"clvLb": -0.0627
 },
 "pending": 42,
 "ausgeschlossenLive": 1112
