@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 83 von 201 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Excelsior v Go Ahead Eagles (Dutch Eredivisie); Guarani (Par) v Olimpia (Paraguayan Primera Division); Peterborough v Reading (English FA Cup)"
+        "nur 74 von 201 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Zaragoza v Huesca (Spanish Primera Federación - Group 2); St Mirren v Rangers (Scottish Premiership); Guarani (Par) v Olimpia (Paraguayan Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,26 +90,22 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 385272 verbraucht, 4614728 uebrig"
+      "note": "Kontingent: 385872 verbraucht, 4614128 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 5,
       "failures": [
-        "Cong An Nhan Dan v Ho Chi Minh City (Vietnamese V-League): name — bester Kandidat „Bristol City v Norwich City“",
-        "Ebbsfleet Utd v Chesham Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
-        "Queens Park v Partick (Scottish Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“",
-        "Hemel Hempstead v Maidstone Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
-        "AFC Telford v Spalding Utd (English National League North): name — bester Kandidat „Charlton Athletic v Sheffield United“",
-        "Anderlecht B v Club Brugge B (Belgian Challenger Pro League): zeit — bester Kandidat „Club Brugge v Anderlecht“ · 21.5h Anpfiff-Abstand",
         "Hampton and Richmond v Maidenhead (English National League South): name — bester Kandidat „Burton Albion v AFC Rushden and Diamonds“",
-        "Francs Borains v Seraing Utd (Belgian Challenger Pro League): name — bester Kandidat „Charlton Athletic v Sheffield United“",
+        "Ebbsfleet Utd v Chesham Utd (English National League South): name — bester Kandidat „Sandvikens IF v Nordic United FC“",
+        "AFC Telford v Spalding Utd (English National League North): name — bester Kandidat „Sandvikens IF v Nordic United FC“",
+        "Queens Park v Partick (Scottish Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“",
         "QPR v Lincoln (English Sky Bet Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“"
       ],
-      "note": "ohne Anker: kein_kandidat 68 · kein_pinnacle 1 · name 8 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 64 · kein_pinnacle 9 · name 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -118,7 +114,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Bristol City v Norwich (18 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Bristol City v Norwich (7 Buecher, ohne Pinnacle); Wehen Wiesbaden v TSV Havelse (18 Buecher, ohne Pinnacle); Orebro v Osters (27 Buecher, ohne Pinnacle); Sandvikens IF v United IK Nordic (24 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -127,7 +123,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 14 gewollt, 14 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -194,5 +190,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-07T14:03:47.362765+00:00"
+  "generatedAt": "2026-11-07T14:18:24.140168+00:00"
 }
