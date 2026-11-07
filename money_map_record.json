@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-07T16:48:22.773935+00:00",
+"generatedAt": "2026-11-07T16:57:56.740880+00:00",
 "byVerdict": {
 "konsens": {
-"n": 812,
-"wins": 480,
-"hitRate": 0.5911,
-"polyN": 793,
-"polyWins": 463,
-"polyHitRate": 0.5839,
-"pinnN": 726,
-"pinnHitRate": 0.5923,
-"nRoi": 812,
-"roi": 0.0806,
-"roiLb": 0.0253,
-"nClv": 812,
+"n": 817,
+"wins": 482,
+"hitRate": 0.59,
+"polyN": 798,
+"polyWins": 465,
+"polyHitRate": 0.5827,
+"pinnN": 731,
+"pinnHitRate": 0.591,
+"nRoi": 817,
+"roi": 0.0779,
+"roiLb": 0.0227,
+"nClv": 817,
 "clv": 0.1,
-"clvLb": -0.05
+"clvLb": -0.0459
 },
 "uneinig": {
 "n": 44,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "English Sky Bet Championship": {
-"n": 57,
-"wins": 32,
-"hitRate": 0.5614
+"n": 59,
+"wins": 33,
+"hitRate": 0.5593
 },
 "UEFA Champions League": {
 "n": 54,
@@ -76,15 +76,15 @@
 "wins": 23,
 "hitRate": 0.5111
 },
+"English Premier League": {
+"n": 44,
+"wins": 23,
+"hitRate": 0.5227
+},
 "Brazilian Serie A": {
 "n": 42,
 "wins": 29,
 "hitRate": 0.6905
-},
-"English Premier League": {
-"n": 42,
-"wins": 22,
-"hitRate": 0.5238
 },
 "Spanish La Liga": {
 "n": 40,
@@ -171,6 +171,11 @@
 "wins": 6,
 "hitRate": 0.6
 },
+"Scottish Premiership": {
+"n": 9,
+"wins": 3,
+"hitRate": 0.3333
+},
 "Norwegian Eliteserien": {
 "n": 8,
 "wins": 5,
@@ -180,11 +185,6 @@
 "n": 8,
 "wins": 4,
 "hitRate": 0.5
-},
-"Scottish Premiership": {
-"n": 8,
-"wins": 3,
-"hitRate": 0.375
 },
 "UEFA Nations League C": {
 "n": 8,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 556,
-"wins": 345,
-"hitRate": 0.6205,
-"nRoi": 556,
-"roi": 0.0394,
-"roiLb": -0.0207,
-"nClv": 556,
+"n": 558,
+"wins": 346,
+"hitRate": 0.6201,
+"nRoi": 558,
+"roi": 0.0378,
+"roiLb": -0.0222,
+"nClv": 558,
 "clv": 0.15,
-"clvLb": -0.0421
+"clvLb": -0.0387
 },
 "weak": {
-"n": 301,
-"wins": 151,
-"hitRate": 0.5017,
-"nRoi": 301,
-"roi": 0.1511,
-"roiLb": 0.0386,
-"nClv": 301,
+"n": 304,
+"wins": 152,
+"hitRate": 0.5,
+"nRoi": 304,
+"roi": 0.1463,
+"roiLb": 0.0346,
+"nClv": 304,
 "clv": -0.03,
-"clvLb": -0.2419
+"clvLb": -0.2353
 }
 },
 "divergence": {
@@ -450,6 +450,101 @@
 "polyRate": 0.3721
 },
 "recent": [
+{
+"matchId": "36235029",
+"home": "Arsenal",
+"away": "Hull",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Arsenal",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T16:57:56.530969+00:00"
+},
+{
+"matchId": "36235204",
+"home": "Fulham",
+"away": "Newcastle",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Fulham",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T16:57:56.530969+00:00"
+},
+{
+"matchId": "36260780",
+"home": "St Johnstone",
+"away": "Dundee",
+"league": "Scottish Premiership",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Dundee",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T16:57:56.530969+00:00"
+},
+{
+"matchId": "36264487",
+"home": "Blackburn",
+"away": "West Ham",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "West Ham",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T16:57:56.530969+00:00"
+},
+{
+"matchId": "36264506",
+"home": "West Brom",
+"away": "Millwall",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "West Brom",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T16:57:56.530969+00:00"
+},
 {
 "matchId": "36240020",
 "home": "Malaga",
@@ -1114,114 +1209,19 @@
 ],
 "kickoff": "2026-11-06T08:40:00Z",
 "settledAt": "2026-11-06T11:45:17.168249+00:00"
-},
-{
-"matchId": "36239733",
-"home": "Cruzeiro MG",
-"away": "Bahia",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cruzeiro MG",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-11-06T00:30:00Z",
-"settledAt": "2026-11-06T03:43:51.913999+00:00"
-},
-{
-"matchId": "36239730",
-"home": "SE Palmeiras",
-"away": "Remo",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "SE Palmeiras",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-11-05T22:30:00Z",
-"settledAt": "2026-11-06T01:43:45.324540+00:00"
-},
-{
-"matchId": "36229816",
-"home": "Az Alkmaar",
-"away": "Juventus",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Juventus",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T23:13:34.960821+00:00"
-},
-{
-"matchId": "36229801",
-"home": "Benfica",
-"away": "Lech Poznan",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Benfica",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T23:13:34.960821+00:00"
-},
-{
-"matchId": "36229799",
-"home": "Celtic",
-"away": "Besiktas",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Besiktas",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T23:13:34.960821+00:00"
 }
 ],
 "global": {
-"n": 857,
-"wins": 496,
-"hitRate": 0.5788,
-"nRoi": 857,
-"roi": 0.0786,
-"roiLb": 0.0231,
-"nClv": 857,
-"clv": 0.08,
-"clvLb": -0.0589
+"n": 862,
+"wins": 498,
+"hitRate": 0.5777,
+"nRoi": 862,
+"roi": 0.0761,
+"roiLb": 0.0207,
+"nClv": 862,
+"clv": 0.09,
+"clvLb": -0.0549
 },
-"pending": 43,
+"pending": 38,
 "ausgeschlossenLive": 1100
 }
