@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 79 von 216 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Grasshoppers Zurich v Lausanne (Swiss Super League); Hertha Berlin v Wolfsburg (German Bundesliga 2); Widzew Lodz v Pogon Szczecin (Polish Ekstraklasa)"
+        "nur 77 von 218 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Antwerp v Lommel (Belgian Pro League); RAAL La Louviere v Cercle Brugge (Belgian Pro League); Grasshoppers Zurich v Lausanne (Swiss Super League)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,24 +90,25 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 384217 verbraucht, 4615783 uebrig"
+      "note": "Kontingent: 384817 verbraucht, 4615183 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 8,
       "failures": [
-        "Cong An Nhan Dan v Ho Chi Minh City (Vietnamese V-League): name — bester Kandidat „Bristol City v Norwich City“",
         "Racing de Ferrol v UD Logrones (Spanish Primera Federación - Group 1): name — bester Kandidat „Málaga v Real Racing Club de Santander“",
-        "Ebbsfleet Utd v Chesham Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
+        "Chanthaburi FC v Phrae United (Thai League 2): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
+        "Uthai Thani v Chiangrai Utd (Thai League 1): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
+        "Ayutthaya United v Pattani FC (Thai League 1): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
+        "Forfar v Edinburgh City (Scottish League Two): name — bester Kandidat „Arsenal v Hull City“",
+        "Elgin City FC v Dumbarton (Scottish League Two): name — bester Kandidat „Arsenal v Hull City“",
         "Queens Park v Partick (Scottish Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“",
-        "Hemel Hempstead v Maidstone Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
-        "AFC Telford v Spalding Utd (English National League North): name — bester Kandidat „Charlton Athletic v Sheffield United“",
         "QPR v Lincoln (English Sky Bet Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“"
       ],
-      "note": "ohne Anker: kein_kandidat 74 · name 7. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 73 · kein_pinnacle 3 · name 8. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -116,7 +117,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 3 — Nurnberg v SV Darmstadt (20 Buecher, ohne Pinnacle); VfL Osnabruck v Kaiserslautern (31 Buecher, ohne Pinnacle); Holstein Kiel v Arminia Bielefeld (32 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -125,7 +126,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
+      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -192,5 +193,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-07T13:33:27.084600+00:00"
+  "generatedAt": "2026-11-07T13:48:23.610342+00:00"
 }
