@@ -49661,7 +49661,7 @@ null
 "leadOdd": 2.8,
 "value": 5526.76,
 "sentAt": "2026-11-04T16:09:49.821089+00:00",
-"status": "void",
+"status": "expired",
 "htScore": null,
 "leadShare": 0.6536578393127257,
 "leadDir": "out",
@@ -49683,8 +49683,7 @@ null
 "ftScore": [
 1,
 1
-],
-"settledAt": "2026-11-07T15:48:38.519682+00:00"
+]
 },
 {
 "k": "fresh:36229684:First Half Goals 0.5",
@@ -54109,7 +54108,7 @@ null
 "leadOdd": 1.51,
 "value": 15420.609999999999,
 "sentAt": "2026-11-07T14:03:37.317057+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -54130,7 +54129,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 9.53,
+"clvPinn": null,
+"settledAt": "2026-11-07T16:03:51.634854+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36264505:Match Odds",
@@ -54186,7 +54195,7 @@ null
 "leadOdd": 1.8,
 "value": 72679.69,
 "sentAt": "2026-11-07T14:18:13.938424+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 2,
 1
@@ -54207,7 +54216,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -2.92,
+"clvPinn": null,
+"settledAt": "2026-11-07T16:18:53.482154+00:00",
+"ftScore": [
+2,
+2
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36267108:Match Odds",
@@ -54221,7 +54240,7 @@ null
 "leadOdd": 2.14,
 "value": 598977.04,
 "sentAt": "2026-11-07T14:18:13.938445+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 1,
 0
@@ -54242,7 +54261,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -1.27,
+"clvPinn": 0.22,
+"settledAt": "2026-11-07T16:18:53.482154+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36267104:Match Odds",
@@ -54463,7 +54492,7 @@ null
 "leadOdd": 2.14,
 "value": 128128.4,
 "sentAt": "2026-11-07T15:18:38.229559+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 1,
 0
@@ -54484,7 +54513,17 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": 20.84,
+"clvPinn": null,
+"settledAt": "2026-11-07T16:18:53.482154+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36235029:Match Odds",
@@ -54553,6 +54592,108 @@ null
 "score": [
 0,
 0
+]
+}
+},
+{
+"k": "fresh:36264742:Match Odds",
+"matchId": "36264742",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Sky Bet Championship",
+"home": "Preston",
+"away": "Southampton",
+"leadName": "Southampton",
+"leadOdd": 4.9,
+"value": 165728.57,
+"sentAt": "2026-11-07T16:03:42.522395+00:00",
+"status": "pending",
+"htScore": [
+1,
+0
+],
+"leadShare": 0.616348828690189,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 40518.5,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.351,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 45,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "fresh:36260780:Over/Under 2.5 Goals",
+"matchId": "36260780",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "Scottish Premiership",
+"home": "St Johnstone",
+"away": "Dundee",
+"leadName": "Over 2.5 Goals",
+"leadOdd": 1.42,
+"value": 35386.83,
+"sentAt": "2026-11-07T16:18:43.880330+00:00",
+"status": "pending",
+"htScore": [
+1,
+1
+],
+"leadShare": 0.913818219942278,
+"leadDir": "in",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 32140.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.071,
+"raus": "ereignis_sprung",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 56,
+"score": [
+1,
+1
+]
+}
+},
+{
+"k": "fresh:36241095:Over/Under 2.5 Goals",
+"matchId": "36241095",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "German Bundesliga",
+"home": "Mainz",
+"away": "Bayern Munich",
+"leadName": "Over 2.5 Goals",
+"leadOdd": 2.62,
+"value": 230750.74,
+"sentAt": "2026-11-07T16:18:43.880349+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5158569372301904,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 126229.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.262,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 83,
+"score": [
+0,
+2
 ]
 }
 }
