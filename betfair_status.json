@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 34 von 128 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: DC Utd v New York City (US MLS); Herrera FC v Atletico Independiente (Panamanian Premier League); Philadelphia v Toronto FC (US MLS)"
+        "nur 17 von 127 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Once Caldas v Aguilas Doradas (Colombian Primera A); Herrera FC v Atletico Independiente (Panamanian Premier League); Philadelphia v Toronto FC (US MLS)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,26 +90,27 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 387727 verbraucht, 4612273 uebrig"
+      "note": "Kontingent: 388375 verbraucht, 4611625 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 10,
       "failures": [
-        "Elgin City FC v Dumbarton (Scottish League Two): name — bester Kandidat „Birmingham City v Swansea City“",
-        "Forfar v Edinburgh City (Scottish League Two): name — bester Kandidat „Birmingham City v Swansea City“",
-        "Hemel Hempstead v Maidstone Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
+        "Elgin City FC v Dumbarton (Scottish League Two): name — bester Kandidat „Cardiff City v Burnley“",
+        "Forfar v Edinburgh City (Scottish League Two): name — bester Kandidat „Cardiff City v Burnley“",
         "Queens Park v Partick (Scottish Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“",
+        "Hemel Hempstead v Maidstone Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
         "Anderlecht B v Club Brugge B (Belgian Challenger Pro League): zeit — bester Kandidat „Club Brugge v Anderlecht“ · 21.5h Anpfiff-Abstand",
         "AFC Telford v Spalding Utd (English National League North): name — bester Kandidat „Charlton Athletic v Sheffield United“",
+        "Hampton and Richmond v Maidenhead (English National League South): name — bester Kandidat „Burton Albion v AFC Rushden and Diamonds“",
         "Francs Borains v Seraing Utd (Belgian Challenger Pro League): name — bester Kandidat „Charlton Athletic v Sheffield United“",
-        "Southampton U21 v Norwich U21 (English Premier League 2 - Div 1): name — bester Kandidat „Preston North End v Southampton“",
+        "Ebbsfleet Utd v Chesham Utd (English National League South): name — bester Kandidat „Charlton Athletic v Sheffield United“",
         "QPR v Lincoln (English Sky Bet Championship): name — bester Kandidat „Queens Park Rangers v Lincoln City“"
       ],
-      "note": "ohne Anker: kein_kandidat 60 · name 8 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 56 · kein_pinnacle 6 · name 9 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -118,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — St Johnstone v Dundee (32 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -194,5 +195,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-07T15:03:46.856944+00:00"
+  "generatedAt": "2026-11-07T15:18:46.992398+00:00"
 }
