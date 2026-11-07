@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-07T10:47:43.109433+00:00",
+ "generatedAt": "2026-11-07T11:02:49.895228+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -87,28 +87,28 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 1281,
+   "n": 1282,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +0.1 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.0429,
-   "pl": 54.91,
-   "roiLb": 0.0006,
+   "grund": "ROI belegt (Untergrenze +0.2 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
+   "roi": 0.0438,
+   "pl": 56.17,
+   "roiLb": 0.0016,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1244,
+   "noetigNRoi": 1191,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 1107,
-    "lo": 276,
-    "hi": 20764,
+    "median": 1046,
+    "lo": 280,
+    "hi": 17801,
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -116,8 +116,8 @@
     "nBei": 1214,
     "roiBei": 0.0437,
     "rausgefallen": 0,
-    "nNeu": 67,
-    "roiNeu": 0.0284
+    "nNeu": 68,
+    "roiNeu": 0.0456
    }
   }
  ],
@@ -860,7 +860,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 5.7,
+   "alterTage": 5.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -888,7 +888,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 5.6,
+   "alterTage": 5.7,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   }
@@ -958,7 +958,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 171.26,
+   "pl": 173.54,
    "roi": 0.0043,
    "clv": 0.34,
    "belegte": 23
@@ -990,7 +990,7 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "roiLb": 0.0006,
+   "roiLb": 0.0016,
    "clvUrteil": "nicht erhoben",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -1193,6 +1193,18 @@
    "belegt": false
   },
   {
+   "liga": "Australian A-League Men",
+   "n": 139,
+   "wins": 80,
+   "hit": 0.5755,
+   "hitLb": 0.5058,
+   "roi": 0.1413,
+   "roiLb": -0.0138,
+   "pl": 19.64,
+   "clv": 0.194,
+   "belegt": false
+  },
+  {
    "liga": "UEFA Champions League",
    "n": 378,
    "wins": 234,
@@ -1346,18 +1358,6 @@
    "roiLb": -0.0425,
    "pl": 18.21,
    "clv": 0.085,
-   "belegt": false
-  },
-  {
-   "liga": "Australian A-League Men",
-   "n": 132,
-   "wins": 74,
-   "hit": 0.5606,
-   "hitLb": 0.489,
-   "roi": 0.1175,
-   "roiLb": -0.0432,
-   "pl": 15.51,
-   "clv": 0.214,
    "belegt": false
   },
   {
@@ -2093,18 +2093,6 @@
    "belegt": false
   },
   {
-   "liga": "Israeli Liga Bet",
-   "n": 50,
-   "wins": 31,
-   "hit": 0.62,
-   "hitLb": 0.5037,
-   "roi": 0.1292,
-   "roiLb": -0.1161,
-   "pl": 6.46,
-   "clv": 0.937,
-   "belegt": false
-  },
-  {
    "liga": "Kuwaiti Premier League",
    "n": 121,
    "wins": 69,
@@ -2750,6 +2738,18 @@
    "roiLb": -0.1604,
    "pl": 4.14,
    "clv": -0.402,
+   "belegt": false
+  },
+  {
+   "liga": "Israeli Liga Bet",
+   "n": 45,
+   "wins": 27,
+   "hit": 0.6,
+   "hitLb": 0.4775,
+   "roi": 0.1036,
+   "roiLb": -0.1615,
+   "pl": 4.66,
+   "clv": 1.051,
    "belegt": false
   },
   {
@@ -3833,18 +3833,6 @@
    "belegt": false
   },
   {
-   "liga": "Uruguayan Reserves",
-   "n": 87,
-   "wins": 41,
-   "hit": 0.4713,
-   "hitLb": 0.3854,
-   "roi": -0.1349,
-   "roiLb": -0.3114,
-   "pl": -11.74,
-   "clv": 0.166,
-   "belegt": false
-  },
-  {
    "liga": "Bahraini Premier",
    "n": 113,
    "wins": 52,
@@ -3866,6 +3854,18 @@
    "roiLb": -0.3185,
    "pl": -7.5,
    "clv": 0.153,
+   "belegt": false
+  },
+  {
+   "liga": "Uruguayan Reserves",
+   "n": 85,
+   "wins": 40,
+   "hit": 0.4706,
+   "hitLb": 0.3838,
+   "roi": -0.1424,
+   "roiLb": -0.3198,
+   "pl": -12.1,
+   "clv": 0.17,
    "belegt": false
   },
   {
@@ -4436,28 +4436,28 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 1281,
+   "n": 1282,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +0.1 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.0429,
-   "pl": 54.91,
-   "roiLb": 0.0006,
+   "grund": "ROI belegt (Untergrenze +0.2 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
+   "roi": 0.0438,
+   "pl": 56.17,
+   "roiLb": 0.0016,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1244,
+   "noetigNRoi": 1191,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 1107,
-    "lo": 276,
-    "hi": 20764,
+    "median": 1046,
+    "lo": 280,
+    "hi": 17801,
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -4465,8 +4465,8 @@
     "nBei": 1214,
     "roiBei": 0.0437,
     "rausgefallen": 0,
-    "nNeu": 67,
-    "roiNeu": 0.0284
+    "nNeu": 68,
+    "roiNeu": 0.0456
    }
   },
   {
@@ -5207,7 +5207,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 5.7,
+   "alterTage": 5.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -5235,7 +5235,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 5.6,
+   "alterTage": 5.7,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -5417,7 +5417,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 8.5,
+   "alterTage": 8.6,
    "art": "mix",
    "wert": "sharp+steam"
   },
@@ -5582,9 +5582,9 @@
    "n": 6076,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0035,
-   "pl": -21.27,
-   "roiLb": -0.024,
+   "roi": -0.0036,
+   "pl": -21.87,
+   "roiLb": -0.0241,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5604,9 +5604,9 @@
    "n": 6201,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0045,
-   "pl": -27.9,
-   "roiLb": -0.0252,
+   "roi": -0.0044,
+   "pl": -27.28,
+   "roiLb": -0.0251,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5666,10 +5666,10 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 23981,
-    "lo": 3885,
-    "hi": 1629357,
-    "nieAnteil": 0.327,
+    "median": 26133,
+    "lo": 4116,
+    "hi": 781497,
+    "nieAnteil": 0.33,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -5737,9 +5737,9 @@
    "n": 5012,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0084,
-   "pl": -42.1,
-   "roiLb": -0.0329,
+   "roi": -0.0083,
+   "pl": -41.6,
+   "roiLb": -0.0328,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5853,9 +5853,9 @@
    "n": 5866,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0176,
-   "pl": -103.24,
-   "roiLb": -0.0398,
+   "roi": -0.0173,
+   "pl": -101.48,
+   "roiLb": -0.0395,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5893,7 +5893,7 @@
     "nieAnteil": 0.217,
     "schaetzbar": false
    },
-   "alterTage": 0.9,
+   "alterTage": 1.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -6401,7 +6401,7 @@
     "nieAnteil": 0.498,
     "schaetzbar": false
    },
-   "alterTage": 4.5,
+   "alterTage": 4.6,
    "art": "mix",
    "wert": "money+steam"
   },
@@ -7437,7 +7437,7 @@
     "nieAnteil": 0.615,
     "schaetzbar": false
    },
-   "alterTage": 4.9,
+   "alterTage": 5.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -14642,7 +14642,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 9.3,
+   "alterTage": 9.4,
    "art": "conviction",
    "wert": 9
   },
@@ -14664,7 +14664,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 8.9,
+   "alterTage": 9.0,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -14709,7 +14709,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 16.5,
+   "alterTage": 16.6,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -14775,7 +14775,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 9.3,
+   "alterTage": 9.4,
    "art": "conviction",
    "wert": 10
   },
@@ -14841,7 +14841,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 110.9,
+   "alterTage": 111.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -14863,7 +14863,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 125.9,
+   "alterTage": 126.0,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
