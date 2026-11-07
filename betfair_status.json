@@ -31,11 +31,9 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "nur 45 von 84 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Vila Nova v Criciuma (Brazilian Serie B); Atlas v Pachuca (Mexican Liga MX); Melgar v Juan Pablo II College (Peruvian Primera Division)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -90,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 393626 verbraucht, 4606374 uebrig"
+      "note": "Kontingent: 394211 verbraucht, 4605789 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -99,14 +97,14 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "Ludogorets v CSKA 1948 Sofia (Bulgarian A League): name — bester Kandidat „FC Krasnodar v CSKA Moscow“",
-        "Southampton U21 v Norwich U21 (English Premier League 2 - Div 1): name — bester Kandidat „Preston North End v Southampton“",
+        "Kansas City (W) v Angel City FC (W) (US National Women Soccer League): zeit — bester Kandidat „Manchester City v Bradford City“ · 913.0h Anpfiff-Abstand",
         "Drogheda v UCD (Irish Play-Offs): name — bester Kandidat „Drogheda United v UC Dublin“",
         "Excelsior Virton v KFCO Beerschot Wilrijk (Belgian Challenger Pro League): name — bester Kandidat „Excelsior v Go Ahead Eagles“",
+        "Real Cartagena v Real Soacha Cundinamarca FC (Colombian Primera B): zeit — bester Kandidat „Real Racing Club de Santander v Real Sociedad“ · 352.1h Anpfiff-Abstand",
         "Aris v Panaitolikos (Greek Super League): name — bester Kandidat „Aris Thessaloniki v Panetolikos Agrinio“",
-        "CD Gualberto Villarroel v CDT Real Oruro (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Valencia v Real Madrid“"
+        "Ludogorets v CSKA 1948 Sofia (Bulgarian A League): name — bester Kandidat „FC Krasnodar v CSKA Moscow“"
       ],
-      "note": "ohne Anker: kein_kandidat 48 · kein_pinnacle 4 · name 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 70 · kein_pinnacle 5 · name 4 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -115,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Birmingham v Swansea (23 Buecher, ohne Pinnacle); Galatasaray v Amed Sportif Faaliyetler (27 Buecher, ohne Pinnacle); Cadiz v Oviedo (22 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 5 — Parma v Bologna (38 Buecher, ohne Pinnacle); Galatasaray v Amed Sportif Faaliyetler (29 Buecher, ohne Pinnacle); Cadiz v Oviedo (22 Buecher, ohne Pinnacle); OB v Viborg (34 Buecher, ohne Pinnacle); Preussen Munster v Duisburg (19 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -124,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
+      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -190,6 +188,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-07T17:03:55.785201+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-11-07T17:18:50.822223+00:00"
 }
