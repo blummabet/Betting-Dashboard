@@ -88,27 +88,29 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 395368 verbraucht, 4604632 uebrig"
+      "note": "Kontingent: 395949 verbraucht, 4604051 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 12,
       "failures": [
         "Drogheda v UCD (Irish Play-Offs): name — bester Kandidat „Drogheda United v UC Dublin“",
         "Kansas City (W) v Angel City FC (W) (US National Women Soccer League): zeit — bester Kandidat „Manchester City v Bradford City“ · 913.0h Anpfiff-Abstand",
+        "Atletico MG v Gremio (Brazilian Cup): name — bester Kandidat „Argentinos Juniors v Atlético Huracán“",
+        "FC Cajamarca v Alianza Atletico (Peruvian Primera Division): name — bester Kandidat „Argentinos Juniors v Atlético Huracán“",
         "Excelsior Virton v KFCO Beerschot Wilrijk (Belgian Challenger Pro League): name — bester Kandidat „Excelsior v Go Ahead Eagles“",
         "Real Cartagena v Real Soacha Cundinamarca FC (Colombian Primera B): zeit — bester Kandidat „Real Racing Club de Santander v Real Sociedad“ · 352.1h Anpfiff-Abstand",
         "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
         "Crystal Palace U21 v Everton U21 (English Premier League 2 - Div 1): name — bester Kandidat „Crystal Palace v Liverpool“",
         "Tottenham U21 v Chelsea U21 (English Premier League 2 - Div 1): name — bester Kandidat „Sunderland v Chelsea“",
         "Aris v Panaitolikos (Greek Super League): name — bester Kandidat „Aris Thessaloniki v Panetolikos Agrinio“",
-        "CD Gualberto Villarroel v CDT Real Oruro (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Valencia v Real Madrid“",
-        "Ludogorets v CSKA 1948 Sofia (Bulgarian A League): name — bester Kandidat „FC Krasnodar v CSKA Moscow“"
+        "Ludogorets v CSKA 1948 Sofia (Bulgarian A League): name — bester Kandidat „FC Krasnodar v CSKA Moscow“",
+        "CD Gualberto Villarroel v CDT Real Oruro (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Valencia v Real Madrid“"
       ],
-      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 3 · name 8 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 54 · kein_pinnacle 2 · name 10 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -117,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Galatasaray v Amed Sportif Faaliyetler (23 Buecher, ohne Pinnacle); Rosenborg v Start (24 Buecher, ohne Pinnacle); FC Vaduz v Sion (26 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Rosenborg v Start (23 Buecher, ohne Pinnacle); FC Vaduz v Sion (23 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -126,7 +128,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 19 gewollt, 19 abgerufen, 0 mit Daten"
+      "note": "Totals: 18 gewollt, 18 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -193,5 +195,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-07T17:49:05.248214+00:00"
+  "generatedAt": "2026-11-07T18:04:03.724589+00:00"
 }
