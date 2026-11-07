@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-07T20:18:54.724695+00:00",
+"generatedAt": "2026-11-07T20:33:48.310996+00:00",
 "byVerdict": {
 "konsens": {
-"n": 833,
-"wins": 492,
-"hitRate": 0.5906,
-"polyN": 814,
-"polyWins": 475,
-"polyHitRate": 0.5835,
-"pinnN": 746,
-"pinnHitRate": 0.5912,
-"nRoi": 833,
-"roi": 0.0779,
-"roiLb": 0.0233,
-"nClv": 833,
+"n": 837,
+"wins": 494,
+"hitRate": 0.5902,
+"polyN": 818,
+"polyWins": 477,
+"polyHitRate": 0.5831,
+"pinnN": 750,
+"pinnHitRate": 0.5907,
+"nRoi": 837,
+"roi": 0.0766,
+"roiLb": 0.0222,
+"nClv": 837,
 "clv": 0.13,
-"clvLb": -0.0141
+"clvLb": -0.016
 },
 "uneinig": {
 "n": 44,
@@ -66,6 +66,11 @@
 "wins": 38,
 "hitRate": 0.7037
 },
+"English Premier League": {
+"n": 45,
+"wins": 23,
+"hitRate": 0.5111
+},
 "UEFA Europa League": {
 "n": 45,
 "wins": 24,
@@ -76,25 +81,20 @@
 "wins": 23,
 "hitRate": 0.5111
 },
-"English Premier League": {
-"n": 44,
-"wins": 23,
-"hitRate": 0.5227
-},
 "Brazilian Serie A": {
 "n": 42,
 "wins": 29,
 "hitRate": 0.6905
 },
 "Spanish La Liga": {
-"n": 40,
+"n": 41,
 "wins": 23,
-"hitRate": 0.575
+"hitRate": 0.561
 },
 "German Bundesliga": {
-"n": 36,
-"wins": 19,
-"hitRate": 0.5278
+"n": 37,
+"wins": 20,
+"hitRate": 0.5405
 },
 "UEFA Conference League": {
 "n": 31,
@@ -106,15 +106,15 @@
 "wins": 21,
 "hitRate": 0.7
 },
+"Spanish Segunda Division": {
+"n": 27,
+"wins": 16,
+"hitRate": 0.5926
+},
 "German Bundesliga 2": {
 "n": 26,
 "wins": 12,
 "hitRate": 0.4615
-},
-"Spanish Segunda Division": {
-"n": 26,
-"wins": 15,
-"hitRate": 0.5769
 },
 "Italian Serie B": {
 "n": 24,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 568,
-"wins": 353,
-"hitRate": 0.6215,
-"nRoi": 568,
-"roi": 0.0384,
-"roiLb": -0.0209,
-"nClv": 568,
+"n": 570,
+"wins": 354,
+"hitRate": 0.6211,
+"nRoi": 570,
+"roi": 0.0375,
+"roiLb": -0.0217,
+"nClv": 570,
 "clv": 0.17,
-"clvLb": -0.0172
+"clvLb": -0.0121
 },
 "weak": {
-"n": 310,
-"wins": 155,
+"n": 312,
+"wins": 156,
 "hitRate": 0.5,
-"nRoi": 310,
-"roi": 0.1452,
-"roiLb": 0.0346,
-"nClv": 310,
-"clv": 0.02,
-"clvLb": -0.1882
+"nRoi": 312,
+"roi": 0.1433,
+"roiLb": 0.0332,
+"nClv": 312,
+"clv": 0.01,
+"clvLb": -0.2028
 }
 },
 "divergence": {
@@ -450,6 +450,82 @@
 "polyRate": 0.3721
 },
 "recent": [
+{
+"matchId": "36239861",
+"home": "Osasuna",
+"away": "Athletic Bilbao",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Athletic Bilbao",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-07T17:30:00Z",
+"settledAt": "2026-11-07T20:33:48.075517+00:00"
+},
+{
+"matchId": "36235238",
+"home": "Nottm Forest",
+"away": "Man City",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Man City",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-07T17:30:00Z",
+"settledAt": "2026-11-07T20:33:48.075517+00:00"
+},
+{
+"matchId": "36241176",
+"home": "Stuttgart",
+"away": "Werder Bremen",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Stuttgart",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-07T17:30:00Z",
+"settledAt": "2026-11-07T20:33:48.075517+00:00"
+},
+{
+"matchId": "36270990",
+"home": "Cordoba",
+"away": "AD Ceuta FC",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cordoba",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-11-07T17:30:00Z",
+"settledAt": "2026-11-07T20:33:48.075517+00:00"
+},
 {
 "matchId": "36268628",
 "home": "Rosenborg",
@@ -1133,95 +1209,19 @@
 ],
 "kickoff": "2026-11-06T23:00:00Z",
 "settledAt": "2026-11-07T02:02:11.816930+00:00"
-},
-{
-"matchId": "36270150",
-"home": "Operario PR",
-"away": "Sport Recife",
-"league": "Brazilian Serie B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sport Recife",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-11-06T22:30:00Z",
-"settledAt": "2026-11-07T01:31:51.688037+00:00"
-},
-{
-"matchId": "36270100",
-"home": "Famalicao",
-"away": "Arouca",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Famalicao",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-06T20:45:00Z",
-"settledAt": "2026-11-06T23:50:35.808706+00:00"
-},
-{
-"matchId": "36234720",
-"home": "Everton",
-"away": "Coventry",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Everton",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-06T20:00:00Z",
-"settledAt": "2026-11-06T23:01:44.737362+00:00"
-},
-{
-"matchId": "36272387",
-"home": "Derby",
-"away": "Bolton",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Bolton",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-06T20:00:00Z",
-"settledAt": "2026-11-06T23:01:44.737362+00:00"
 }
 ],
 "global": {
-"n": 878,
-"wins": 508,
-"hitRate": 0.5786,
-"nRoi": 878,
-"roi": 0.0761,
-"roiLb": 0.0213,
-"nClv": 878,
-"clv": 0.12,
-"clvLb": -0.0246
+"n": 882,
+"wins": 510,
+"hitRate": 0.5782,
+"nRoi": 882,
+"roi": 0.0749,
+"roiLb": 0.0203,
+"nClv": 882,
+"clv": 0.11,
+"clvLb": -0.0264
 },
-"pending": 37,
-"ausgeschlossenLive": 1085
+"pending": 35,
+"ausgeschlossenLive": 1083
 }
