@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-07T16:23:21.298642+00:00",
+ "generatedAt": "2026-11-07T16:53:24.510882+00:00",
  "sports": [
   "americanfootball_nfl",
   "basketball_nba",
@@ -9,27 +9,154 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 825,
- "pinnKeys": 281,
- "matched": 147,
- "footballRows": 147,
- "crossRows": 678,
- "footballSkippedStale": 137,
+ "polyRowsSeen": 823,
+ "pinnKeys": 275,
+ "matched": 141,
+ "footballRows": 141,
+ "crossRows": 682,
+ "footballSkippedStale": 134,
  "seenBySport": {
   "basketball_nba": 204,
   "americanfootball_nfl": 92,
-  "icehockey_nhl": 346,
+  "icehockey_nhl": 350,
   "boxing_boxing": 36,
   "soccer_mls": 24,
-  "soccer_liga": 123
+  "soccer_liga": 117
  },
  "matchedBySport": {
   "soccer_mls": 24,
-  "soccer_liga": 123
+  "soccer_liga": 117
  },
  "trackRecord": {
-  "tracked": 143,
+  "tracked": 138,
   "converged": 5
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|eintrachtfrankfurt-scpaderborn07|hw",
+   "sport": "soccer_liga",
+   "event": "SC Paderborn 07 vs Eintracht Frankfurt",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 30.5,
+   "pinnPP": 82.0,
+   "gapPP": -51.54,
+   "vol": 46559,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|eintrachtfrankfurt-scpaderborn07|aw",
+   "sport": "soccer_liga",
+   "event": "SC Paderborn 07 vs Eintracht Frankfurt",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 43.5,
+   "pinnPP": 2.9,
+   "gapPP": 40.62,
+   "vol": 46559,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|arsenal-hullcity|hw",
+   "sport": "soccer_liga",
+   "event": "Arsenal vs Hull City",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 86.5,
+   "pinnPP": 65.1,
+   "gapPP": 21.38,
+   "vol": 439885,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|arsenal-hullcity|dr",
+   "sport": "soccer_liga",
+   "event": "Arsenal vs Hull City",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 10.5,
+   "pinnPP": 29.4,
+   "gapPP": -18.95,
+   "vol": 439885,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|fulham-newcastle|dr",
+   "sport": "soccer_liga",
+   "event": "Fulham vs Newcastle",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 25.5,
+   "pinnPP": 43.8,
+   "gapPP": -18.32,
+   "vol": 251392,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|fulham-newcastle|hw",
+   "sport": "soccer_liga",
+   "event": "Fulham vs Newcastle",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 47.5,
+   "pinnPP": 34.6,
+   "gapPP": 12.93,
+   "vol": 251392,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|eintrachtfrankfurt-scpaderborn07|dr",
+   "sport": "soccer_liga",
+   "event": "SC Paderborn 07 vs Eintracht Frankfurt",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 25.5,
+   "pinnPP": 15.1,
+   "gapPP": 10.42,
+   "vol": 46559,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|deportivolacoruna-espanyol|dr",
+   "sport": "soccer_liga",
+   "event": "Espanyol vs Deportivo La Coruna",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 29.5,
+   "pinnPP": 39.8,
+   "gapPP": -10.27,
+   "vol": 26496,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  },
+  {
+   "id": "soccer_liga|deportivolacoruna-espanyol|hw",
+   "sport": "soccer_liga",
+   "event": "Espanyol vs Deportivo La Coruna",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 38.5,
+   "pinnPP": 32.1,
+   "gapPP": 6.39,
+   "vol": 26496,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-07T16:53:24.510438+00:00"
+  }
+ ]
 }
