@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-06T23:18:16.930704+00:00",
+  "timestamp": "2026-11-07T09:02:08.866099+00:00",
   "checked": 102,
   "errors": 0,
   "warnings": 75,
-  "infos": 325,
+  "infos": 327,
   "issues": [
     {
       "date": "07.11.2026",
@@ -1658,6 +1658,15 @@
       "away": "FC Schalke 04",
       "league": "Bundesliga",
       "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "1899 Hoffenheim: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "08.11.2026",
+      "home": "1899 Hoffenheim",
+      "away": "FC Schalke 04",
+      "league": "Bundesliga",
+      "severity": "INFO",
       "code": "CARDS35_LOW_FV",
       "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
     },
@@ -1686,7 +1695,7 @@
       "league": "Bundesliga",
       "severity": "INFO",
       "code": "LOW_SCORING_PROFILE",
-      "msg": "Ø gpg=0.30, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+      "msg": "Ø gpg=2.00, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
     },
     {
       "date": "08.11.2026",
@@ -1695,7 +1704,16 @@
       "league": "Bundesliga",
       "severity": "INFO",
       "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=0.30 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+      "msg": "Ø gpg=2.00 (statischer Proxy) → Poisson FV für Over 3.5 = 14.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+    },
+    {
+      "date": "08.11.2026",
+      "home": "1899 Hoffenheim",
+      "away": "FC Schalke 04",
+      "league": "Bundesliga",
+      "severity": "INFO",
+      "code": "TEAM_OVER_AWAY_LOW_FV",
+      "msg": "FC Schalke 04 expA≈0.55 (statischer Proxy) → FV über 1.5 = 10.6%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "07.11.2026",

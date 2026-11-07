@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 06.11.2026 23:18
+# 🟡 Picks Validator — 07.11.2026 09:02
 
-**102 Spiele geprüft** · 🔴 0 Fehler · 🟡 75 Warnungen · 🔵 325 Hinweise
+**102 Spiele geprüft** · 🔴 0 Fehler · 🟡 75 Warnungen · 🔵 327 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  06.11.2026 23:18
+  07.11.2026 09:02
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -390,7 +390,7 @@
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ─────────────────────────────────────────────────────────────────
-  🇫🇷 Ligue 1  (rl=25)
+  🇫🇷 Ligue 1  (rl=24)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 07.11.2026  Auxerre vs Paris FC
@@ -490,7 +490,7 @@
      Lens expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇩🇪 Bundesliga  (rl=26)
+  🇩🇪 Bundesliga  (rl=25)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 07.11.2026  FSV Mainz 05 vs Bayern München
@@ -585,6 +585,9 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 08.11.2026  SC Freiburg vs Union Berlin
      Union Berlin expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 08.11.2026  1899 Hoffenheim vs FC Schalke 04
+     1899 Hoffenheim: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 08.11.2026  1899 Hoffenheim vs FC Schalke 04
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -596,10 +599,13 @@
      H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 08.11.2026  1899 Hoffenheim vs FC Schalke 04
-     Ø gpg=0.30, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+     Ø gpg=2.00, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 08.11.2026  1899 Hoffenheim vs FC Schalke 04
-     Ø gpg=0.30 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=2.00 (statischer Proxy) → Poisson FV für Over 3.5 = 14.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+     📅 08.11.2026  1899 Hoffenheim vs FC Schalke 04
+     FC Schalke 04 expA≈0.55 (statischer Proxy) → FV über 1.5 = 10.6%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇭🇺 NB I  (rl=21)
@@ -690,7 +696,7 @@
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
 
 ─────────────────────────────────────────────────────────────────
-  🇮🇹 Serie A  (rl=28)
+  🇮🇹 Serie A  (rl=27)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 07.11.2026  Cagliari vs Frosinone
@@ -975,7 +981,7 @@
      Zaglebie Lubin expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇵🇹 Primeira Liga  (rl=24)
+  🇵🇹 Primeira Liga  (rl=23)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 07.11.2026  Nacional vs Academico Viseu
@@ -1272,7 +1278,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 102 Spiele
   🟡 75 Warnungen — manuelle Prüfung empfohlen
-  🔵 325 Hinweise — Pick-Richtung kontrollieren
+  🔵 327 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
