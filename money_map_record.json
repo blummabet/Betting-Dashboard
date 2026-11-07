@@ -1,19 +1,19 @@
 {
-"generatedAt": "2026-11-07T22:03:46.329995+00:00",
+"generatedAt": "2026-11-07T22:19:04.049344+00:00",
 "byVerdict": {
 "konsens": {
-"n": 841,
-"wins": 497,
-"hitRate": 0.591,
-"polyN": 822,
-"polyWins": 480,
-"polyHitRate": 0.5839,
-"pinnN": 754,
-"pinnHitRate": 0.5915,
-"nRoi": 841,
-"roi": 0.078,
-"roiLb": 0.0237,
-"nClv": 841,
+"n": 843,
+"wins": 499,
+"hitRate": 0.5919,
+"polyN": 824,
+"polyWins": 482,
+"polyHitRate": 0.585,
+"pinnN": 756,
+"pinnHitRate": 0.5926,
+"nRoi": 843,
+"roi": 0.0797,
+"roiLb": 0.0256,
+"nClv": 843,
 "clv": 0.14,
 "clvLb": -0.007
 },
@@ -181,6 +181,11 @@
 "wins": 3,
 "hitRate": 0.3333
 },
+"Brazilian Serie B": {
+"n": 8,
+"wins": 4,
+"hitRate": 0.5
+},
 "Romanian Liga I": {
 "n": 8,
 "wins": 4,
@@ -190,11 +195,6 @@
 "n": 8,
 "wins": 4,
 "hitRate": 0.5
-},
-"Brazilian Serie B": {
-"n": 7,
-"wins": 3,
-"hitRate": 0.4286
 },
 "Colombian Primera A": {
 "n": 7,
@@ -276,6 +276,11 @@
 "wins": 0,
 "hitRate": 0.0
 },
+"Polish Ekstraklasa": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Swiss Super League": {
 "n": 4,
 "wins": 2,
@@ -305,11 +310,6 @@
 "n": 3,
 "wins": 0,
 "hitRate": 0.0
-},
-"Polish Ekstraklasa": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Azerbaijan 1st Division": {
 "n": 2,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 572,
-"wins": 356,
-"hitRate": 0.6224,
-"nRoi": 572,
-"roi": 0.0394,
-"roiLb": -0.0197,
-"nClv": 572,
+"n": 573,
+"wins": 357,
+"hitRate": 0.623,
+"nRoi": 573,
+"roi": 0.0403,
+"roiLb": -0.0186,
+"nClv": 573,
 "clv": 0.19,
 "clvLb": 0.001
 },
 "weak": {
-"n": 314,
-"wins": 157,
-"hitRate": 0.5,
-"nRoi": 314,
-"roi": 0.1433,
-"roiLb": 0.0336,
-"nClv": 314,
+"n": 315,
+"wins": 158,
+"hitRate": 0.5016,
+"nRoi": 315,
+"roi": 0.1461,
+"roiLb": 0.0367,
+"nClv": 315,
 "clv": 0.01,
-"clvLb": -0.2015
+"clvLb": -0.2009
 }
 },
 "divergence": {
@@ -450,6 +450,44 @@
 "polyRate": 0.3721
 },
 "recent": [
+{
+"matchId": "36273197",
+"home": "Novorizontino",
+"away": "Fortaleza EC",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Novorizontino",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-07T19:10:00Z",
+"settledAt": "2026-11-07T22:19:03.801085+00:00"
+},
+{
+"matchId": "36270968",
+"home": "Widzew Lodz",
+"away": "Pogon Szczecin",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Widzew Lodz",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-11-07T19:15:00Z",
+"settledAt": "2026-11-07T22:19:03.801085+00:00"
+},
 {
 "matchId": "36240023",
 "home": "Valencia",
@@ -1171,57 +1209,19 @@
 ],
 "kickoff": "2026-11-07T12:00:00Z",
 "settledAt": "2026-11-07T15:03:21.733621+00:00"
-},
-{
-"matchId": "36271326",
-"home": "FK Kudrivka",
-"away": "Chernomorets Odesa",
-"league": "Ukrainian Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Chernomorets Odesa",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-07T11:00:00Z",
-"settledAt": "2026-11-07T14:03:23.021229+00:00"
-},
-{
-"matchId": "36239278",
-"home": "Perth Glory",
-"away": "Newcastle Jets",
-"league": "Australian A-League Men",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Perth Glory",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-11-07T10:45:00Z",
-"settledAt": "2026-11-07T13:47:59.834176+00:00"
 }
 ],
 "global": {
-"n": 886,
-"wins": 513,
-"hitRate": 0.579,
-"nRoi": 886,
-"roi": 0.0762,
-"roiLb": 0.0217,
-"nClv": 886,
+"n": 888,
+"wins": 515,
+"hitRate": 0.58,
+"nRoi": 888,
+"roi": 0.0779,
+"roiLb": 0.0235,
+"nClv": 888,
 "clv": 0.12,
 "clvLb": -0.0178
 },
-"pending": 34,
+"pending": 32,
 "ausgeschlossenLive": 1080
 }
