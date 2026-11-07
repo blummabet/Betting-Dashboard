@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-07T16:57:56.740880+00:00",
+"generatedAt": "2026-11-07T17:03:30.013376+00:00",
 "byVerdict": {
 "konsens": {
-"n": 817,
-"wins": 482,
-"hitRate": 0.59,
-"polyN": 798,
-"polyWins": 465,
-"polyHitRate": 0.5827,
-"pinnN": 731,
-"pinnHitRate": 0.591,
-"nRoi": 817,
-"roi": 0.0779,
-"roiLb": 0.0227,
-"nClv": 817,
-"clv": 0.1,
-"clvLb": -0.0459
+"n": 821,
+"wins": 483,
+"hitRate": 0.5883,
+"polyN": 802,
+"polyWins": 466,
+"polyHitRate": 0.581,
+"pinnN": 734,
+"pinnHitRate": 0.5886,
+"nRoi": 821,
+"roi": 0.0746,
+"roiLb": 0.0196,
+"nClv": 821,
+"clv": 0.12,
+"clvLb": -0.031
 },
 "uneinig": {
 "n": 44,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "English Sky Bet Championship": {
-"n": 59,
+"n": 60,
 "wins": 33,
-"hitRate": 0.5593
+"hitRate": 0.55
 },
 "UEFA Champions League": {
 "n": 54,
@@ -62,9 +62,9 @@
 "hitRate": 0.7037
 },
 "Italian Serie A": {
-"n": 51,
+"n": 53,
 "wins": 37,
-"hitRate": 0.7255
+"hitRate": 0.6981
 },
 "UEFA Europa League": {
 "n": 45,
@@ -291,6 +291,11 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Czech 1 Liga": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Finnish Veikkausliiga": {
 "n": 3,
 "wins": 0,
@@ -320,11 +325,6 @@
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
-},
-"Czech 1 Liga": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
 },
 "Danish Superliga": {
 "n": 2,
@@ -419,26 +419,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 558,
-"wins": 346,
-"hitRate": 0.6201,
-"nRoi": 558,
-"roi": 0.0378,
-"roiLb": -0.0222,
-"nClv": 558,
+"n": 560,
+"wins": 347,
+"hitRate": 0.6196,
+"nRoi": 560,
+"roi": 0.037,
+"roiLb": -0.0229,
+"nClv": 560,
 "clv": 0.15,
-"clvLb": -0.0387
+"clvLb": -0.0333
 },
 "weak": {
-"n": 304,
+"n": 306,
 "wins": 152,
-"hitRate": 0.5,
-"nRoi": 304,
-"roi": 0.1463,
-"roiLb": 0.0346,
-"nClv": 304,
-"clv": -0.03,
-"clvLb": -0.2353
+"hitRate": 0.4967,
+"nRoi": 306,
+"roi": 0.1389,
+"roiLb": 0.0275,
+"nClv": 306,
+"clv": 0.0,
+"clvLb": -0.2058
 }
 },
 "divergence": {
@@ -450,6 +450,82 @@
 "polyRate": 0.3721
 },
 "recent": [
+{
+"matchId": "36267108",
+"home": "Cagliari",
+"away": "Frosinone",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Frosinone",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-07T14:00:00Z",
+"settledAt": "2026-11-07T17:03:29.780863+00:00"
+},
+{
+"matchId": "36267104",
+"home": "Torino",
+"away": "Lecce",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Torino",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-07T14:00:00Z",
+"settledAt": "2026-11-07T17:03:29.780863+00:00"
+},
+{
+"matchId": "36264836",
+"home": "Charlton",
+"away": "Sheff Utd",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Sheff Utd",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-07T15:00:00Z",
+"settledAt": "2026-11-07T17:03:29.780863+00:00"
+},
+{
+"matchId": "36266672",
+"home": "Slovan Liberec",
+"away": "Bohemians 1905",
+"league": "Czech 1 Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Slovan Liberec",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-07T14:00:00Z",
+"settledAt": "2026-11-07T17:03:29.780863+00:00"
+},
 {
 "matchId": "36235029",
 "home": "Arsenal",
@@ -1133,95 +1209,19 @@
 ],
 "kickoff": "2026-11-06T18:00:00Z",
 "settledAt": "2026-11-06T21:01:24.740188+00:00"
-},
-{
-"matchId": "36267659",
-"home": "Dynamo Dresden",
-"away": "Greuther Furth",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Dynamo Dresden",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-11-06T17:30:00Z",
-"settledAt": "2026-11-06T20:31:23.593157+00:00"
-},
-{
-"matchId": "36260398",
-"home": "Braunschweig",
-"away": "Cottbus",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Braunschweig",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-11-06T17:30:00Z",
-"settledAt": "2026-11-06T20:31:23.593157+00:00"
-},
-{
-"matchId": "36273156",
-"home": "Arges Pitesti",
-"away": "Dinamo Bucharest",
-"league": "Romanian Liga I",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Dinamo Bucharest",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-11-06T18:30:00Z",
-"settledAt": "2026-11-06T20:31:23.593157+00:00"
-},
-{
-"matchId": "36239361",
-"home": "Sydney FC",
-"away": "Central Coast Mariners",
-"league": "Australian A-League Men",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sydney FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-11-06T08:40:00Z",
-"settledAt": "2026-11-06T11:45:17.168249+00:00"
 }
 ],
 "global": {
-"n": 862,
-"wins": 498,
-"hitRate": 0.5777,
-"nRoi": 862,
-"roi": 0.0761,
-"roiLb": 0.0207,
-"nClv": 862,
-"clv": 0.09,
-"clvLb": -0.0549
+"n": 866,
+"wins": 499,
+"hitRate": 0.5762,
+"nRoi": 866,
+"roi": 0.073,
+"roiLb": 0.0177,
+"nClv": 866,
+"clv": 0.1,
+"clvLb": -0.0408
 },
-"pending": 38,
+"pending": 34,
 "ausgeschlossenLive": 1100
 }
