@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-11-07T14:48:12.355780+00:00",
+"generatedAt": "2026-11-07T15:03:21.991943+00:00",
 "byVerdict": {
 "konsens": {
-"n": 804,
-"wins": 477,
-"hitRate": 0.5933,
-"polyN": 785,
-"polyWins": 460,
-"polyHitRate": 0.586,
-"pinnN": 718,
-"pinnHitRate": 0.5947,
-"nRoi": 804,
-"roi": 0.0828,
-"roiLb": 0.0273,
-"nClv": 804,
+"n": 806,
+"wins": 478,
+"hitRate": 0.5931,
+"polyN": 787,
+"polyWins": 461,
+"polyHitRate": 0.5858,
+"pinnN": 720,
+"pinnHitRate": 0.5944,
+"nRoi": 806,
+"roi": 0.0823,
+"roiLb": 0.0269,
+"nClv": 806,
 "clv": 0.1,
-"clvLb": -0.0516
+"clvLb": -0.0511
 },
 "uneinig": {
-"n": 43,
+"n": 44,
 "wins": 16,
-"hitRate": 0.3721,
-"polyN": 42,
+"hitRate": 0.3636,
+"polyN": 43,
 "polyWins": 16,
-"polyHitRate": 0.381,
-"pinnN": 32,
-"pinnHitRate": 0.3125,
-"nRoi": 43,
-"roi": 0.0914,
-"roiLb": -0.2737,
-"nClv": 43,
+"polyHitRate": 0.3721,
+"pinnN": 33,
+"pinnHitRate": 0.303,
+"nRoi": 44,
+"roi": 0.0666,
+"roiLb": -0.2924,
+"nClv": 44,
 "clv": -0.18,
-"clvLb": -0.7606
+"clvLb": -0.7432
 },
 "teil": {
 "n": 1,
@@ -106,6 +106,11 @@
 "wins": 21,
 "hitRate": 0.7
 },
+"German Bundesliga 2": {
+"n": 26,
+"wins": 12,
+"hitRate": 0.4615
+},
 "Spanish Segunda Division": {
 "n": 25,
 "wins": 14,
@@ -115,11 +120,6 @@
 "n": 24,
 "wins": 10,
 "hitRate": 0.4167
-},
-"German Bundesliga 2": {
-"n": 23,
-"wins": 11,
-"hitRate": 0.4783
 },
 "English Sky Bet League 1": {
 "n": 16,
@@ -419,37 +419,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 555,
-"wins": 344,
-"hitRate": 0.6198,
-"nRoi": 555,
-"roi": 0.0382,
-"roiLb": -0.022,
-"nClv": 555,
+"n": 556,
+"wins": 345,
+"hitRate": 0.6205,
+"nRoi": 556,
+"roi": 0.0394,
+"roiLb": -0.0207,
+"nClv": 556,
 "clv": 0.15,
-"clvLb": -0.0428
+"clvLb": -0.0421
 },
 "weak": {
-"n": 293,
+"n": 295,
 "wins": 149,
-"hitRate": 0.5085,
-"nRoi": 293,
-"roi": 0.1649,
-"roiLb": 0.0511,
-"nClv": 293,
-"clv": -0.04,
-"clvLb": -0.2498
+"hitRate": 0.5051,
+"nRoi": 295,
+"roi": 0.1571,
+"roiLb": 0.0436,
+"nClv": 295,
+"clv": -0.03,
+"clvLb": -0.2481
 }
 },
 "divergence": {
-"n": 43,
+"n": 44,
 "betfairWins": 16,
-"betfairRate": 0.3721,
-"polyN": 42,
+"betfairRate": 0.3636,
+"polyN": 43,
 "polyWins": 16,
-"polyRate": 0.381
+"polyRate": 0.3721
 },
 "recent": [
+{
+"matchId": "36267797",
+"home": "Nurnberg",
+"away": "SV Darmstadt",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Nurnberg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-07T12:00:00Z",
+"settledAt": "2026-11-07T15:03:21.733621+00:00"
+},
+{
+"matchId": "36267796",
+"home": "Holstein Kiel",
+"away": "Arminia Bielefeld",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-11-07T12:00:00Z",
+"settledAt": "2026-11-07T15:03:21.733621+00:00"
+},
+{
+"matchId": "36263194",
+"home": "VfL Osnabruck",
+"away": "Kaiserslautern",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "VFL Osnabruck",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-11-07T12:00:00Z",
+"settledAt": "2026-11-07T15:03:21.733621+00:00"
+},
 {
 "matchId": "36271326",
 "home": "FK Kudrivka",
@@ -1152,76 +1209,19 @@
 ],
 "kickoff": "2026-11-05T20:00:00Z",
 "settledAt": "2026-11-05T23:13:34.960821+00:00"
-},
-{
-"matchId": "36229804",
-"home": "Torreense",
-"away": "Ararat Armenia",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Torreense",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T23:13:34.960821+00:00"
-},
-{
-"matchId": "36243118",
-"home": "FC Twente",
-"away": "Pafos FC",
-"league": "UEFA Conference League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Twente",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T23:13:34.960821+00:00"
-},
-{
-"matchId": "36229811",
-"home": "Sturm Graz",
-"away": "NK Celje",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sturm Graz",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-11-05T20:00:00Z",
-"settledAt": "2026-11-05T21:58:17.493548+00:00"
 }
 ],
 "global": {
-"n": 848,
-"wins": 493,
-"hitRate": 0.5814,
-"nRoi": 848,
-"roi": 0.082,
-"roiLb": 0.0262,
-"nClv": 848,
+"n": 851,
+"wins": 494,
+"hitRate": 0.5805,
+"nRoi": 851,
+"roi": 0.0802,
+"roiLb": 0.0246,
+"nClv": 851,
 "clv": 0.08,
-"clvLb": -0.0606
+"clvLb": -0.06
 },
-"pending": 49,
-"ausgeschlossenLive": 1103
+"pending": 47,
+"ausgeschlossenLive": 1102
 }
