@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 109 von 246 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: ES Setif v MB Rouissat (Algerian Ligue 1); Al Jahra v Al-Qadsia (Kuwaiti Premier League); Ludogorets v CSKA 1948 Sofia (Bulgarian A League)"
+        "nur 106 von 250 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Drogheda v UCD (Irish Play-Offs); Leganes v Albacete (Spanish Segunda Division); Altrincham v Notts Co (English FA Cup)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,23 +90,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 377392 verbraucht, 4622608 uebrig"
+      "note": "Kontingent: 379352 verbraucht, 4620648 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 6,
+      "nFail": 4,
       "failures": [
-        "Kuressaare v Nomme Utd (Estonian Premier League): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
-        "Ayutthaya United v Pattani FC (Thai League 1): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
-        "Uthai Thani v Chiangrai Utd (Thai League 1): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
-        "Racing de Ferrol v UD Logrones (Spanish Primera Federación - Group 1): name — bester Kandidat „Málaga v Real Racing Club de Santander“",
         "Muangthong Utd v Esan Pattaya (Thai League 2): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
+        "Kuressaare v Nomme Utd (Estonian Premier League): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
+        "Racing de Ferrol v UD Logrones (Spanish Primera Federación - Group 1): name — bester Kandidat „Málaga v Real Racing Club de Santander“",
         "Chanthaburi FC v Phrae United (Thai League 2): name — bester Kandidat „Leeds United v Tottenham Hotspur“"
       ],
-      "note": "ohne Anker: kein_kandidat 90 · name 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 89 · kein_pinnacle 1 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -115,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Eyupspor v Kocaelispor (29 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -124,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -191,5 +189,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-07T10:47:59.621673+00:00"
+  "generatedAt": "2026-11-07T11:33:28.558607+00:00"
 }
