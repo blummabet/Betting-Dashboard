@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 125 von 225 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Plymouth v Alvechurch (English FA Cup); Hampton and Richmond v Maidenhead (English National League South); Watford v Middlesbrough (English Sky Bet Championship)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 372269 verbraucht, 4627731 uebrig"
+      "note": "Kontingent: 373177 verbraucht, 4626823 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -104,7 +106,7 @@
         "Muangthong Utd v Esan Pattaya (Thai League 2): name — bester Kandidat „Leeds United v Tottenham Hotspur“",
         "Chanthaburi FC v Phrae United (Thai League 2): name — bester Kandidat „Leeds United v Tottenham Hotspur“"
       ],
-      "note": "ohne Anker: kein_kandidat 92 · name 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 90 · name 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -122,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
+      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -188,6 +190,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-07T08:47:54.217688+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-07T09:03:15.142054+00:00"
 }
