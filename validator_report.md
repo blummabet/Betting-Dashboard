@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 07.11.2026 22:00
+# 🟡 Picks Validator — 08.11.2026 09:13
 
-**54 Spiele geprüft** · 🔴 0 Fehler · 🟡 33 Warnungen · 🔵 164 Hinweise
+**54 Spiele geprüft** · 🔴 0 Fehler · 🟡 32 Warnungen · 🔵 163 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  07.11.2026 22:00
+  08.11.2026 09:13
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -388,7 +388,7 @@
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
      📅 08.11.2026  Napoli vs Lazio
-     Score-Differenz 5.5 Punkte: Lazio (9.7) vs Napoli (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
+     Score-Differenz 5.7 Punkte: Lazio (9.9) vs Napoli (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 08.11.2026  Napoli vs Lazio
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -575,9 +575,6 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 08.11.2026  Vitória SC vs FC Porto
      FC Porto expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 08.11.2026  Rio Ave vs SC Braga
-     Rio Ave: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 08.11.2026  Rio Ave vs SC Braga
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
@@ -600,9 +597,6 @@
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Prem  (rl=25)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 08.11.2026  Heart Of Midlothian vs Falkirk
-     Heart Of Midlothian: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 08.11.2026  Heart Of Midlothian vs Falkirk
      Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
@@ -662,8 +656,8 @@
 
 ═════════════════════════════════════════════════════════════════
   Geprüft: 54 Spiele
-  🟡 33 Warnungen — manuelle Prüfung empfohlen
-  🔵 164 Hinweise — Pick-Richtung kontrollieren
+  🟡 32 Warnungen — manuelle Prüfung empfohlen
+  🔵 163 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-07T22:00:12.946011+00:00",
+  "timestamp": "2026-11-08T09:13:04.097840+00:00",
   "checked": 54,
   "errors": 0,
-  "warnings": 33,
-  "infos": 164,
+  "warnings": 32,
+  "infos": 163,
   "issues": [
     {
       "date": "08.11.2026",
@@ -1038,7 +1038,7 @@
       "league": "Serie A",
       "severity": "INFO",
       "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 5.5 Punkte: Lazio (9.7) vs Napoli (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
+      "msg": "Score-Differenz 5.7 Punkte: Lazio (9.9) vs Napoli (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
     },
     {
       "date": "08.11.2026",
@@ -1568,15 +1568,6 @@
       "away": "SC Braga",
       "league": "Primeira Liga",
       "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Rio Ave: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "08.11.2026",
-      "home": "Rio Ave",
-      "away": "SC Braga",
-      "league": "Primeira Liga",
-      "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
@@ -1624,15 +1615,6 @@
       "severity": "WARN",
       "code": "U25_H2H_HARD_BLOCK_MISS",
       "msg": "H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "08.11.2026",
-      "home": "Heart Of Midlothian",
-      "away": "Falkirk",
-      "league": "Scottish Prem",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "Heart Of Midlothian: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
     },
     {
       "date": "08.11.2026",
