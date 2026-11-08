@@ -13,18 +13,28 @@
    "entryOdd": 2.78,
    "anteilPct": 70,
    "stufe": 2,
-   "verstaerker": [],
-   "rang": 57.0,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 66%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 69.0,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 66,
+    "usd": 156675,
+    "odd": 1.53
+   },
    "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "polyKey": "brco-vas-pal-2026-11-08",
+   "polySide": "CR Vasco da Gama",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
+    "punkte": 5,
+    "moeglich": 7,
     "dauerH": 1.9,
     "teile": [
      {
@@ -43,8 +53,8 @@
       },
       "geld": {
        "anteil": 0.705,
-       "betrag": 44251,
-       "gesamt": 62768,
+       "betrag": 72501,
+       "gesamt": 102838,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -53,13 +63,25 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 66% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.66,
+       "betrag": null,
+       "gesamt": 156675,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 66% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -100,145 +122,8 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-11-08T19:06:10.166500+00:00",
-   "zuletztAktiv": "2026-11-08T20:21:11.156397+00:00",
+   "zuletztAktiv": "2026-11-08T20:36:20.194323+00:00",
    "haltePreis": 2.38,
-   "aktiv": true
-  },
-  "36275417|Match Odds": {
-   "matchId": "36275417",
-   "home": "Rio Ave",
-   "away": "Braga",
-   "league": "Portuguese Primeira Liga",
-   "kickoff": "2026-11-08T20:30:00Z",
-   "markt": "Match Odds",
-   "seite": "away",
-   "name": "Braga",
-   "odd": 1.56,
-   "entryOdd": 1.54,
-   "anteilPct": 76,
-   "stufe": 1,
-   "verstaerker": [
-    {
-     "art": "poly",
-     "text": "Poly Preis 64%",
-     "gewicht": 12
-    },
-    {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
-    }
-   ],
-   "rang": 79.6,
-   "track": null,
-   "streak": null,
-   "poly": {
-    "anteilPct": 64,
-    "usd": 938,
-    "odd": 1.55
-   },
-   "polyStatus": "ja",
-   "polyKey": "por-rio-scb-2026-11-08",
-   "polySide": "SC Braga",
-   "pinnMovePP": -0.0,
-   "punkte": {
-    "punkte": 7,
-    "moeglich": 10,
-    "dauerH": 0.15,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 76% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.757,
-       "betrag": 16098,
-       "gesamt": 21266,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 76% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Poly-Preis 64% auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
-      },
-      "geld": {
-       "anteil": 0.64,
-       "betrag": null,
-       "gesamt": 938,
-       "waehrung": "USD",
-       "quelle": "preis"
-      },
-      "text": "Poly-Preis 64% auf derselben Seite"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
-      },
-      "geld": null,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.1h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.1h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": -0.0197,
-   "gehaltenSeit": "2026-11-08T20:21:11.156397+00:00",
-   "zuletztAktiv": "2026-11-08T20:21:11.156397+00:00",
-   "haltePreis": 1.56,
    "aktiv": true
   }
  }
