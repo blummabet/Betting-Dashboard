@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-08T18:50:58.341755+00:00",
+"generatedAt": "2026-11-08T19:06:05.839062+00:00",
 "byVerdict": {
 "konsens": {
-"n": 873,
-"wins": 519,
-"hitRate": 0.5945,
-"polyN": 854,
-"polyWins": 502,
-"polyHitRate": 0.5878,
-"pinnN": 786,
-"pinnHitRate": 0.5954,
-"nRoi": 873,
-"roi": 0.0833,
-"roiLb": 0.0302,
-"nClv": 873,
+"n": 875,
+"wins": 520,
+"hitRate": 0.5943,
+"polyN": 856,
+"polyWins": 503,
+"polyHitRate": 0.5876,
+"pinnN": 787,
+"pinnHitRate": 0.5959,
+"nRoi": 875,
+"roi": 0.0822,
+"roiLb": 0.0292,
+"nClv": 875,
 "clv": 0.14,
-"clvLb": -0.006
+"clvLb": -0.0032
 },
 "uneinig": {
 "n": 45,
@@ -172,9 +172,9 @@
 "hitRate": 0.6364
 },
 "Scottish Premiership": {
-"n": 10,
-"wins": 4,
-"hitRate": 0.4
+"n": 11,
+"wins": 5,
+"hitRate": 0.4545
 },
 "Brazilian Serie B": {
 "n": 9,
@@ -311,6 +311,11 @@
 "wins": 0,
 "hitRate": 0.0
 },
+"Ukrainian Premier League": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
 "Azerbaijan 1st Division": {
 "n": 2,
 "wins": 2,
@@ -352,11 +357,6 @@
 "hitRate": 0.5
 },
 "UEFA Nations League D": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
-},
-"Ukrainian Premier League": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
@@ -419,15 +419,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 585,
-"wins": 367,
-"hitRate": 0.6274,
-"nRoi": 585,
-"roi": 0.045,
-"roiLb": -0.0132,
-"nClv": 585,
+"n": 587,
+"wins": 368,
+"hitRate": 0.6269,
+"nRoi": 587,
+"roi": 0.0434,
+"roiLb": -0.0146,
+"nClv": 587,
 "clv": 0.2,
-"clvLb": 0.0147
+"clvLb": 0.0189
 },
 "weak": {
 "n": 334,
@@ -450,6 +450,44 @@
 "polyRate": 0.3864
 },
 "recent": [
+{
+"matchId": "36267750",
+"home": "Celtic",
+"away": "Kilmarnock",
+"league": "Scottish Premiership",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Celtic",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-08T16:00:00Z",
+"settledAt": "2026-11-08T19:06:05.563924+00:00"
+},
+{
+"matchId": "36275446",
+"home": "Shakhtar",
+"away": "Dynamo Kiev",
+"league": "Ukrainian Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Shakhtar",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-11-08T16:00:00Z",
+"settledAt": "2026-11-08T19:06:05.563924+00:00"
+},
 {
 "matchId": "36270960",
 "home": "Kalmar FF",
@@ -1171,57 +1209,19 @@
 ],
 "kickoff": "2026-11-07T17:30:00Z",
 "settledAt": "2026-11-07T20:33:48.075517+00:00"
-},
-{
-"matchId": "36235238",
-"home": "Nottm Forest",
-"away": "Man City",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Man City",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-07T17:30:00Z",
-"settledAt": "2026-11-07T20:33:48.075517+00:00"
-},
-{
-"matchId": "36241176",
-"home": "Stuttgart",
-"away": "Werder Bremen",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Stuttgart",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-07T17:30:00Z",
-"settledAt": "2026-11-07T20:33:48.075517+00:00"
 }
 ],
 "global": {
-"n": 919,
-"wins": 536,
-"hitRate": 0.5832,
-"nRoi": 919,
-"roi": 0.0832,
-"roiLb": 0.0299,
-"nClv": 919,
-"clv": 0.12,
-"clvLb": -0.0164
+"n": 921,
+"wins": 537,
+"hitRate": 0.5831,
+"nRoi": 921,
+"roi": 0.0822,
+"roiLb": 0.0289,
+"nClv": 921,
+"clv": 0.13,
+"clvLb": -0.0136
 },
-"pending": 23,
+"pending": 21,
 "ausgeschlossenLive": 1058
 }
