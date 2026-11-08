@@ -1,13 +1,13 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-08T15:50:46.440546+00:00",
+  "updatedAt": "2026-11-08T15:55:40.773736+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.8,
-    "proTag": 95.8,
-    "lueckeMinMin": 7.3,
+    "spanneH": 4.6,
+    "proTag": 99.4,
+    "lueckeMinMin": 4.9,
     "lueckeMedianMin": 15.1,
     "lueckeMaxMin": 29.8,
     "sollProTag": null,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 19,
-    "gelaufen": 19,
+    "erzeugt": 20,
+    "gelaufen": 20,
     "verdraengt": 0,
-    "spanneH": 174.7,
-    "erzeugtProTag": 2.6,
-    "widerspruch": "erzeugtProTag 2.6 gegen eine gemessene Kadenz von 95.8/Tag (Faktor 36.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 191.6,
+    "erzeugtProTag": 2.5,
+    "widerspruch": "erzeugtProTag 2.5 gegen eine gemessene Kadenz von 99.4/Tag (Faktor 39.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-08T15:55:40.773736+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "42497208261",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42497208261",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-08T15:55:04Z",
+      "startedAt": "2026-11-08T15:55:04Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 36.8,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-08T15:50:46.440546+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-11-08T11:19:39Z",
       "wartetS": 0.0,
       "laeuftSeitS": 44.4,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-08T11:05:05.080870+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "42474110007",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42474110007",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-08T11:04:23Z",
-      "startedAt": "2026-11-08T11:04:23Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 42.1,
       "event": "workflow_dispatch"
     }
   ]
