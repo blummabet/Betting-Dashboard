@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 116 von 148 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Slavia Prague v SK Artis Brno (Czech 1 Liga); Farense v Benfica B (Portuguese Segunda Liga); Arsenal U21 v Aston Villa U21 (English Premier League 2 - Div 1)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,19 +90,18 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 428404 verbraucht, 4571596 uebrig"
+      "note": "Kontingent: 428961 verbraucht, 4571039 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 11,
       "failures": [
         "Central & West DR & SA v South China (Hong Kong 1st Division League): name — bester Kandidat „Shanghai Shenhua FC v Qingdao West Coast FC“",
         "Shenzhen 2028 v Shanghai Port B (Chinese League 2): name — bester Kandidat „Shanghai SIPG FC v Liaoning Tieren FC“",
         "Guizhou Zhucheng Athletic v Shandong Taishan B (Chinese League 2): name — bester Kandidat „Shandong Luneng Taishan FC v Chengdu Rongcheng FC“",
-        "Bali Utd Pusam v Persik Kediri (Indonesian Super League): name — bester Kandidat „JEF United Chiba v Mito HollyHock“",
         "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
         "Liverpool (W) v Arsenal (W) (English WSL): name — bester Kandidat „Crystal Palace v Liverpool“",
         "Satun United FC v JL Chiangmai United (Thai League 2): zeit — bester Kandidat „Peterborough United v Oxford United“ · 148.0h Anpfiff-Abstand",
@@ -110,7 +111,7 @@
         "Aston Villa (W) v Man Utd (W) (English WSL): zeit — bester Kandidat „Manchester United v Aston Villa“ · 4.5h Anpfiff-Abstand",
         "Hangzhou Linping Wuyue v Dalian Kewei (Chinese League 2): name — bester Kandidat „Dalian Yingbo v Tianjin Jinmen Tiger FC“"
       ],
-      "note": "ohne Anker: kein_kandidat 90 · name 9 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 91 · name 8 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -128,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -194,6 +195,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-08T07:50:08.952708+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-08T08:05:21.093015+00:00"
 }
