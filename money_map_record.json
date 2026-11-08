@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-08T21:51:12.992365+00:00",
+"generatedAt": "2026-11-08T22:51:20.669182+00:00",
 "byVerdict": {
 "konsens": {
-"n": 884,
+"n": 886,
 "wins": 526,
-"hitRate": 0.595,
-"polyN": 865,
+"hitRate": 0.5937,
+"polyN": 867,
 "polyWins": 509,
-"polyHitRate": 0.5884,
-"pinnN": 796,
-"pinnHitRate": 0.5967,
-"nRoi": 884,
-"roi": 0.0838,
-"roiLb": 0.0311,
-"nClv": 884,
+"polyHitRate": 0.5871,
+"pinnN": 798,
+"pinnHitRate": 0.5952,
+"nRoi": 886,
+"roi": 0.0814,
+"roiLb": 0.0287,
+"nClv": 886,
 "clv": 0.15,
-"clvLb": 0.0031
+"clvLb": 0.0023
 },
 "uneinig": {
 "n": 46,
@@ -57,9 +57,9 @@
 "hitRate": 0.5469
 },
 "Italian Serie A": {
-"n": 59,
+"n": 60,
 "wins": 42,
-"hitRate": 0.7119
+"hitRate": 0.7
 },
 "UEFA Champions League": {
 "n": 54,
@@ -97,9 +97,9 @@
 "hitRate": 0.575
 },
 "French Ligue 1": {
-"n": 36,
+"n": 37,
 "wins": 25,
-"hitRate": 0.6944
+"hitRate": 0.6757
 },
 "UEFA Conference League": {
 "n": 31,
@@ -430,15 +430,15 @@
 "clvLb": 0.0248
 },
 "weak": {
-"n": 340,
+"n": 342,
 "wins": 172,
-"hitRate": 0.5059,
-"nRoi": 340,
-"roi": 0.149,
-"roiLb": 0.0444,
-"nClv": 340,
+"hitRate": 0.5029,
+"nRoi": 342,
+"roi": 0.1423,
+"roiLb": 0.038,
+"nClv": 342,
 "clv": -0.0,
-"clvLb": -0.21
+"clvLb": -0.2111
 }
 },
 "divergence": {
@@ -450,6 +450,44 @@
 "polyRate": 0.3778
 },
 "recent": [
+{
+"matchId": "36267099",
+"home": "Fiorentina",
+"away": "Juventus",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Juventus",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-11-08T19:45:00Z",
+"settledAt": "2026-11-08T22:51:20.402342+00:00"
+},
+{
+"matchId": "36239780",
+"home": "Lens",
+"away": "Marseille",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lens",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-11-08T19:45:00Z",
+"settledAt": "2026-11-08T22:51:20.402342+00:00"
+},
 {
 "matchId": "36241112",
 "home": "Hoffenheim",
@@ -1171,57 +1209,19 @@
 ],
 "kickoff": "2026-11-07T21:00:00Z",
 "settledAt": "2026-11-08T00:03:53.939881+00:00"
-},
-{
-"matchId": "36270050",
-"home": "Sporting Lisbon",
-"away": "Moreirense",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sporting Lisbon",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-07T20:30:00Z",
-"settledAt": "2026-11-07T23:33:57.981760+00:00"
-},
-{
-"matchId": "36239806",
-"home": "Paris St-G",
-"away": "ESTAC Troyes",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Paris St-G",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-07T20:05:00Z",
-"settledAt": "2026-11-07T23:18:56.124158+00:00"
 }
 ],
 "global": {
-"n": 931,
+"n": 933,
 "wins": 543,
-"hitRate": 0.5832,
-"nRoi": 931,
-"roi": 0.0825,
-"roiLb": 0.0296,
-"nClv": 931,
+"hitRate": 0.582,
+"nRoi": 933,
+"roi": 0.0802,
+"roiLb": 0.0273,
+"nClv": 933,
 "clv": 0.13,
-"clvLb": -0.0075
+"clvLb": -0.0083
 },
-"pending": 12,
+"pending": 10,
 "ausgeschlossenLive": 1057
 }
