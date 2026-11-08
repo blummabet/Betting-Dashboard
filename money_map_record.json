@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-11-08T15:20:31.883552+00:00",
+"generatedAt": "2026-11-08T15:35:46.570814+00:00",
 "byVerdict": {
 "konsens": {
-"n": 857,
+"n": 858,
 "wins": 510,
-"hitRate": 0.5951,
-"polyN": 838,
+"hitRate": 0.5944,
+"polyN": 839,
 "polyWins": 493,
-"polyHitRate": 0.5883,
-"pinnN": 770,
-"pinnHitRate": 0.5961,
-"nRoi": 857,
-"roi": 0.0835,
-"roiLb": 0.0299,
-"nClv": 857,
+"polyHitRate": 0.5876,
+"pinnN": 771,
+"pinnHitRate": 0.5953,
+"nRoi": 858,
+"roi": 0.0823,
+"roiLb": 0.0287,
+"nClv": 858,
 "clv": 0.14,
-"clvLb": -0.0037
+"clvLb": -0.0041
 },
 "uneinig": {
-"n": 44,
-"wins": 16,
-"hitRate": 0.3636,
-"polyN": 43,
-"polyWins": 16,
-"polyHitRate": 0.3721,
-"pinnN": 33,
-"pinnHitRate": 0.303,
-"nRoi": 44,
-"roi": 0.0666,
-"roiLb": -0.2924,
-"nClv": 44,
+"n": 45,
+"wins": 17,
+"hitRate": 0.3778,
+"polyN": 44,
+"polyWins": 17,
+"polyHitRate": 0.3864,
+"pinnN": 34,
+"pinnHitRate": 0.2941,
+"nRoi": 45,
+"roi": 0.1056,
+"roiLb": -0.2512,
+"nClv": 45,
 "clv": -0.18,
-"clvLb": -0.7432
+"clvLb": -0.7266
 },
 "teil": {
 "n": 1,
@@ -107,9 +107,9 @@
 "hitRate": 0.7097
 },
 "German Bundesliga 2": {
-"n": 27,
-"wins": 13,
-"hitRate": 0.4815
+"n": 28,
+"wins": 14,
+"hitRate": 0.5
 },
 "Spanish Segunda Division": {
 "n": 27,
@@ -266,6 +266,11 @@
 "wins": 5,
 "hitRate": 1.0
 },
+"Belgian Pro League": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Bulgarian A League": {
 "n": 4,
 "wins": 3,
@@ -295,11 +300,6 @@
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
-},
-"Belgian Pro League": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
 },
 "Czech 1 Liga": {
 "n": 3,
@@ -419,37 +419,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 581,
+"n": 582,
 "wins": 365,
-"hitRate": 0.6282,
-"nRoi": 581,
-"roi": 0.046,
-"roiLb": -0.0122,
-"nClv": 581,
+"hitRate": 0.6271,
+"nRoi": 582,
+"roi": 0.0442,
+"roiLb": -0.014,
+"nClv": 582,
 "clv": 0.18,
-"clvLb": -0.0001
+"clvLb": -0.0008
 },
 "weak": {
-"n": 321,
-"wins": 161,
-"hitRate": 0.5016,
-"nRoi": 321,
-"roi": 0.1457,
-"roiLb": 0.0374,
-"nClv": 321,
+"n": 322,
+"wins": 162,
+"hitRate": 0.5031,
+"nRoi": 322,
+"roi": 0.1509,
+"roiLb": 0.0426,
+"nClv": 322,
 "clv": 0.02,
-"clvLb": -0.1873
+"clvLb": -0.1867
 }
 },
 "divergence": {
-"n": 44,
-"betfairWins": 16,
-"betfairRate": 0.3636,
-"polyN": 43,
-"polyWins": 16,
-"polyRate": 0.3721
+"n": 45,
+"betfairWins": 17,
+"betfairRate": 0.3778,
+"polyN": 44,
+"polyWins": 17,
+"polyRate": 0.3864
 },
 "recent": [
+{
+"matchId": "36267648",
+"home": "Club Brugge",
+"away": "Anderlecht",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Club Brugge",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-08T12:30:00Z",
+"settledAt": "2026-11-08T15:35:46.376382+00:00"
+},
+{
+"matchId": "36267801",
+"home": "FC Magdeburg",
+"away": "St Pauli",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "FC Magdeburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-11-08T12:30:00Z",
+"settledAt": "2026-11-08T15:35:46.376382+00:00"
+},
 {
 "matchId": "36267103",
 "home": "Napoli",
@@ -1171,57 +1209,19 @@
 ],
 "kickoff": "2026-11-07T14:00:00Z",
 "settledAt": "2026-11-07T17:03:29.780863+00:00"
-},
-{
-"matchId": "36264836",
-"home": "Charlton",
-"away": "Sheff Utd",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sheff Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-11-07T15:00:00Z",
-"settledAt": "2026-11-07T17:03:29.780863+00:00"
-},
-{
-"matchId": "36266672",
-"home": "Slovan Liberec",
-"away": "Bohemians 1905",
-"league": "Czech 1 Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Slovan Liberec",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-07T14:00:00Z",
-"settledAt": "2026-11-07T17:03:29.780863+00:00"
 }
 ],
 "global": {
-"n": 902,
-"wins": 526,
-"hitRate": 0.5831,
-"nRoi": 902,
-"roi": 0.0815,
-"roiLb": 0.0277,
-"nClv": 902,
+"n": 904,
+"wins": 527,
+"hitRate": 0.583,
+"nRoi": 904,
+"roi": 0.0822,
+"roiLb": 0.0284,
+"nClv": 904,
 "clv": 0.12,
-"clvLb": -0.0144
+"clvLb": -0.0148
 },
-"pending": 38,
+"pending": 36,
 "ausgeschlossenLive": 1060
 }
