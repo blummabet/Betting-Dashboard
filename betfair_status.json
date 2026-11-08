@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 119 von 164 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Girona v Almeria (Spanish Segunda Division); Derry City v Waterford (Irish FAI Cup); AEK Athens v Levadiakos (Greek Super League)"
+        "nur 129 von 179 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Alanyaspor v Trabzonspor (Turkish Super League); Audax Italiano v Coquimbo Unido (Chilean Primera Division); Univ Catolica (Chile) v Deportes Limache (Chilean Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,27 +90,26 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 432478 verbraucht, 4567522 uebrig"
+      "note": "Kontingent: 433032 verbraucht, 4566968 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 9,
       "failures": [
-        "Bali Utd Pusam v Persik Kediri (Indonesian Super League): name — bester Kandidat „JEF United Chiba v Mito HollyHock“",
-        "Central & West DR & SA v South China (Hong Kong 1st Division League): name — bester Kandidat „Shanghai Shenhua FC v Qingdao West Coast FC“",
         "Bochum v Karlsruhe (German Bundesliga 2): name — bester Kandidat „VfL Bochum v Karlsruher SC“",
         "Liverpool (W) v Arsenal (W) (English WSL): name — bester Kandidat „Crystal Palace v Liverpool“",
         "Rasi Salai United FC v Bangkok Utd (Thai League 1): zeit — bester Kandidat „Peterborough United v Oxford United“ · 148.0h Anpfiff-Abstand",
-        "Satun United FC v JL Chiangmai United (Thai League 2): zeit — bester Kandidat „Peterborough United v Oxford United“ · 148.0h Anpfiff-Abstand",
         "Crystal Palace U21 v Everton U21 (English Premier League 2 - Div 1): name — bester Kandidat „Crystal Palace v Liverpool“",
+        "Satun United FC v JL Chiangmai United (Thai League 2): zeit — bester Kandidat „Peterborough United v Oxford United“ · 148.0h Anpfiff-Abstand",
         "Spartak Varna v Arda (Bulgarian A League): name — bester Kandidat „Spartak Moscow v FC Akron Tolyatti“",
         "Aston Villa (W) v Man Utd (W) (English WSL): zeit — bester Kandidat „Manchester United v Aston Villa“ · 4.5h Anpfiff-Abstand",
-        "Tottenham U21 v Chelsea U21 (English Premier League 2 - Div 1): name — bester Kandidat „Sunderland v Chelsea“"
+        "Tottenham U21 v Chelsea U21 (English Premier League 2 - Div 1): name — bester Kandidat „Sunderland v Chelsea“",
+        "Bali Utd Pusam v Persik Kediri (Indonesian Super League): name — bester Kandidat „JEF United Chiba v Mito HollyHock“"
       ],
-      "note": "ohne Anker: kein_kandidat 90 · kein_pinnacle 6 · name 7 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 96 · name 6 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -119,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 6 — Beijing Guoan v Chongqing Tonglianglong (17 Buecher, ohne Pinnacle); Shanghai Shenhua v Qingdao Youth Island (10 Buecher, ohne Pinnacle); Zhejiang Greentown v Henan Songshan Longmen (3 Buecher, ohne Pinnacle); Qingdao Hainiu v Shenzhen Peng City (24 Buecher, ohne Pinnacle); Bucheon FC 1995 v Pohang Steelers (25 Buecher, ohne Pinnacle); Dalian Yingbo v Tianjin Jinmen Tiger FC (21 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -128,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
+      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -195,5 +194,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-08T09:20:30.921674+00:00"
+  "generatedAt": "2026-11-08T09:35:31.187980+00:00"
 }
