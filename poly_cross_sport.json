@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-08T14:25:08.070169+00:00",
+ "generatedAt": "2026-11-08T14:55:02.571782+00:00",
  "sports": [
   "americanfootball_nfl",
   "basketball_nba",
@@ -8,25 +8,96 @@
   "soccer_liga"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 720,
- "pinnKeys": 144,
- "matched": 72,
- "footballRows": 72,
+ "polyRowsSeen": 717,
+ "pinnKeys": 139,
+ "matched": 69,
+ "footballRows": 69,
  "crossRows": 648,
- "footballSkippedStale": 178,
+ "footballSkippedStale": 179,
  "seenBySport": {
   "basketball_nba": 206,
   "americanfootball_nfl": 94,
   "icehockey_nhl": 332,
   "boxing_boxing": 16,
-  "soccer_liga": 72
+  "soccer_liga": 69
  },
  "matchedBySport": {
-  "soccer_liga": 72
+  "soccer_liga": 69
  },
  "trackRecord": {
-  "tracked": 125,
+  "tracked": 130,
   "converged": 0
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|lille-rennes|aw",
+   "sport": "soccer_liga",
+   "event": "Rennes vs Lille",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 27.5,
+   "pinnPP": 54.4,
+   "gapPP": -26.93,
+   "vol": 61272,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-08T14:55:02.571419+00:00"
+  },
+  {
+   "id": "soccer_liga|lille-rennes|hw",
+   "sport": "soccer_liga",
+   "event": "Rennes vs Lille",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 38.5,
+   "pinnPP": 17.8,
+   "gapPP": 20.7,
+   "vol": 61272,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-08T14:55:02.571419+00:00"
+  },
+  {
+   "id": "soccer_liga|chelsea-sunderland|aw",
+   "sport": "soccer_liga",
+   "event": "Sunderland vs Chelsea",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 26.5,
+   "pinnPP": 40.5,
+   "gapPP": -13.96,
+   "vol": 7187358,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-08T14:55:02.571419+00:00"
+  },
+  {
+   "id": "soccer_liga|chelsea-sunderland|hw",
+   "sport": "soccer_liga",
+   "event": "Sunderland vs Chelsea",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 41.5,
+   "pinnPP": 27.6,
+   "gapPP": 13.86,
+   "vol": 7187358,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-08T14:55:02.571419+00:00"
+  },
+  {
+   "id": "soccer_liga|elche-realbetis|dr",
+   "sport": "soccer_liga",
+   "event": "Elche vs Real Betis",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 56.5,
+   "pinnPP": 47.6,
+   "gapPP": 8.9,
+   "vol": 490548,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-11-08T14:55:02.571419+00:00"
+  }
+ ]
 }
