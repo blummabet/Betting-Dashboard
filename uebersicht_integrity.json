@@ -116,8 +116,8 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Man Utd v Aston Villa (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $127381 fremdes Geld in einer Konsens-Zeile",
-        "Rennes v Lille (French Ligue 1): Poly-Seite heisst „Stade Rennais FC 1901“ und gehoert zu keinem der beiden Teams — $9528 fremdes Geld in einer Konsens-Zeile"
+        "Man Utd v Aston Villa (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $132080 fremdes Geld in einer Konsens-Zeile",
+        "Rennes v Lille (French Ligue 1): Poly-Seite heisst „Stade Rennais FC 1901“ und gehoert zu keinem der beiden Teams — $35685 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 2,
       "ok": false,
@@ -174,27 +174,27 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "135 Picks im Fenster, 22 % ohne Preis-Signal."
+      "hinweis": "137 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 509 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 511 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 509 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 511 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "apif_predictions schadet belegt: Ausgang -0.069 schlechter als ohne (OG -0.014, n=47/289) — abwerten oder nur noch beobachten",
-        "injury schadet belegt: Ausgang -0.046 schlechter als ohne (OG -0.009, n=177/159) — abwerten oder nur noch beobachten",
-        "topscorer_momentum schadet belegt: Ausgang -0.052 schlechter als ohne (OG -0.009, n=82/254) — abwerten oder nur noch beobachten"
+        "apif_predictions schadet belegt: Ausgang -0.068 schlechter als ohne (OG -0.014, n=47/291) — abwerten oder nur noch beobachten",
+        "injury schadet belegt: Ausgang -0.045 schlechter als ohne (OG -0.009, n=178/160) — abwerten oder nur noch beobachten",
+        "topscorer_momentum schadet belegt: Ausgang -0.054 schlechter als ohne (OG -0.011, n=83/255) — abwerten oder nur noch beobachten"
       ],
       "nFail": 3,
       "ok": false,
@@ -206,7 +206,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=6522 (UG -3.4 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6525 (UG -3.8 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -257,8 +257,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 351 h — die Datei selbst ist 351 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 341 h — die Datei selbst ist 341 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 352 h — die Datei selbst ist 352 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 342 h — die Datei selbst ist 342 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -280,7 +280,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1287 Zeilen · 1262 abgerechnet · 13 offen"
+      "hinweis": "1291 Zeilen · 1269 abgerechnet · 10 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -336,7 +336,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 636.8 h, MLS 644.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 637.9 h, MLS 645.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -344,5 +344,5 @@
     }
   ],
   "nFail": 11,
-  "generatedAt": "2026-11-08T13:34:22.577305+00:00"
+  "generatedAt": "2026-11-08T14:37:58.743616+00:00"
 }
