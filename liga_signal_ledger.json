@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-07T21:50:50Z",
-    "total_records": 336,
+    "updated_at": "2026-11-08T13:34:19Z",
+    "total_records": 337,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -4395,6 +4395,65 @@
       "entryBook": "soft",
       "processVerdict": "UNLUCKY",
       "clvBasis": "roh"
+    },
+    {
+      "key": "ESP-12-532-541|AH Auswärts −1.25",
+      "matchKey": "ESP-12-532-541",
+      "market": "AH Auswärts −1.25",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.26
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.75
+        },
+        {
+          "name": "form_rating",
+          "score": 3.58
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 1.2
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.72
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.5
+        },
+        {
+          "name": "betfair_money",
+          "score": 2.43
+        }
+      ],
+      "resolvedAt": "2026-11-08T13:34:17Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.76,
+      "entryOdd": 1.76,
+      "entryBook": "pini",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ESP-12-536-542|Heimsieg",
@@ -15236,7 +15295,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-07T21:50:50Z",
+      "resolvedAt": "2026-11-08T13:34:19Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
