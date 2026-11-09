@@ -3,10 +3,12 @@
     {
       "id": "close_feed_fresh",
       "label": "Close-Feed frisch (frisches Geld kommt rein)",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Close-Feed: jüngster Stand vor 3.0 h (> 3 h erwartet) · 3873 Märkte im File"
+      ],
       "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
     },
     {
@@ -90,7 +92,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1330 geprueft, davon 234 abgeschnitten"
+      "note": "1329 geprueft, davon 234 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -126,7 +128,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "3874 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "3873 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -135,7 +137,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-26); 2088 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-26); 2087 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -200,6 +202,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-11-09T08:00:28.415418+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-11-09T08:30:12.713680+00:00"
 }
