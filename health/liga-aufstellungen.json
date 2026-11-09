@@ -1,29 +1,44 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-08T23:55:16.949973+00:00",
+  "updatedAt": "2026-11-09T19:44:14.094221+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 8.1,
-    "proTag": 56.5,
-    "lueckeMinMin": 4.9,
-    "lueckeMedianMin": 14.9,
-    "lueckeMaxMin": 210.3,
+    "spanneH": 27.8,
+    "proTag": 16.4,
+    "lueckeMinMin": 6.4,
+    "lueckeMedianMin": 15.0,
+    "lueckeMaxMin": 1189.0,
     "sollProTag": null,
     "liefergradPct": null,
     "fensterMin": null,
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 22,
-    "gelaufen": 22,
+    "erzeugt": 23,
+    "gelaufen": 23,
     "verdraengt": 0,
-    "spanneH": 199.6,
-    "erzeugtProTag": 2.6,
-    "widerspruch": "erzeugtProTag 2.6 gegen eine gemessene Kadenz von 56.5/Tag (Faktor 21.7) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 219.4,
+    "erzeugtProTag": 2.5,
+    "widerspruch": "erzeugtProTag 2.5 gegen eine gemessene Kadenz von 16.4/Tag (Faktor 6.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-09T19:44:14.094221+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "42686104937",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42686104937",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-09T19:43:40Z",
+      "startedAt": "2026-11-09T19:43:40Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 34.1,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-08T23:55:16.949973+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 36.8,
       "event": "schedule"
-    },
-    {
-      "ts": "2026-11-08T15:50:46.440546+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "42496779559",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42496779559",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-08T15:49:53Z",
-      "startedAt": "2026-11-08T15:49:53Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 53.4,
-      "event": "workflow_dispatch"
     }
   ]
 }
