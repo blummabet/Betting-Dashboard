@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-09T02:06:35.268491+00:00",
+"generatedAt": "2026-11-09T02:21:54.797747+00:00",
 "count": 3,
-"covered": 0,
+"covered": 1,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -47,27 +47,75 @@
 "soccer_turkey_super_league",
 "soccer_usa_mls"
 ],
-"leaguesMitAnker": [],
+"leaguesMitAnker": [
+"Mexican Liga MX"
+],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 30,
 "oddsKeysMitDaten": 30,
-"oddsEvents": 270,
+"oddsEvents": 269,
 "oddsTotals": {
-"versucht": 0,
+"versucht": 1,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 0,
+"gewollt": 1,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 464750,
-"remaining": 4535250,
+"used": 465110,
+"remaining": 4534890,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
 "ankerQuote": 0.8,
 "games": [
+{
+"matchId": "36273931",
+"home": "Leon",
+"away": "Guadalajara",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-11-09T02:10:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Guadalajara",
+"moneySharePct": 69,
+"moneyOdd": 1.98,
+"moneyDir": "out",
+"totVol": 24702,
+"pinnOdd": 1.91,
+"softOdd": 1.88,
+"softN": 35,
+"poly": {
+"vol": 79228,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "mex-leo-gua-2026-11-08",
+"sideKey": "CD Guadalajara",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.24,
+"draw": 0.2525,
+"away": 0.5076,
+"fav": "away"
+},
+"soft": {
+"home": 0.2525,
+"draw": 0.2599,
+"away": 0.4876,
+"fav": "away",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36287647",
 "home": "Universitario de Deportes",
@@ -78,10 +126,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Universitario de Deportes",
-"moneySharePct": 90,
-"moneyOdd": 1.3,
+"moneySharePct": 92,
+"moneyOdd": 1.45,
 "moneyDir": "out",
-"totVol": 46366,
+"totVol": 58001,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -117,10 +165,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Alianza FC Valledupar",
-"moneySharePct": 53,
+"moneySharePct": 49,
 "moneyOdd": 6.2,
-"moneyDir": "out",
-"totVol": 25568,
+"moneyDir": "flat",
+"totVol": 27976,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -144,37 +192,6 @@
 "ankerGrund": {
 "spiel": "Alianza FC Valledupar v Llaneros FC",
 "grund": "kein_kandidat"
-}
-},
-{
-"matchId": "36285677",
-"home": "CD Fas",
-"away": "Fuerte San Francisco",
-"league": "Salvadoran Primera Division",
-"country": "SV",
-"kickoff": "2026-11-09T01:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Cd Fas",
-"moneySharePct": 91,
-"moneyOdd": 2.46,
-"moneyDir": "in",
-"totVol": 3589,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "CD Fas v Fuerte San Francisco",
-"grund": "kein_kandidat",
-"naechster": "San Marino v Belarus"
 }
 }
 ],
