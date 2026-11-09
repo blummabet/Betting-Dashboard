@@ -90,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1339 geprueft, davon 235 abgeschnitten"
+      "note": "1338 geprueft, davon 235 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -126,7 +126,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "3904 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "3902 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -156,9 +156,11 @@
       "id": "wallet_profit_wird_gemessen",
       "label": "Wallet-Profit wird gemessen",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "keine Auflösung in den letzten 3 Tagen — die Messung kann nicht anlaufen, und das ist selbst ein Befund"
+      ],
       "note": "Seit 22.09. rechnet poly_money_broad je Auflösung Gewinn und Einsatz je Wallet mit (Anteile x Einstieg). Kommt dort nichts an, sind Profit und ROI der Zeitraeume leer — was besser ist als falsch, aber nicht das Ziel."
     },
     {
@@ -198,6 +200,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-08T23:59:37.756504+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-11-09T00:29:47.109867+00:00"
 }
