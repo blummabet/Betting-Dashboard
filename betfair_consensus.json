@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-11-09T01:36:30.474058+00:00",
-"count": 2,
+"generatedAt": "2026-11-09T01:51:35.140233+00:00",
+"count": 4,
 "covered": 1,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -47,9 +47,7 @@
 "soccer_turkey_super_league",
 "soccer_usa_mls"
 ],
-"leaguesMitAnker": [
-"Mexican Liga MX"
-],
+"leaguesMitAnker": [],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 30,
 "oddsKeysMitDaten": 30,
@@ -62,13 +60,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 463980,
-"remaining": 4536020,
+"used": 464385,
+"remaining": 4535615,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.833,
+"ankerQuote": 0.667,
 "games": [
 {
 "matchId": "36273783",
@@ -80,13 +78,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Puebla",
-"moneySharePct": 80,
-"moneyOdd": 1.09,
+"moneySharePct": 84,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 84973,
-"pinnOdd": 1.16,
-"softOdd": 1.06,
-"softN": 24,
+"totVol": 102519,
+"pinnOdd": null,
+"softOdd": 1.0,
+"softN": 15,
 "poly": {
 "vol": 22735,
 "odd": 1.21,
@@ -97,24 +95,28 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": {
-"home": 0.0476,
-"draw": 0.1342,
-"away": 0.8182,
-"fav": "away"
-},
+"pinn": null,
 "soft": {
-"home": 0.0371,
-"draw": 0.113,
-"away": 0.8499,
+"home": 0.0216,
+"draw": 0.0395,
+"away": 0.9389,
 "fav": "away",
-"n": 24
+"n": 15
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Queretaro v Puebla",
+"grund": "kein_pinnacle",
+"kandidat": "Querétaro v Puebla",
+"key": "soccer_mexico_ligamx",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15
+}
 },
 {
 "matchId": "36287647",
@@ -126,10 +128,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Universitario de Deportes",
-"moneySharePct": 85,
-"moneyOdd": 1.22,
-"moneyDir": "in",
-"totVol": 21956,
+"moneySharePct": 86,
+"moneyOdd": 1.24,
+"moneyDir": "out",
+"totVol": 27048,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -154,16 +156,78 @@
 "spiel": "Universitario de Deportes v Cesar Vallejo Moquegua",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36273909",
+"home": "Alianza FC Valledupar",
+"away": "Llaneros FC",
+"league": "Colombian Primera A",
+"country": "CO",
+"kickoff": "2026-11-09T01:15:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Alianza FC Valledupar",
+"moneySharePct": 71,
+"moneyOdd": 2.64,
+"moneyDir": "in",
+"totVol": 17240,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Alianza FC Valledupar v Llaneros FC",
+"grund": "kein_kandidat"
+}
+},
+{
+"matchId": "36285677",
+"home": "CD Fas",
+"away": "Fuerte San Francisco",
+"league": "Salvadoran Primera Division",
+"country": "SV",
+"kickoff": "2026-11-09T01:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Cd Fas",
+"moneySharePct": 91,
+"moneyOdd": 2.48,
+"moneyDir": "out",
+"totVol": 3260,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "CD Fas v Fuerte San Francisco",
+"grund": "kein_kandidat",
+"naechster": "San Marino v Belarus"
+}
 }
 ],
 "ankerN": 6,
 "ankerNOffen": 82,
-"ankerMit": 5,
+"ankerMit": 4,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 68,
 "name": 1,
-"zeit": 1
+"zeit": 1,
+"kein_pinnacle": 1
 },
 "beispiele": [
 {
@@ -184,6 +248,17 @@
 "abstandH": 29.0,
 "matchId": "36294828",
 "liga": "Nigerian Premier League"
+},
+{
+"spiel": "Queretaro v Puebla",
+"grund": "kein_pinnacle",
+"kandidat": "Querétaro v Puebla",
+"key": "soccer_mexico_ligamx",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15,
+"matchId": "36273783",
+"liga": "Mexican Liga MX"
 }
 ]
 }
