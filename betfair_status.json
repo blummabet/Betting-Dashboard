@@ -88,16 +88,18 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 543970 verbraucht, 4456030 uebrig"
+      "note": "Kontingent: 544515 verbraucht, 4455485 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "ohne Anker: kein_kandidat 109 · kein_pinnacle 10. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "South United v Sporting Club Bengaluru (Bangalore Super Division League): zeit — bester Kandidat „Sporting Lisbon v Manchester United“ · 345.5h Anpfiff-Abstand"
+      ],
+      "note": "ohne Anker: kein_kandidat 109 · kein_pinnacle 11 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -106,7 +108,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 5 — Real Madrid FC (W) v Paris FC (W) (10 Buecher, ohne Pinnacle); Grimsby v Nottingham Forest U21 (17 Buecher, ohne Pinnacle); Tavernes v Valencia (9 Buecher, ohne Pinnacle); Anaitasuna FT v Alaves (13 Buecher, ohne Pinnacle); CD Pamplona v Eibar (8 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 5 — Grimsby v Nottingham Forest U21 (17 Buecher, ohne Pinnacle); Leicester v Walsall (24 Buecher, ohne Pinnacle); Tavernes v Valencia (9 Buecher, ohne Pinnacle); Anaitasuna FT v Alaves (5 Buecher, ohne Pinnacle); CD Pamplona v Eibar (4 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -115,7 +117,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 4 gewollt, 4 abgerufen, 0 mit Daten"
+      "note": "Totals: 3 gewollt, 3 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -181,6 +183,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 0,
-  "generatedAt": "2026-11-10T19:27:44.517452+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-11-10T19:42:47.586668+00:00"
 }
