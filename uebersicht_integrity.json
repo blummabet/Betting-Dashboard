@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: Konjunktion · Top-5 + MLS, ABWÄGEN · gepusht, Konjunktion · gehalten (Haltepreis) nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: Konjunktion · Top-5 + MLS, ABWÄGEN · gepusht, AFC Champions League Two · Match Odds nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -171,7 +171,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "140 Picks im Fenster, 21 % ohne Preis-Signal."
+      "hinweis": "137 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -200,11 +200,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+5.8 %, UG +1.5 %, Geldseite +1.7 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+5.9 %, UG +1.7 %, Geldseite +1.7 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6497 (UG -4.9 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6494 (UG -5.1 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -255,8 +255,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 380 h — die Datei selbst ist 380 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 369 h — die Datei selbst ist 369 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 387 h — die Datei selbst ist 387 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 377 h — die Datei selbst ist 377 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -266,7 +266,7 @@
       "label": "Public-Stille ist erklaert",
       "severity": "warn",
       "failures": [
-        "Betfair-Public schweigt seit 7 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (204), fix (109), drift (85)"
+        "Betfair-Public schweigt seit 8 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (212), fix (125), drift (96)"
       ],
       "nFail": 1,
       "ok": false,
@@ -278,7 +278,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1328 Zeilen · 1311 abgerechnet · 5 offen"
+      "hinweis": "1335 Zeilen · 1323 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -325,24 +325,22 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [
-        "liga-data.json: der Datenbau hat zuletzt vor 19 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 665.1 h, MLS 672.8 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 673.0 h, MLS 680.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 12,
-  "generatedAt": "2026-11-09T17:52:15.663958+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-11-10T01:44:07.577829+00:00"
 }
