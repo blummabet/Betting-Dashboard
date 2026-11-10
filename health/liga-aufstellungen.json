@@ -1,12 +1,12 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-09T19:44:14.094221+00:00",
+  "updatedAt": "2026-11-10T02:26:35.621359+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 27.8,
-    "proTag": 16.4,
+    "spanneH": 34.3,
+    "proTag": 13.3,
     "lueckeMinMin": 6.4,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 1189.0,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 23,
-    "gelaufen": 23,
+    "erzeugt": 24,
+    "gelaufen": 24,
     "verdraengt": 0,
-    "spanneH": 219.4,
+    "spanneH": 226.1,
     "erzeugtProTag": 2.5,
-    "widerspruch": "erzeugtProTag 2.5 gegen eine gemessene Kadenz von 16.4/Tag (Faktor 6.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 2.5 gegen eine gemessene Kadenz von 13.3/Tag (Faktor 5.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-10T02:26:35.621359+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "42742720468",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42742720468",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-10T02:25:58Z",
+      "startedAt": "2026-11-10T02:25:58Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 37.6,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-09T19:44:14.094221+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 46.3,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-08T15:55:40.773736+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "42497208261",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/42497208261",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-08T15:55:04Z",
-      "startedAt": "2026-11-08T15:55:04Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 36.8,
-      "event": "schedule"
     }
   ]
 }
