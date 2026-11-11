@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-11T04:28:24.163897+00:00",
-"count": 4,
-"covered": 3,
+"generatedAt": "2026-11-11T04:43:12.440641+00:00",
+"count": 5,
+"covered": 4,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 563905,
-"remaining": 4436095,
+"used": 564450,
+"remaining": 4435550,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -187,7 +187,7 @@
 "moneySharePct": 85,
 "moneyOdd": 1.27,
 "moneyDir": "flat",
-"totVol": 27716,
+"totVol": 27721,
 "pinnOdd": 1.25,
 "softOdd": 1.24,
 "softN": 35,
@@ -227,6 +227,56 @@
 "pinnTotals": null
 },
 {
+"matchId": "36260326",
+"home": "Albania",
+"away": "Finland",
+"league": "UEFA Nations League C",
+"country": "International",
+"kickoff": "2026-11-12T19:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Albania",
+"moneySharePct": 92,
+"moneyOdd": 1.96,
+"moneyDir": "in",
+"totVol": 20443,
+"pinnOdd": null,
+"softOdd": 1.85,
+"softN": 31,
+"poly": {
+"vol": 9616,
+"odd": 1.98,
+"sharePct": 50,
+"shareSrc": "preis",
+"key": "unl-alb-fin-2026-11-12",
+"sideKey": "Albania",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": {
+"home": 0.4967,
+"draw": 0.2824,
+"away": 0.2208,
+"fav": "home",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Albania v Finland",
+"grund": "kein_pinnacle",
+"kandidat": "Albania v Finland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31
+}
+},
+{
 "matchId": "36299681",
 "home": "FC Juarez (W)",
 "away": "Guadalajara (W)",
@@ -234,12 +284,12 @@
 "country": "MX",
 "kickoff": "2026-11-11T03:00:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "FC Juarez (W)",
-"moneySharePct": 47,
-"moneyOdd": 4.1,
-"moneyDir": "out",
-"totVol": 9752,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 48,
+"moneyOdd": 1.5,
+"moneyDir": "in",
+"totVol": 17500,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -263,20 +313,19 @@
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 126,
-"kein_pinnacle": 13,
-"zeit": 1
+"zeit": 1,
+"kein_pinnacle": 13
 },
 "beispiele": [
 {
-"spiel": "Albania v Finland",
-"grund": "kein_pinnacle",
-"kandidat": "Albania v Finland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36260326",
-"liga": "UEFA Nations League C"
+"spiel": "South United v Sporting Club Bengaluru",
+"kandidat": "Sporting Lisbon v Manchester United",
+"key": "soccer_uefa_champs_league",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 345.5,
+"matchId": "36304017",
+"liga": "Bangalore Super Division League"
 },
 {
 "spiel": "San Marino v Belarus",
@@ -411,14 +460,15 @@
 "liga": "UEFA Nations League D"
 },
 {
-"spiel": "South United v Sporting Club Bengaluru",
-"kandidat": "Sporting Lisbon v Manchester United",
-"key": "soccer_uefa_champs_league",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 345.5,
-"matchId": "36304017",
-"liga": "Bangalore Super Division League"
+"spiel": "Albania v Finland",
+"grund": "kein_pinnacle",
+"kandidat": "Albania v Finland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36260326",
+"liga": "UEFA Nations League C"
 }
 ]
 }
