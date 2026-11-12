@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-12T22:33:34.483724+00:00",
+"generatedAt": "2026-11-12T22:48:33.937422+00:00",
 "byVerdict": {
 "konsens": {
-"n": 901,
-"wins": 535,
-"hitRate": 0.5938,
-"polyN": 882,
-"polyWins": 518,
-"polyHitRate": 0.5873,
-"pinnN": 808,
-"pinnHitRate": 0.5953,
-"nRoi": 901,
-"roi": 0.0793,
-"roiLb": 0.0272,
-"nClv": 901,
-"clv": 0.13,
-"clvLb": -0.0097
+"n": 906,
+"wins": 539,
+"hitRate": 0.5949,
+"polyN": 887,
+"polyWins": 522,
+"polyHitRate": 0.5885,
+"pinnN": 813,
+"pinnHitRate": 0.5966,
+"nRoi": 906,
+"roi": 0.0797,
+"roiLb": 0.0277,
+"nClv": 906,
+"clv": 0.12,
+"clvLb": -0.0168
 },
 "uneinig": {
 "n": 46,
@@ -161,6 +161,11 @@
 "wins": 8,
 "hitRate": 0.6667
 },
+"UEFA Nations League C": {
+"n": 12,
+"wins": 7,
+"hitRate": 0.5833
+},
 "Australian A-League Men": {
 "n": 11,
 "wins": 6,
@@ -191,10 +196,10 @@
 "wins": 4,
 "hitRate": 0.4444
 },
-"UEFA Nations League C": {
+"UEFA Nations League A": {
 "n": 9,
-"wins": 4,
-"hitRate": 0.4444
+"wins": 8,
+"hitRate": 0.8889
 },
 "Dutch Eredivisie": {
 "n": 8,
@@ -215,11 +220,6 @@
 "n": 7,
 "wins": 4,
 "hitRate": 0.5714
-},
-"UEFA Nations League A": {
-"n": 7,
-"wins": 7,
-"hitRate": 1.0
 },
 "UEFA Nations League B": {
 "n": 7,
@@ -434,26 +434,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 599,
-"wins": 377,
-"hitRate": 0.6294,
-"nRoi": 599,
-"roi": 0.0446,
-"roiLb": -0.0126,
-"nClv": 599,
-"clv": 0.19,
-"clvLb": 0.0145
+"n": 602,
+"wins": 380,
+"hitRate": 0.6312,
+"nRoi": 602,
+"roi": 0.0455,
+"roiLb": -0.0114,
+"nClv": 602,
+"clv": 0.2,
+"clvLb": 0.0173
 },
 "weak": {
-"n": 349,
-"wins": 175,
+"n": 351,
+"wins": 176,
 "hitRate": 0.5014,
-"nRoi": 349,
-"roi": 0.1362,
-"roiLb": 0.0332,
-"nClv": 349,
-"clv": -0.01,
-"clvLb": -0.2218
+"nRoi": 351,
+"roi": 0.1354,
+"roiLb": 0.0327,
+"nClv": 351,
+"clv": -0.04,
+"clvLb": -0.2451
 }
 },
 "divergence": {
@@ -465,6 +465,101 @@
 "polyRate": 0.3778
 },
 "recent": [
+{
+"matchId": "36159876",
+"home": "England",
+"away": "Croatia",
+"league": "UEFA Nations League A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "England",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-12T19:45:00Z",
+"settledAt": "2026-11-12T22:48:33.713320+00:00"
+},
+{
+"matchId": "36260326",
+"home": "Albania",
+"away": "Finland",
+"league": "UEFA Nations League C",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Albania",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-12T19:45:00Z",
+"settledAt": "2026-11-12T22:48:33.713320+00:00"
+},
+{
+"matchId": "36190241",
+"home": "Italy",
+"away": "France",
+"league": "UEFA Nations League A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "France",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-12T19:45:00Z",
+"settledAt": "2026-11-12T22:48:33.713320+00:00"
+},
+{
+"matchId": "36260212",
+"home": "San Marino",
+"away": "Belarus",
+"league": "UEFA Nations League C",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Belarus",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-11-12T19:45:00Z",
+"settledAt": "2026-11-12T22:48:33.713320+00:00"
+},
+{
+"matchId": "36274871",
+"home": "Montenegro",
+"away": "Latvia",
+"league": "UEFA Nations League C",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Montenegro",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-12T19:45:00Z",
+"settledAt": "2026-11-12T22:48:33.713320+00:00"
+},
 {
 "matchId": "36221047",
 "home": "Czechia",
@@ -1129,114 +1224,19 @@
 ],
 "kickoff": "2026-11-08T14:00:00Z",
 "settledAt": "2026-11-08T17:05:49.556064+00:00"
-},
-{
-"matchId": "36235198",
-"home": "Crystal Palace",
-"away": "Liverpool",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Liverpool",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
-},
-{
-"matchId": "36235237",
-"home": "Brighton",
-"away": "Brentford",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Brighton",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
-},
-{
-"matchId": "36235210",
-"home": "Ipswich",
-"away": "Bournemouth",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Bournemouth",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
-},
-{
-"matchId": "36267152",
-"home": "AC Monza",
-"away": "Atalanta",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Atalanta",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
-},
-{
-"matchId": "36267141",
-"home": "Genoa",
-"away": "AC Milan",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "AC Milan",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
 }
 ],
 "global": {
-"n": 948,
-"wins": 552,
-"hitRate": 0.5823,
-"nRoi": 948,
-"roi": 0.0783,
-"roiLb": 0.0259,
-"nClv": 948,
-"clv": 0.12,
-"clvLb": -0.0195
+"n": 953,
+"wins": 556,
+"hitRate": 0.5834,
+"nRoi": 953,
+"roi": 0.0786,
+"roiLb": 0.0264,
+"nClv": 953,
+"clv": 0.11,
+"clvLb": -0.0262
 },
-"pending": 18,
+"pending": 13,
 "ausgeschlossenLive": 1034
 }
