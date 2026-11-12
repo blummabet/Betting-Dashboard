@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-12T23:03:32.614644+00:00",
+ "generatedAt": "2026-11-12T23:33:43.094633+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.013,
     "schaetzbar": false
    },
-   "alterTage": 4.0,
+   "alterTage": 4.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -955,12 +955,12 @@
    "strom": "poly",
    "zerlegung": "nach Conviction",
    "art": "conviction",
-   "gruppen": 8,
+   "gruppen": 7,
    "basis": "1840 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1838,
-   "pl": 8.21,
-   "roi": 0.0045,
-   "clv": -0.153,
+   "n": 1836,
+   "pl": 7.68,
+   "roi": 0.0042,
+   "clv": -0.156,
    "belegte": 0
   }
  ],
@@ -4243,7 +4243,7 @@
     "nieAnteil": 0.013,
     "schaetzbar": false
    },
-   "alterTage": 4.0,
+   "alterTage": 4.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -5282,7 +5282,7 @@
     "nieAnteil": 0.157,
     "schaetzbar": false
    },
-   "alterTage": 10.4,
+   "alterTage": 10.5,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -5343,7 +5343,7 @@
     "nieAnteil": 0.103,
     "schaetzbar": false
    },
-   "alterTage": 9.9,
+   "alterTage": 10.0,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -5437,7 +5437,7 @@
     "nieAnteil": 0.247,
     "schaetzbar": false
    },
-   "alterTage": 10.0,
+   "alterTage": 10.1,
    "art": "conviction",
    "wert": 6
   },
@@ -5575,7 +5575,7 @@
     "nieAnteil": 0.165,
     "schaetzbar": false
    },
-   "alterTage": 9.9,
+   "alterTage": 10.0,
    "art": "conviction",
    "wert": 7
   },
@@ -5671,7 +5671,7 @@
     "nieAnteil": 0.302,
     "schaetzbar": false
    },
-   "alterTage": 9.9,
+   "alterTage": 10.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -5793,7 +5793,7 @@
     "nieAnteil": 0.192,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
@@ -5986,7 +5986,7 @@
     "nieAnteil": 0.232,
     "schaetzbar": false
    },
-   "alterTage": 9.9,
+   "alterTage": 10.0,
    "art": "mix",
    "wert": "money+sharp+steam"
   },
@@ -7180,7 +7180,7 @@
     "nieAnteil": 0.862,
     "schaetzbar": false
    },
-   "alterTage": 10.8,
+   "alterTage": 10.9,
    "art": "mix",
    "wert": "bf+money"
   },
@@ -8381,7 +8381,7 @@
     "nieAnteil": 0.672,
     "schaetzbar": false
    },
-   "alterTage": 9.9,
+   "alterTage": 10.0,
    "art": "conviction",
    "wert": 8
   },
@@ -14991,28 +14991,6 @@
    "wert": 10
   },
   {
-   "schublade": "Conviction 4",
-   "strom": "poly",
-   "n": 2,
-   "status": "sammelt",
-   "grund": "2 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
-   "roi": 0.266,
-   "pl": 0.53,
-   "roiLb": null,
-   "clv": 2.0,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 28,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "zu_wenige",
-   "entfernung": null,
-   "alterTage": 21.0,
-   "art": "conviction",
-   "wert": 4
-  },
-  {
    "schublade": "WM · BEOBACHTEN",
    "strom": "cards",
    "n": 2,
@@ -15143,6 +15121,27 @@
    "wert": "steam"
   },
   {
+   "schublade": "Conviction 4",
+   "strom": "poly",
+   "n": 2,
+   "status": "ruht",
+   "grund": "letzter Play vor 21 Tagen — die Schublade liefert nichts mehr",
+   "roi": 0.266,
+   "pl": 0.53,
+   "roiLb": null,
+   "clv": 2.0,
+   "clvLb": null,
+   "clvOg": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "zu_wenige",
+   "fehltN": 0,
+   "alterTage": 21.0,
+   "art": "conviction",
+   "wert": 4
+  },
+  {
    "schublade": "Conviction 2",
    "strom": "poly",
    "n": 2,
@@ -15168,7 +15167,7 @@
   "schubladen": 475,
   "freigegeben": 3,
   "kandidaten": 23,
-  "ruhend": 6,
+  "ruhend": 7,
   "naechsteFreigabe": 0,
   "naechsterBeleg": 19
  }
