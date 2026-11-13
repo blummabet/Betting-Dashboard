@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-13T14:05:47.154727+00:00",
+ "generatedAt": "2026-11-13T14:20:32.178691+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -667,6 +667,40 @@
    }
   },
   {
+   "schublade": "Match Odds",
+   "strom": "betfair",
+   "n": 6443,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +1.7 %) — aber von 468 gleichzeitig geprüften Schubladen legt der Zufall allein 23.4 über diese Hürde, und drüber liegen 24. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0429,
+   "pl": 276.4,
+   "roiLb": 0.017,
+   "clv": 0.31,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 468,
+    "erwartet": 23.4,
+    "nUeber": 24,
+    "ueberschuss": false
+   },
+   "zielN": 6367,
+   "seitKandidat": {
+    "ab": "2026-10-18T01:30:25.357275+00:00",
+    "nBei": 6337,
+    "nNeu": 106
+   }
+  },
+  {
    "schublade": "UEFA Champions League · Match Odds",
    "strom": "betfair",
    "n": 54,
@@ -698,40 +732,6 @@
     "ab": "2026-11-04T21:55:20.070073+00:00",
     "nBei": 51,
     "nNeu": 3
-   }
-  },
-  {
-   "schublade": "Match Odds",
-   "strom": "betfair",
-   "n": 6443,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.7 %) — aber von 468 gleichzeitig geprüften Schubladen legt der Zufall allein 23.4 über diese Hürde, und drüber liegen 24. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0427,
-   "pl": 275.12,
-   "roiLb": 0.0167,
-   "clv": 0.31,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 468,
-    "erwartet": 23.4,
-    "nUeber": 24,
-    "ueberschuss": false
-   },
-   "zielN": 6367,
-   "seitKandidat": {
-    "ab": "2026-10-18T01:30:25.357275+00:00",
-    "nBei": 6337,
-    "nNeu": 106
    }
   },
   {
@@ -946,7 +946,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 370.5,
+   "pl": 372.52,
    "roi": 0.0093,
    "clv": 0.31,
    "belegte": 23
@@ -1902,13 +1902,13 @@
   },
   {
    "liga": "Danish Superliga",
-   "n": 159,
-   "wins": 88,
-   "hit": 0.5535,
-   "hitLb": 0.4882,
-   "roi": 0.0367,
-   "roiLb": -0.0949,
-   "pl": 5.83,
+   "n": 155,
+   "wins": 86,
+   "hit": 0.5548,
+   "hitLb": 0.4888,
+   "roi": 0.0394,
+   "roiLb": -0.0939,
+   "pl": 6.1,
    "clv": 0.164,
    "belegt": false
   },
@@ -2186,6 +2186,18 @@
    "roiLb": -0.115,
    "pl": 9.05,
    "clv": 0.078,
+   "belegt": false
+  },
+  {
+   "liga": "Czech U19",
+   "n": 45,
+   "wins": 28,
+   "hit": 0.6222,
+   "hitLb": 0.4996,
+   "roi": 0.166,
+   "roiLb": -0.1189,
+   "pl": 7.47,
+   "clv": 0.283,
    "belegt": false
   },
   {
@@ -2669,18 +2681,6 @@
    "belegt": false
   },
   {
-   "liga": "Kazakhstan Premier League",
-   "n": 165,
-   "wins": 85,
-   "hit": 0.5152,
-   "hitLb": 0.4514,
-   "roi": -0.0353,
-   "roiLb": -0.1632,
-   "pl": -5.82,
-   "clv": -0.386,
-   "belegt": false
-  },
-  {
    "liga": "Venezuelan Primera Division",
    "n": 210,
    "wins": 102,
@@ -2774,6 +2774,18 @@
    "roiLb": -0.1683,
    "pl": -5.47,
    "clv": 0.697,
+   "belegt": false
+  },
+  {
+   "liga": "Kazakhstan Premier League",
+   "n": 160,
+   "wins": 82,
+   "hit": 0.5125,
+   "hitLb": 0.4478,
+   "roi": -0.0391,
+   "roiLb": -0.1694,
+   "pl": -6.25,
+   "clv": -0.357,
    "belegt": false
   },
   {
@@ -3005,18 +3017,6 @@
    "belegt": false
   },
   {
-   "liga": "Czech U19",
-   "n": 38,
-   "wins": 23,
-   "hit": 0.6053,
-   "hitLb": 0.472,
-   "roi": 0.1287,
-   "roiLb": -0.1882,
-   "pl": 4.89,
-   "clv": 0.321,
-   "belegt": false
-  },
-  {
    "liga": "Slovenian U19",
    "n": 33,
    "wins": 19,
@@ -3134,18 +3134,6 @@
    "roiLb": -0.21,
    "pl": 1.51,
    "clv": -0.522,
-   "belegt": false
-  },
-  {
-   "liga": "Indian Super League",
-   "n": 99,
-   "wins": 52,
-   "hit": 0.5253,
-   "hitLb": 0.4431,
-   "roi": -0.0005,
-   "roiLb": -0.2123,
-   "pl": -0.05,
-   "clv": -0.303,
    "belegt": false
   },
   {
@@ -3338,6 +3326,18 @@
    "roiLb": -0.2443,
    "pl": -23.11,
    "clv": 0.214,
+   "belegt": false
+  },
+  {
+   "liga": "Indian Super League",
+   "n": 94,
+   "wins": 48,
+   "hit": 0.5106,
+   "hitLb": 0.4267,
+   "roi": -0.0249,
+   "roiLb": -0.245,
+   "pl": -2.34,
+   "clv": -0.292,
    "belegt": false
   },
   {
@@ -4873,6 +4873,40 @@
    }
   },
   {
+   "schublade": "Match Odds",
+   "strom": "betfair",
+   "n": 6443,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +1.7 %) — aber von 468 gleichzeitig geprüften Schubladen legt der Zufall allein 23.4 über diese Hürde, und drüber liegen 24. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0429,
+   "pl": 276.4,
+   "roiLb": 0.017,
+   "clv": 0.31,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 468,
+    "erwartet": 23.4,
+    "nUeber": 24,
+    "ueberschuss": false
+   },
+   "zielN": 6367,
+   "seitKandidat": {
+    "ab": "2026-10-18T01:30:25.357275+00:00",
+    "nBei": 6337,
+    "nNeu": 106
+   }
+  },
+  {
    "schublade": "UEFA Champions League · Match Odds",
    "strom": "betfair",
    "n": 54,
@@ -4904,40 +4938,6 @@
     "ab": "2026-11-04T21:55:20.070073+00:00",
     "nBei": 51,
     "nNeu": 3
-   }
-  },
-  {
-   "schublade": "Match Odds",
-   "strom": "betfair",
-   "n": 6443,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.7 %) — aber von 468 gleichzeitig geprüften Schubladen legt der Zufall allein 23.4 über diese Hürde, und drüber liegen 24. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0427,
-   "pl": 275.12,
-   "roiLb": 0.0167,
-   "clv": 0.31,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 468,
-    "erwartet": 23.4,
-    "nUeber": 24,
-    "ueberschuss": false
-   },
-   "zielN": 6367,
-   "seitKandidat": {
-    "ab": "2026-10-18T01:30:25.357275+00:00",
-    "nBei": 6337,
-    "nNeu": 106
    }
   },
   {
@@ -5148,9 +5148,9 @@
    "n": 6183,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0074,
-   "pl": 45.75,
-   "roiLb": -0.0133,
+   "roi": 0.007,
+   "pl": 43.28,
+   "roiLb": -0.0137,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5195,12 +5195,12 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 6069,
+   "n": 6068,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0059,
-   "pl": 35.81,
-   "roiLb": -0.0145,
+   "roi": 0.0062,
+   "pl": 37.62,
+   "roiLb": -0.0143,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5322,12 +5322,12 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 4834,
+   "n": 4835,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0152,
-   "pl": 73.48,
-   "roiLb": -0.0178,
+   "roi": 0.0154,
+   "pl": 74.46,
+   "roiLb": -0.0177,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5372,7 +5372,7 @@
   {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 5543,
+   "n": 5544,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": 0.0003,
@@ -5513,9 +5513,9 @@
    "n": 5910,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0063,
-   "pl": -37.23,
-   "roiLb": -0.0285,
+   "roi": -0.0064,
+   "pl": -37.82,
+   "roiLb": -0.0286,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5532,12 +5532,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 5018,
+   "n": 5017,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0048,
-   "pl": -24.09,
-   "roiLb": -0.0292,
+   "roi": -0.0046,
+   "pl": -23.08,
+   "roiLb": -0.0291,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5777,12 +5777,12 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6439,
+   "n": 6437,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0109,
-   "pl": -70.09,
-   "roiLb": -0.0502,
+   "roi": -0.0113,
+   "pl": -72.5,
+   "roiLb": -0.0506,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5792,10 +5792,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 76068,
-    "lo": 6562,
-    "hi": 9478860,
-    "nieAnteil": 0.702,
+    "median": 65549,
+    "lo": 8115,
+    "hi": 7293871,
+    "nieAnteil": 0.692,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -6014,7 +6014,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 10.7,
+   "alterTage": 10.8,
    "art": "gate"
   },
   {
@@ -6085,7 +6085,7 @@
     "nieAnteil": 0.798,
     "schaetzbar": false
    },
-   "alterTage": 10.7,
+   "alterTage": 10.8,
    "art": "mix",
    "wert": "money+sharp"
   },
@@ -6595,7 +6595,7 @@
     "nieAnteil": 0.548,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
