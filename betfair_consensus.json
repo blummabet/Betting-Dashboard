@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-13T10:04:55.087179+00:00",
-"count": 6,
-"covered": 6,
+"generatedAt": "2026-11-13T10:20:04.770634+00:00",
+"count": 7,
+"covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -55,7 +55,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 45,
 "oddsKeysMitDaten": 45,
-"oddsEvents": 451,
+"oddsEvents": 452,
 "oddsTotals": {
 "versucht": 1,
 "mitDaten": 0,
@@ -64,8 +64,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 681126,
-"remaining": 4318874,
+"used": 681714,
+"remaining": 4318286,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -83,11 +83,11 @@
 "moneySide": "away",
 "moneyName": "Germany",
 "moneySharePct": 97,
-"moneyOdd": 1.29,
-"moneyDir": "in",
-"totVol": 267044,
-"pinnOdd": 1.26,
-"softOdd": 1.26,
+"moneyOdd": 1.3,
+"moneyDir": "out",
+"totVol": 269021,
+"pinnOdd": 1.25,
+"softOdd": 1.25,
 "softN": 37,
 "poly": {
 "vol": 6045,
@@ -100,25 +100,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.0935,
-"draw": 0.143,
-"away": 0.7636,
+"home": 0.0936,
+"draw": 0.1399,
+"away": 0.7665,
 "fav": "away"
 },
 "soft": {
-"home": 0.0995,
-"draw": 0.1537,
-"away": 0.7468,
+"home": 0.0992,
+"draw": 0.1531,
+"away": 0.7477,
 "fav": "away",
 "n": 37
 },
-"pinnMovePP": -0.1,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": -0.1,
-"stepPP": 1.3,
+"movePP": 0.3,
+"stepPP": 0.3,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -136,8 +136,8 @@
 "moneyName": "Netherlands",
 "moneySharePct": 81,
 "moneyOdd": 1.63,
-"moneyDir": "out",
-"totVol": 71697,
+"moneyDir": "flat",
+"totVol": 78633,
 "pinnOdd": 1.6,
 "softOdd": 1.57,
 "softN": 37,
@@ -158,16 +158,16 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6011,
-"draw": 0.2194,
-"away": 0.1795,
+"home": 0.5978,
+"draw": 0.2205,
+"away": 0.1817,
 "fav": "home",
 "n": 37
 },
 "pinnMovePP": -0.8,
 "pinnMove": {
 "movePP": -0.8,
-"stepPP": 0.3,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -187,9 +187,9 @@
 "moneySide": "home",
 "moneyName": "Luxembourg",
 "moneySharePct": 62,
-"moneyOdd": 2.48,
+"moneyOdd": 2.46,
 "moneyDir": "in",
-"totVol": 26216,
+"totVol": 27384,
 "pinnOdd": 2.47,
 "softOdd": 2.35,
 "softN": 29,
@@ -210,9 +210,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.397,
-"draw": 0.3087,
-"away": 0.2942,
+"home": 0.3981,
+"draw": 0.3088,
+"away": 0.2931,
 "fav": "home",
 "n": 29
 },
@@ -229,6 +229,52 @@
 "pinnTotals": null
 },
 {
+"matchId": "36221145",
+"home": "Slovenia",
+"away": "Switzerland",
+"league": "UEFA Nations League B",
+"country": "International",
+"kickoff": "2026-11-13T19:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Switzerland",
+"moneySharePct": 79,
+"moneyOdd": 1.78,
+"moneyDir": "out",
+"totVol": 25792,
+"pinnOdd": 1.71,
+"softOdd": 1.69,
+"softN": 32,
+"poly": {
+"vol": 3815,
+"odd": 1.74,
+"sharePct": 57,
+"shareSrc": "preis",
+"key": "unl-slv-che-2026-11-13",
+"sideKey": "Switzerland",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1573,
+"draw": 0.2771,
+"away": 0.5656,
+"fav": "away"
+},
+"soft": {
+"home": 0.1658,
+"draw": 0.2795,
+"away": 0.5546,
+"fav": "away",
+"n": 32
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36221247",
 "home": "Scotland",
 "away": "North Macedonia",
@@ -240,8 +286,8 @@
 "moneyName": "Scotland",
 "moneySharePct": 87,
 "moneyOdd": 1.22,
-"moneyDir": "out",
-"totVol": 21690,
+"moneyDir": "flat",
+"totVol": 22100,
 "pinnOdd": 1.19,
 "softOdd": 1.18,
 "softN": 32,
@@ -256,72 +302,26 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.8111,
-"draw": 0.1272,
-"away": 0.0617,
+"home": 0.8117,
+"draw": 0.1269,
+"away": 0.0613,
 "fav": "home"
 },
 "soft": {
-"home": 0.798,
-"draw": 0.1381,
-"away": 0.0638,
+"home": 0.7995,
+"draw": 0.1373,
+"away": 0.0632,
 "fav": "home",
 "n": 32
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": 0.1,
+"stepPP": 0.1,
 "n": 2,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36192508",
-"home": "Norway",
-"away": "Wales",
-"league": "UEFA Nations League A",
-"country": "International",
-"kickoff": "2026-11-14T17:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Norway",
-"moneySharePct": 90,
-"moneyOdd": 1.27,
-"moneyDir": "flat",
-"totVol": 21628,
-"pinnOdd": 1.23,
-"softOdd": 1.22,
-"softN": 37,
-"poly": {
-"vol": 3539,
-"odd": 1.26,
-"sharePct": 80,
-"shareSrc": "preis",
-"key": "unl-nor-wal-2026-11-14",
-"sideKey": "Norway",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.7791,
-"draw": 0.1363,
-"away": 0.0846,
-"fav": "home"
-},
-"soft": {
-"home": 0.7691,
-"draw": 0.1444,
-"away": 0.0865,
-"fav": "home",
-"n": 37
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -339,7 +339,7 @@
 "moneySharePct": 62,
 "moneyOdd": 2.6,
 "moneyDir": "flat",
-"totVol": 21598,
+"totVol": 21636,
 "pinnOdd": 2.51,
 "softOdd": 2.4,
 "softN": 32,
@@ -370,9 +370,61 @@
 "pinnMove": {
 "movePP": 0.3,
 "stepPP": -0.0,
-"n": 22,
+"n": 23,
 "move": false,
 "laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36192508",
+"home": "Norway",
+"away": "Wales",
+"league": "UEFA Nations League A",
+"country": "International",
+"kickoff": "2026-11-14T17:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Norway",
+"moneySharePct": 90,
+"moneyOdd": 1.27,
+"moneyDir": "flat",
+"totVol": 21630,
+"pinnOdd": 1.24,
+"softOdd": 1.22,
+"softN": 37,
+"poly": {
+"vol": 3539,
+"odd": 1.26,
+"sharePct": 80,
+"shareSrc": "preis",
+"key": "unl-nor-wal-2026-11-14",
+"sideKey": "Norway",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.7771,
+"draw": 0.1375,
+"away": 0.0855,
+"fav": "home"
+},
+"soft": {
+"home": 0.7697,
+"draw": 0.144,
+"away": 0.0863,
+"fav": "home",
+"n": 37
+},
+"pinnMovePP": -0.2,
+"pinnMove": {
+"movePP": -0.2,
+"stepPP": -0.2,
+"n": 2,
+"move": false,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -380,11 +432,11 @@
 }
 ],
 "ankerN": 2,
-"ankerNOffen": 147,
+"ankerNOffen": 146,
 "ankerMit": 2,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 119,
+"kein_kandidat": 118,
 "kein_pinnacle": 1,
 "name": 2,
 "zeit": 1
