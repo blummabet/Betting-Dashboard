@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-13T01:48:43.483187+00:00",
+"generatedAt": "2026-11-13T02:03:56.788323+00:00",
 "byVerdict": {
 "konsens": {
-"n": 906,
-"wins": 539,
-"hitRate": 0.5949,
-"polyN": 887,
-"polyWins": 522,
-"polyHitRate": 0.5885,
-"pinnN": 813,
-"pinnHitRate": 0.5966,
-"nRoi": 906,
-"roi": 0.0797,
-"roiLb": 0.0277,
-"nClv": 906,
+"n": 908,
+"wins": 540,
+"hitRate": 0.5947,
+"polyN": 889,
+"polyWins": 523,
+"polyHitRate": 0.5883,
+"pinnN": 814,
+"pinnHitRate": 0.5958,
+"nRoi": 908,
+"roi": 0.0786,
+"roiLb": 0.0268,
+"nClv": 908,
 "clv": 0.12,
-"clvLb": -0.0168
+"clvLb": -0.0191
 },
 "uneinig": {
 "n": 46,
@@ -171,6 +171,11 @@
 "wins": 6,
 "hitRate": 0.5455
 },
+"Brazilian Serie B": {
+"n": 11,
+"wins": 6,
+"hitRate": 0.5455
+},
 "French Ligue 2": {
 "n": 11,
 "wins": 7,
@@ -180,11 +185,6 @@
 "n": 11,
 "wins": 5,
 "hitRate": 0.4545
-},
-"Brazilian Serie B": {
-"n": 10,
-"wins": 6,
-"hitRate": 0.6
 },
 "Norwegian Eliteserien": {
 "n": 10,
@@ -201,15 +201,15 @@
 "wins": 8,
 "hitRate": 0.8889
 },
-"Dutch Eredivisie": {
+"Colombian Primera A": {
 "n": 8,
 "wins": 3,
 "hitRate": 0.375
 },
-"Colombian Primera A": {
-"n": 7,
-"wins": 2,
-"hitRate": 0.2857
+"Dutch Eredivisie": {
+"n": 8,
+"wins": 3,
+"hitRate": 0.375
 },
 "English Football League Cup": {
 "n": 7,
@@ -434,26 +434,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 602,
-"wins": 380,
-"hitRate": 0.6312,
-"nRoi": 602,
-"roi": 0.0455,
-"roiLb": -0.0114,
-"nClv": 602,
-"clv": 0.2,
-"clvLb": 0.0173
+"n": 603,
+"wins": 381,
+"hitRate": 0.6318,
+"nRoi": 603,
+"roi": 0.0458,
+"roiLb": -0.011,
+"nClv": 603,
+"clv": 0.19,
+"clvLb": 0.015
 },
 "weak": {
-"n": 351,
+"n": 352,
 "wins": 176,
-"hitRate": 0.5014,
-"nRoi": 351,
-"roi": 0.1354,
-"roiLb": 0.0327,
-"nClv": 351,
+"hitRate": 0.5,
+"nRoi": 352,
+"roi": 0.1321,
+"roiLb": 0.0296,
+"nClv": 352,
 "clv": -0.04,
-"clvLb": -0.2451
+"clvLb": -0.2465
 }
 },
 "divergence": {
@@ -465,6 +465,44 @@
 "polyRate": 0.3778
 },
 "recent": [
+{
+"matchId": "36306240",
+"home": "Deportivo Pasto",
+"away": "Junior FC Barranquilla",
+"league": "Colombian Primera A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Junior FC Barranquilla",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-11-12T23:00:00Z",
+"settledAt": "2026-11-13T02:03:56.430200+00:00"
+},
+{
+"matchId": "36297012",
+"home": "Sao Bernardo",
+"away": "Athletic Club",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sao Bernardo",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-11-12T23:00:00Z",
+"settledAt": "2026-11-13T02:03:56.430200+00:00"
+},
 {
 "matchId": "36159876",
 "home": "England",
@@ -1186,57 +1224,19 @@
 ],
 "kickoff": "2026-11-08T15:15:00Z",
 "settledAt": "2026-11-08T18:20:55.798643+00:00"
-},
-{
-"matchId": "36241102",
-"home": "FC Koln",
-"away": "Leverkusen",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Leverkusen",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-08T14:30:00Z",
-"settledAt": "2026-11-08T17:35:55.037625+00:00"
-},
-{
-"matchId": "36235240",
-"home": "Sunderland",
-"away": "Chelsea",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Chelsea",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-08T14:00:00Z",
-"settledAt": "2026-11-08T17:05:49.556064+00:00"
 }
 ],
 "global": {
-"n": 953,
-"wins": 556,
-"hitRate": 0.5834,
-"nRoi": 953,
-"roi": 0.0786,
-"roiLb": 0.0264,
-"nClv": 953,
+"n": 955,
+"wins": 557,
+"hitRate": 0.5832,
+"nRoi": 955,
+"roi": 0.0776,
+"roiLb": 0.0255,
+"nClv": 955,
 "clv": 0.11,
-"clvLb": -0.0262
+"clvLb": -0.0283
 },
-"pending": 14,
+"pending": 12,
 "ausgeschlossenLive": 1033
 }
