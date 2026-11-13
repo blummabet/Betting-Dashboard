@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 472 h kein Lauf mehr verzeichnet"
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 473 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -574,7 +574,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 32.9 Tage Fenster (2026-10-11 bis 2026-11-13). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 33.0 Tage Fenster (2026-10-11 bis 2026-11-13). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -583,7 +583,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.1h · jüngste Daten vor 0.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -592,9 +592,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.7h, aber die jüngste Poly-Global-Scan-Datei ist 19.2h alt (poly_wallet_track 19.2h, poly_money_broad 19.2h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.1h, aber die jüngste Poly-Global-Scan-Datei ist 20.2h alt (poly_wallet_track 20.2h, poly_money_broad 20.2h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.7h · jüngste Daten vor 19.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.1h · jüngste Daten vor 20.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -614,7 +614,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "97 Spiele bewertet · 26 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "91 Spiele bewertet · 26 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -623,7 +623,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 67d · 🔒 Liga · Conviction ab 5: 213/80 seit 63d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 73d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6437/200 seit 67d · 🔒 Bücher-Score ≥7 von 10: 152/40 seit 73d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 67d · 🔒 Liga · Conviction ab 5: 213/80 seit 63d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 73d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6438/200 seit 67d · 🔒 Bücher-Score ≥7 von 10: 152/40 seit 73d"
     },
     {
       "id": "killer_push_buch",
@@ -645,5 +645,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-11-13T14:45:24.845725+00:00"
+  "generatedAt": "2026-11-13T15:44:29.014135+00:00"
 }
