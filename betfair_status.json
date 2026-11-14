@@ -27,10 +27,10 @@
       "failures": [
         "36221146: zuletzt 157.261 € und Anpfiff erst in 1.1 h — trotzdem nicht mehr im Feed",
         "36192508: zuletzt 362.271 € und Anpfiff erst in 1.1 h — trotzdem nicht mehr im Feed",
-        "36167673: zuletzt 81.069 € und Anpfiff erst in 3.9 h — trotzdem nicht mehr im Feed",
-        "36192523: zuletzt 190.841 € und Anpfiff erst in 3.9 h — trotzdem nicht mehr im Feed",
-        "36199057: zuletzt 178.591 € und Anpfiff erst in 3.9 h — trotzdem nicht mehr im Feed",
-        "36170403: zuletzt 132.060 € und Anpfiff erst in 3.9 h — trotzdem nicht mehr im Feed"
+        "36167673: zuletzt 81.069 € und Anpfiff erst in 3.8 h — trotzdem nicht mehr im Feed",
+        "36192523: zuletzt 190.841 € und Anpfiff erst in 3.8 h — trotzdem nicht mehr im Feed",
+        "36199057: zuletzt 178.591 € und Anpfiff erst in 3.8 h — trotzdem nicht mehr im Feed",
+        "36170403: zuletzt 132.060 € und Anpfiff erst in 3.8 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -41,7 +41,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 0 von 84 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Coquimbo Unido v OHiggins (Chilean Cup); Mirassol v Atletico MG (Brazilian Serie A); Haiti v USA (CONCACAF Nations League A)"
+        "nur 0 von 84 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Coquimbo Unido v OHiggins (Chilean Cup); Haiti v USA (CONCACAF Nations League A); Mirassol v Atletico MG (Brazilian Serie A)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -97,24 +97,42 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 749787 verbraucht, 4250213 uebrig"
+      "note": "Kontingent: 749928 verbraucht, 4250072 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 32,
       "failures": [
-        "Bath City v Truro City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand",
-        "Wingate and Finchley v Hashtag United (English FA Trophy): zeit — bester Kandidat „Brighton and Hove Albion v Newcastle United“ · 359.1h Anpfiff-Abstand",
-        "Bourne Town FC v Bromsgrove Sporting FC (English FA Trophy): name — bester Kandidat „Real Sociedad B v Sporting Gijón“",
+        "Ashton Utd v Workington (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Newmarket v Oxford City (English FA Trophy): name — bester Kandidat „Salford City v Northampton Town“",
         "Salisbury City v Chichester City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand",
-        "Spennymoor Town v Scarborough Athletic (English FA Trophy): unerklaert — bester Kandidat „Shrewsbury Town v Oldham Athletic“",
-        "Didcot Town v Slough Town (English FA Trophy): unerklaert — bester Kandidat „Swindon Town v Grimsby Town“",
-        "Merthyr Town v Harborough Town (English FA Trophy): unerklaert — bester Kandidat „Swindon Town v Grimsby Town“"
+        "Bath City v Truro City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand",
+        "Worksop Town v South Shields (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Hebburn Town v Guiseley (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Bedford Town v Chesham Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Stirling v Elgin City FC (Scottish League Two): name — bester Kandidat „Salford City v Northampton Town“",
+        "Maidstone Utd v Maidenhead (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Edinburgh City v Clyde (Scottish League Two): name — bester Kandidat „Salford City v Northampton Town“",
+        "Halesowen Town v Redditch United (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Enfield Town v Spalding Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Dover v Burgess Hill Town (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Farnham Town v Ebbsfleet Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Harrogate Town v Altrincham (English National League): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Bridlington Town v Macclesfield (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Eastbourne v Chertsey Town (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Braintree v Kettering Town FC (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Bourne Town FC v Bromsgrove Sporting FC (English FA Trophy): name — bester Kandidat „Real Sociedad B v Sporting Gijón“",
+        "Kidderminster v FC Halifax Town (English National League): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Wingate and Finchley v Hashtag United (English FA Trophy): zeit — bester Kandidat „Brighton and Hove Albion v Newcastle United“ · 359.1h Anpfiff-Abstand",
+        "Wimborne Town v Uxbridge (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Hereford FC v Brackley Town (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Alfreton Town v Southport (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Billericay Town v Waltham Abbey (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“"
       ],
-      "note": "ohne Anker: kein_kandidat 77 · kein_pinnacle 4 · name 1 · unerklaert 3 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 52 · kein_pinnacle 4 · name 26 · unerklaert 3 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -123,7 +141,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — MK Dons v Burton Albion (22 Buecher, ohne Pinnacle); Swindon v Grimsby (29 Buecher, ohne Pinnacle); Port Vale v Accrington (29 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — MK Dons v Burton Albion (23 Buecher, ohne Pinnacle); Swindon v Grimsby (30 Buecher, ohne Pinnacle); Port Vale v Accrington (30 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -199,5 +217,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-11-14T15:53:39.379031+00:00"
+  "generatedAt": "2026-11-14T15:56:59.409137+00:00"
 }
