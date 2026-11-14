@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 495 h kein Lauf mehr verzeichnet"
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 496 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -583,7 +583,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.3h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.2h · jüngste Daten vor 0.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -592,9 +592,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.4h, aber die jüngste Poly-Global-Scan-Datei ist 41.9h alt (poly_wallet_track 41.9h, poly_money_broad 41.9h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.4h, aber die jüngste Poly-Global-Scan-Datei ist 43.0h alt (poly_wallet_track 43.0h, poly_money_broad 43.0h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.4h · jüngste Daten vor 41.9h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.4h · jüngste Daten vor 43.0h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -605,7 +605,7 @@
       "failures": [
         "Anker `soccer_italy_coppa_italia` trifft keinen Ligastring im Feed (eingetragen als 'Italian Coppa Italia'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden."
       ],
-      "note": "42 von 43 Ankern der Handliste treffen den Feed · 424 Ligastrings gesehen · Anker liegt auf 71% von 14 offenen Spielen (aus 47 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "42 von 43 Ankern der Handliste treffen den Feed · 424 Ligastrings gesehen · Anker liegt auf 62% von 13 offenen Spielen (aus 47 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -614,7 +614,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "91 Spiele bewertet · 18 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "82 Spiele bewertet · 17 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -645,5 +645,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-11-14T13:29:16.385279+00:00"
+  "generatedAt": "2026-11-14T14:33:14.437434+00:00"
 }
