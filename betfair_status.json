@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 113 von 157 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Spennymoor Town v Scarborough Athletic (English FA Trophy); Forfar v Spartans (Scottish League Two); Eastleigh v AFC Fylde (English National League)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,20 +90,19 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 733649 verbraucht, 4266351 uebrig"
+      "note": "Kontingent: 734218 verbraucht, 4265782 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
         "Czech Rep U19 v Croatia U19 (UEFA U19 Euro Qualifiers): zeit — bester Kandidat „Croatia v Czech Republic“ · 32.8h Anpfiff-Abstand",
-        "Hungary U19 v Netherlands U19 (UEFA U19 Euro Qualifiers): name — bester Kandidat „Georgia v Hungary“",
         "Bath City v Truro City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 105 · kein_pinnacle 2 · name 1 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 106 · kein_pinnacle 1 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -185,6 +186,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-14T08:52:57.801035+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-14T09:08:06.512290+00:00"
 }
