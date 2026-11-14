@@ -22,9 +22,16 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 6,
+      "failures": [
+        "36221146: zuletzt 157.261 € und Anpfiff erst in 1.9 h — trotzdem nicht mehr im Feed",
+        "36192508: zuletzt 362.271 € und Anpfiff erst in 1.9 h — trotzdem nicht mehr im Feed",
+        "36167673: zuletzt 81.069 € und Anpfiff erst in 4.6 h — trotzdem nicht mehr im Feed",
+        "36192523: zuletzt 190.841 € und Anpfiff erst in 4.6 h — trotzdem nicht mehr im Feed",
+        "36199057: zuletzt 178.591 € und Anpfiff erst in 4.6 h — trotzdem nicht mehr im Feed",
+        "36170403: zuletzt 132.060 € und Anpfiff erst in 4.6 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +41,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 68 von 174 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Millonarios v Alianza FC Valledupar (Colombian Primera A); Atletico Nacional Medellin v Once Caldas (Colombian Primera A); Aguilas Doradas v Ind Medellin (Colombian Primera A)"
+        "nur 0 von 88 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: CD Universitario v Herrera FC (Panamanian Premier League); Deportivo Recoleta v Libertad (Paraguayan Cup); Union Cocle v Atletico Independiente (Panamanian Premier League)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,19 +97,42 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 747476 verbraucht, 4252524 uebrig"
+      "note": "Kontingent: 748090 verbraucht, 4251910 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 32,
       "failures": [
+        "Hebburn Town v Guiseley (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Eastbourne v Chertsey Town (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Bedford Town v Chesham Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Stirling v Elgin City FC (Scottish League Two): name — bester Kandidat „Salford City v Northampton Town“",
+        "Newmarket v Oxford City (English FA Trophy): name — bester Kandidat „Salford City v Northampton Town“",
+        "Sutton Utd v Solihull Moors (English National League): name — bester Kandidat „Colchester United v Gillingham“",
+        "Ashton Utd v Workington (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Braintree v Kettering Town FC (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Bourne Town FC v Bromsgrove Sporting FC (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Edinburgh City v Clyde (Scottish League Two): name — bester Kandidat „Salford City v Northampton Town“",
+        "Worksop Town v South Shields (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Kidderminster v FC Halifax Town (English National League): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Maidstone Utd v Maidenhead (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
         "Wingate and Finchley v Hashtag United (English FA Trophy): zeit — bester Kandidat „Brighton and Hove Albion v Newcastle United“ · 359.1h Anpfiff-Abstand",
-        "Bath City v Truro City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand"
+        "Dover v Burgess Hill Town (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Farnham Town v Ebbsfleet Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Bridlington Town v Macclesfield (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Halesowen Town v Redditch United (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Enfield Town v Spalding Utd (English FA Trophy): name — bester Kandidat „Colchester United v Gillingham“",
+        "Billericay Town v Waltham Abbey (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Alfreton Town v Southport (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Salisbury City v Chichester City (English FA Trophy): zeit — bester Kandidat „Norwich City v Cardiff City“ · 165.5h Anpfiff-Abstand",
+        "Spennymoor Town v Scarborough Athletic (English FA Trophy): unerklaert — bester Kandidat „Shrewsbury Town v Oldham Athletic“",
+        "Didcot Town v Slough Town (English FA Trophy): unerklaert — bester Kandidat „Swindon Town v Grimsby Town“",
+        "Leek Town FC v Morecambe (English FA Trophy): name — bester Kandidat „Swindon Town v Grimsby Town“"
       ],
-      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 3 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 56 · name 26 · unerklaert 3 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -111,7 +141,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Valladolid v CD Castellon (34 Buecher, ohne Pinnacle); Austria v Republic of Ireland (25 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -120,7 +150,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 4 gewollt, 4 abgerufen, 0 mit Daten"
+      "note": "Totals: 3 gewollt, 3 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -186,6 +216,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-14T14:53:38.416453+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-11-14T15:08:39.537515+00:00"
 }
