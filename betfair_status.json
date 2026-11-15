@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 58 von 79 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Union San Felipe v Union Espanola (Chilean Primera B); Club Deportes Santa Cruz v CSD Rangers (Chilean Primera B); San Marcos v San Luis (Chilean Primera B)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,23 +90,24 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 804993 verbraucht, 4195007 uebrig"
+      "note": "Kontingent: 805619 verbraucht, 4194381 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 6,
+      "nFail": 7,
       "failures": [
         "Arsenal (W) v London City Lionesses (English WSL): zeit — bester Kandidat „Arsenal v Manchester City“ · 336.0h Anpfiff-Abstand",
         "Deportivo La Coruna (W) v Barcelona (W) (Spanish Liga F): zeit — bester Kandidat „Deportivo La Coruña v Barcelona“ · 334.2h Anpfiff-Abstand",
         "SD Gernika Club v Real Oviedo II (Spanish Segunda Federación - Group 1): name — bester Kandidat „SD Eibar v Cádiz CF“",
         "Valencia (W) v Granada (W) (Spanish Liga F): name — bester Kandidat „Granada CF v Las Palmas“",
         "SD Compostela v Ourense CF (Spanish Segunda Federación - Group 1): name — bester Kandidat „SD Eibar v Cádiz CF“",
-        "CP Mijas Las Lagunas v CD Estepona (Spanish Segunda Federación - Group 4): name — bester Kandidat „Granada CF v Las Palmas“"
+        "CP Mijas Las Lagunas v CD Estepona (Spanish Segunda Federación - Group 4): name — bester Kandidat „Granada CF v Las Palmas“",
+        "Boca Juniors de Cali v Independiente Yumbo (Colombian Primera B): zeit — bester Kandidat „Boca Juniors v Independiente Rivadavia“ · 148.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 70 · kein_pinnacle 1 · name 4 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 70 · name 4 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +116,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Tenerife v AD Ceuta FC (21 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -188,6 +191,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-15T14:56:10.743408+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-15T15:11:06.762639+00:00"
 }
