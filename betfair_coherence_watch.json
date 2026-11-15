@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-15T07:09:47.903700+00:00",
+ "updatedAt": "2026-11-15T07:25:07.225362+00:00",
  "minMoneyEur": 2000.0,
  "minEdge": 0.04,
  "minRungs": 3,
@@ -30,11 +30,11 @@
     "feuerQuote": 0.001
    },
    "3-6h": {
-    "n": 3006,
+    "n": 3009,
     "wenig_geld": 1350,
     "geld_ok": 150,
     "feuert": 2,
-    "wenig_sprossen": 1506,
+    "wenig_sprossen": 1509,
     "kein_preis": 0,
     "kein_lambda": 0,
     "zu_kleine_abweichung": 148,
@@ -42,15 +42,15 @@
     "feuerQuote": 0.001
    },
    "6-12h": {
-    "n": 2501,
+    "n": 2499,
     "wenig_geld": 564,
-    "geld_ok": 89,
+    "geld_ok": 87,
     "feuert": 2,
     "wenig_sprossen": 1848,
     "kein_preis": 0,
     "kein_lambda": 0,
-    "zu_kleine_abweichung": 87,
-    "geldQuote": 0.036,
+    "zu_kleine_abweichung": 85,
+    "geldQuote": 0.035,
     "feuerQuote": 0.001
    },
    "12-24h": {
@@ -78,57 +78,21 @@
     "feuerQuote": 0.0
    },
    "live/danach": {
-    "n": 4368,
-    "wenig_geld": 939,
-    "geld_ok": 1489,
-    "feuert": 516,
-    "wenig_sprossen": 711,
-    "kein_preis": 1234,
+    "n": 4367,
+    "wenig_geld": 935,
+    "geld_ok": 1491,
+    "feuert": 520,
+    "wenig_sprossen": 714,
+    "kein_preis": 1232,
     "kein_lambda": 0,
-    "zu_kleine_abweichung": 968,
+    "zu_kleine_abweichung": 966,
     "geldQuote": 0.341,
-    "feuerQuote": 0.118
+    "feuerQuote": 0.119
    }
   },
   "n": 20000
  },
  "rows": [
-  {
-   "matchId": "36267102",
-   "league": "Italian Serie A",
-   "match": "Roma – Sassuolo",
-   "market": "Over/Under 3.5 Goals",
-   "hours": 6.2,
-   "bucket": "6-12h",
-   "reason": "zu_kleine_abweichung",
-   "moneyEur": 19914,
-   "dev": 0.0042,
-   "seenAt": "2026-11-07T13:33:03.741905+00:00"
-  },
-  {
-   "matchId": "36267102",
-   "league": "Italian Serie A",
-   "match": "Roma – Sassuolo",
-   "market": "Both teams to Score?",
-   "hours": 6.2,
-   "bucket": "6-12h",
-   "reason": "zu_kleine_abweichung",
-   "moneyEur": 6743,
-   "dev": 0.0347,
-   "seenAt": "2026-11-07T13:33:03.741905+00:00"
-  },
-  {
-   "matchId": "36278873",
-   "league": "Croatian Prva NL",
-   "match": "Segesta – Opatija",
-   "market": "Over/Under 2.5 Goals",
-   "hours": -1.8,
-   "bucket": "live/danach",
-   "reason": "zu_kleine_abweichung",
-   "moneyEur": 13779,
-   "dev": 0.007,
-   "seenAt": "2026-11-07T13:33:03.741905+00:00"
-  },
   {
    "matchId": "36278873",
    "league": "Croatian Prva NL",
@@ -235306,14 +235270,38 @@
    "seenAt": "2026-11-15T06:55:09.864752+00:00"
   },
   {
-   "matchId": "36304527",
-   "league": "Egyptian 2nd Division",
-   "match": "Telecom Egypt SC – Kahraba Ismailia",
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
-   "bucket": "3-6h",
-   "reason": "wenig_geld",
-   "moneyEur": 88,
+   "hours": 6.09,
+   "bucket": "6-12h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
+   "dev": null,
+   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+  },
+  {
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
+   "market": "Over/Under 3.5 Goals",
+   "hours": 6.09,
+   "bucket": "6-12h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
+   "dev": null,
+   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+  },
+  {
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
+   "market": "Both teams to Score?",
+   "hours": 6.09,
+   "bucket": "6-12h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
    "dev": null,
    "seenAt": "2026-11-15T07:09:47.760121+00:00"
   },
@@ -235321,4777 +235309,4789 @@
    "matchId": "36304527",
    "league": "Egyptian 2nd Division",
    "match": "Telecom Egypt SC – Kahraba Ismailia",
+   "market": "Over/Under 2.5 Goals",
+   "hours": 5.08,
+   "bucket": "3-6h",
+   "reason": "wenig_geld",
+   "moneyEur": 88,
+   "dev": null,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
+  },
+  {
+   "matchId": "36304527",
+   "league": "Egyptian 2nd Division",
+   "match": "Telecom Egypt SC – Kahraba Ismailia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 54,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304527",
    "league": "Egyptian 2nd Division",
    "match": "Telecom Egypt SC – Kahraba Ismailia",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 35,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314518",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sierra Leone – DR Congo",
    "market": "Over/Under 2.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314518",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sierra Leone – DR Congo",
    "market": "Over/Under 3.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314518",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sierra Leone – DR Congo",
    "market": "Both teams to Score?",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314688",
    "league": "Friendlies International",
    "match": "Russia – Venezuela",
    "market": "Over/Under 2.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314688",
    "league": "Friendlies International",
    "match": "Russia – Venezuela",
    "market": "Over/Under 3.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314688",
    "league": "Friendlies International",
    "match": "Russia – Venezuela",
    "market": "Both teams to Score?",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302552",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Tanzania – Nigeria",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302552",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Tanzania – Nigeria",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302552",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Tanzania – Nigeria",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298759",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Malawi – Egypt",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298759",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Malawi – Egypt",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298759",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Malawi – Egypt",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306651",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sudan – Senegal",
    "market": "Over/Under 2.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306651",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sudan – Senegal",
    "market": "Over/Under 3.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306651",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Sudan – Senegal",
    "market": "Both teams to Score?",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298885",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Namibia – Cameroon",
    "market": "Over/Under 2.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298885",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Namibia – Cameroon",
    "market": "Over/Under 3.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298885",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Namibia – Cameroon",
    "market": "Both teams to Score?",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308382",
    "league": "UEFA Nations League A",
    "match": "Germany – Netherlands",
    "market": "Over/Under 2.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308382",
    "league": "UEFA Nations League A",
    "match": "Germany – Netherlands",
    "market": "Over/Under 3.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308382",
    "league": "UEFA Nations League A",
    "match": "Germany – Netherlands",
    "market": "Both teams to Score?",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36307482",
    "league": "UEFA Nations League A",
    "match": "Greece – Serbia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36307482",
    "league": "UEFA Nations League A",
    "match": "Greece – Serbia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36307482",
    "league": "UEFA Nations League A",
    "match": "Greece – Serbia",
    "market": "Both teams to Score?",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308399",
    "league": "UEFA Nations League B",
    "match": "North Macedonia – Slovenia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308399",
    "league": "UEFA Nations League B",
    "match": "North Macedonia – Slovenia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308399",
    "league": "UEFA Nations League B",
    "match": "North Macedonia – Slovenia",
    "market": "Both teams to Score?",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308400",
    "league": "UEFA Nations League B",
    "match": "Switzerland – Scotland",
    "market": "Over/Under 2.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 513,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308400",
    "league": "UEFA Nations League B",
    "match": "Switzerland – Scotland",
    "market": "Over/Under 3.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 10,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308400",
    "league": "UEFA Nations League B",
    "match": "Switzerland – Scotland",
    "market": "Both teams to Score?",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 127,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299529",
    "league": "UEFA Nations League A",
    "match": "France – Türkiye",
    "market": "Over/Under 2.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
-   "moneyEur": 321,
+   "moneyEur": 337,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299529",
    "league": "UEFA Nations League A",
    "match": "France – Türkiye",
    "market": "Over/Under 3.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
-   "moneyEur": 961,
+   "moneyEur": 1000,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299529",
    "league": "UEFA Nations League A",
    "match": "France – Türkiye",
    "market": "Both teams to Score?",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 1859,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303912",
    "league": "UEFA Nations League A",
    "match": "Croatia – Czechia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 51,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303912",
    "league": "UEFA Nations League A",
    "match": "Croatia – Czechia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 41,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303912",
    "league": "UEFA Nations League A",
    "match": "Croatia – Czechia",
    "market": "Both teams to Score?",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 800,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303915",
    "league": "UEFA Nations League A",
    "match": "Belgium – Italy",
    "market": "Over/Under 2.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 1231,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303915",
    "league": "UEFA Nations League A",
    "match": "Belgium – Italy",
    "market": "Over/Under 3.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
    "moneyEur": 255,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303915",
    "league": "UEFA Nations League A",
    "match": "Belgium – Italy",
    "market": "Both teams to Score?",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "wenig_geld",
-   "moneyEur": 979,
+   "moneyEur": 986,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36291346",
    "league": "UEFA Nations League A",
    "match": "Spain – England",
    "market": "Over/Under 2.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "zu_kleine_abweichung",
-   "moneyEur": 3452,
-   "dev": 0.0018,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 3459,
+   "dev": 0.0026,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36291346",
    "league": "UEFA Nations League A",
    "match": "Spain – England",
    "market": "Over/Under 3.5 Goals",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "zu_kleine_abweichung",
    "moneyEur": 4329,
-   "dev": 0.0025,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "dev": 0.0003,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36291346",
    "league": "UEFA Nations League A",
    "match": "Spain – England",
    "market": "Both teams to Score?",
-   "hours": 12.59,
+   "hours": 12.33,
    "bucket": "12-24h",
    "reason": "zu_kleine_abweichung",
-   "moneyEur": 8272,
-   "dev": 0.0145,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 8292,
+   "dev": 0.0158,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319877",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Zimbabwe – Equatorial Guinea",
    "market": "Over/Under 2.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319877",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Zimbabwe – Equatorial Guinea",
    "market": "Over/Under 3.5 Goals",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319877",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Zimbabwe – Equatorial Guinea",
    "market": "Both teams to Score?",
-   "hours": 29.84,
+   "hours": 29.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319874",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Somalia – Ghana",
    "market": "Over/Under 2.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319874",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Somalia – Ghana",
    "market": "Over/Under 3.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319874",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Somalia – Ghana",
    "market": "Both teams to Score?",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319235",
    "league": "UEFA Nations League C",
    "match": "Kazakhstan – Slovakia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319235",
    "league": "UEFA Nations League C",
    "match": "Kazakhstan – Slovakia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319235",
    "league": "UEFA Nations League C",
    "match": "Kazakhstan – Slovakia",
    "market": "Both teams to Score?",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319092",
    "league": "UEFA Nations League C",
    "match": "Faroe Islands – Moldova",
    "market": "Over/Under 2.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319092",
    "league": "UEFA Nations League C",
    "match": "Faroe Islands – Moldova",
    "market": "Over/Under 3.5 Goals",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319092",
    "league": "UEFA Nations League C",
    "match": "Faroe Islands – Moldova",
    "market": "Both teams to Score?",
-   "hours": 31.84,
+   "hours": 31.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319875",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Central African Republic – Benin",
    "market": "Over/Under 2.5 Goals",
-   "hours": 32.84,
+   "hours": 32.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319875",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Central African Republic – Benin",
    "market": "Over/Under 3.5 Goals",
-   "hours": 32.84,
+   "hours": 32.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319875",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Central African Republic – Benin",
    "market": "Both teams to Score?",
-   "hours": 32.84,
+   "hours": 32.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319211",
    "league": "UEFA Nations League C",
    "match": "Estonia – Bulgaria",
    "market": "Over/Under 2.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319211",
    "league": "UEFA Nations League C",
    "match": "Estonia – Bulgaria",
    "market": "Over/Under 3.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319211",
    "league": "UEFA Nations League C",
    "match": "Estonia – Bulgaria",
    "market": "Both teams to Score?",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319252",
    "league": "UEFA Nations League C",
    "match": "Iceland – Luxembourg",
    "market": "Over/Under 2.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319252",
    "league": "UEFA Nations League C",
    "match": "Iceland – Luxembourg",
    "market": "Over/Under 3.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319252",
    "league": "UEFA Nations League C",
    "match": "Iceland – Luxembourg",
    "market": "Both teams to Score?",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319698",
    "league": "UEFA Nations League D",
    "match": "Lithuania – Liechtenstein",
    "market": "Over/Under 2.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319698",
    "league": "UEFA Nations League D",
    "match": "Lithuania – Liechtenstein",
    "market": "Over/Under 3.5 Goals",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319698",
    "league": "UEFA Nations League D",
    "match": "Lithuania – Liechtenstein",
    "market": "Both teams to Score?",
-   "hours": 33.84,
+   "hours": 33.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321504",
    "league": "CONCACAF Nations League B",
    "match": "Guadeloupe – Bermuda",
    "market": "Over/Under 2.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321504",
    "league": "CONCACAF Nations League B",
    "match": "Guadeloupe – Bermuda",
    "market": "Over/Under 3.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321504",
    "league": "CONCACAF Nations League B",
    "match": "Guadeloupe – Bermuda",
    "market": "Both teams to Score?",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321119",
    "league": "CONCACAF Nations League B",
    "match": "Guyana – Puerto Rico",
    "market": "Over/Under 2.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321119",
    "league": "CONCACAF Nations League B",
    "match": "Guyana – Puerto Rico",
    "market": "Over/Under 3.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321119",
    "league": "CONCACAF Nations League B",
    "match": "Guyana – Puerto Rico",
    "market": "Both teams to Score?",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321358",
    "league": "CONCACAF Nations League B",
    "match": "Cuba – Grenada",
    "market": "Over/Under 2.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321358",
    "league": "CONCACAF Nations League B",
    "match": "Cuba – Grenada",
    "market": "Over/Under 3.5 Goals",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321358",
    "league": "CONCACAF Nations League B",
    "match": "Cuba – Grenada",
    "market": "Both teams to Score?",
-   "hours": 35.84,
+   "hours": 35.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319618",
    "league": "UEFA Nations League D",
    "match": "Gibraltar – Malta",
    "market": "Over/Under 2.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319618",
    "league": "UEFA Nations League D",
    "match": "Gibraltar – Malta",
    "market": "Over/Under 3.5 Goals",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319618",
    "league": "UEFA Nations League D",
    "match": "Gibraltar – Malta",
    "market": "Both teams to Score?",
-   "hours": 36.59,
+   "hours": 36.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321561",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Martinique – Aruba",
    "market": "Over/Under 2.5 Goals",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321561",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Martinique – Aruba",
    "market": "Over/Under 3.5 Goals",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321561",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Martinique – Aruba",
    "market": "Both teams to Score?",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321562",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Trinidad & Tobago – Antigua and Barbuda",
    "market": "Over/Under 2.5 Goals",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321562",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Trinidad & Tobago – Antigua and Barbuda",
    "market": "Over/Under 3.5 Goals",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321562",
    "league": "CONCACAF Nations League Qualifiers",
    "match": "Trinidad & Tobago – Antigua and Barbuda",
    "market": "Both teams to Score?",
-   "hours": 40.84,
+   "hours": 40.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321395",
    "league": "CONCACAF Nations League A",
    "match": "Canada – Guatemala",
    "market": "Over/Under 2.5 Goals",
-   "hours": 41.84,
+   "hours": 41.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321395",
    "league": "CONCACAF Nations League A",
    "match": "Canada – Guatemala",
    "market": "Over/Under 3.5 Goals",
-   "hours": 41.84,
+   "hours": 41.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321395",
    "league": "CONCACAF Nations League A",
    "match": "Canada – Guatemala",
    "market": "Both teams to Score?",
-   "hours": 41.84,
+   "hours": 41.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319876",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Ethiopia – Mozambique",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319876",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Ethiopia – Mozambique",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319876",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Ethiopia – Mozambique",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319245",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Lesotho – Gabon",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319245",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Lesotho – Gabon",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319245",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Lesotho – Gabon",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319873",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Burundi – Zambia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319873",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Burundi – Zambia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319873",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Burundi – Zambia",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319764",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Liberia – Cape Verde",
    "market": "Over/Under 2.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319764",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Liberia – Cape Verde",
    "market": "Over/Under 3.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319764",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Liberia – Cape Verde",
    "market": "Both teams to Score?",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298771",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Botswana – Uganda",
    "market": "Over/Under 2.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298771",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Botswana – Uganda",
    "market": "Over/Under 3.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298771",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Botswana – Uganda",
    "market": "Both teams to Score?",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319716",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Congo – Comoros",
    "market": "Over/Under 2.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319716",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Congo – Comoros",
    "market": "Over/Under 3.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319716",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Congo – Comoros",
    "market": "Both teams to Score?",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319836",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Mauritania – Burkina Faso",
    "market": "Over/Under 2.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319836",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Mauritania – Burkina Faso",
    "market": "Over/Under 3.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319836",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Mauritania – Burkina Faso",
    "market": "Both teams to Score?",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314522",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Rwanda – Mali",
    "market": "Over/Under 2.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314522",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Rwanda – Mali",
    "market": "Over/Under 3.5 Goals",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36314522",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Rwanda – Mali",
    "market": "Both teams to Score?",
-   "hours": 59.84,
+   "hours": 59.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308392",
    "league": "UEFA Nations League A",
    "match": "Denmark – Norway",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308392",
    "league": "UEFA Nations League A",
    "match": "Denmark – Norway",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308392",
    "league": "UEFA Nations League A",
    "match": "Denmark – Norway",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308405",
    "league": "UEFA Nations League B",
    "match": "Bosnia – Romania",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 1674,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308405",
    "league": "UEFA Nations League B",
    "match": "Bosnia – Romania",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 213,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308405",
    "league": "UEFA Nations League B",
    "match": "Bosnia – Romania",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_geld",
    "moneyEur": 46,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308415",
    "league": "UEFA Nations League B",
    "match": "Poland – Sweden",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308415",
    "league": "UEFA Nations League B",
    "match": "Poland – Sweden",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308415",
    "league": "UEFA Nations League B",
    "match": "Poland – Sweden",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308411",
    "league": "UEFA Nations League B",
    "match": "Ukraine – Georgia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308411",
    "league": "UEFA Nations League B",
    "match": "Ukraine – Georgia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308411",
    "league": "UEFA Nations League B",
    "match": "Ukraine – Georgia",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319920",
    "league": "CONCACAF Nations League A",
    "match": "Panama – Curacao",
    "market": "Over/Under 2.5 Goals",
-   "hours": 15.84,
+   "hours": 15.58,
    "bucket": "12-24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319920",
    "league": "CONCACAF Nations League A",
    "match": "Panama – Curacao",
    "market": "Over/Under 3.5 Goals",
-   "hours": 15.84,
+   "hours": 15.58,
    "bucket": "12-24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319920",
    "league": "CONCACAF Nations League A",
    "match": "Panama – Curacao",
    "market": "Both teams to Score?",
-   "hours": 15.84,
+   "hours": 15.58,
    "bucket": "12-24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308404",
    "league": "UEFA Nations League B",
    "match": "Israel – Austria",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308404",
    "league": "UEFA Nations League B",
    "match": "Israel – Austria",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308404",
    "league": "UEFA Nations League B",
    "match": "Israel – Austria",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308420",
    "league": "UEFA Nations League B",
    "match": "Republic of Ireland – Kosovo",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308420",
    "league": "UEFA Nations League B",
    "match": "Republic of Ireland – Kosovo",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308420",
    "league": "UEFA Nations League B",
    "match": "Republic of Ireland – Kosovo",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308393",
    "league": "UEFA Nations League A",
    "match": "Wales – Portugal",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308393",
    "league": "UEFA Nations League A",
    "match": "Wales – Portugal",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308393",
    "league": "UEFA Nations League A",
    "match": "Wales – Portugal",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308413",
    "league": "UEFA Nations League B",
    "match": "Hungary – Northern Ireland",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308413",
    "league": "UEFA Nations League B",
    "match": "Hungary – Northern Ireland",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36308413",
    "league": "UEFA Nations League B",
    "match": "Hungary – Northern Ireland",
    "market": "Both teams to Score?",
-   "hours": 60.59,
+   "hours": 60.33,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36300601",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Niger – Morocco",
    "market": "Over/Under 2.5 Goals",
-   "hours": 60.84,
+   "hours": 60.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36300601",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Niger – Morocco",
    "market": "Over/Under 3.5 Goals",
-   "hours": 60.84,
+   "hours": 60.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36300601",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "Niger – Morocco",
    "market": "Both teams to Score?",
-   "hours": 60.84,
+   "hours": 60.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322172",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "South Sudan – Angola",
    "market": "Over/Under 2.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322172",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "South Sudan – Angola",
    "market": "Over/Under 3.5 Goals",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322172",
    "league": "CAF African Cup of Nations Qualifiers",
    "match": "South Sudan – Angola",
    "market": "Both teams to Score?",
-   "hours": 53.84,
+   "hours": 53.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317843",
    "league": "UEFA Nations League C",
    "match": "Latvia – Armenia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
-   "moneyEur": 215,
+   "moneyEur": 275,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317843",
    "league": "UEFA Nations League C",
    "match": "Latvia – Armenia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 849,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317843",
    "league": "UEFA Nations League C",
    "match": "Latvia – Armenia",
    "market": "Both teams to Score?",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 89,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315697",
    "league": "UEFA Nations League C",
    "match": "Cyprus – Montenegro",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "zu_kleine_abweichung",
-   "moneyEur": 2200,
-   "dev": 0.0048,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 2243,
+   "dev": 0.006,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315697",
    "league": "UEFA Nations League C",
    "match": "Cyprus – Montenegro",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 143,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315697",
    "league": "UEFA Nations League C",
    "match": "Cyprus – Montenegro",
    "market": "Both teams to Score?",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 241,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317727",
    "league": "Elite Friendlies",
    "match": "Hamburger SV – Hajduk Split",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317727",
    "league": "Elite Friendlies",
    "match": "Hamburger SV – Hajduk Split",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317727",
    "league": "Elite Friendlies",
    "match": "Hamburger SV – Hajduk Split",
    "market": "Both teams to Score?",
-   "hours": 6.84,
+   "hours": 6.58,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312167",
    "league": "Japanese J League 3",
    "match": "Kagoshima Utd – Tottori",
    "market": "Over/Under 2.5 Goals",
-   "hours": -3.16,
+   "hours": -3.42,
    "bucket": "live/danach",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312167",
    "league": "Japanese J League 3",
    "match": "Kagoshima Utd – Tottori",
    "market": "Over/Under 3.5 Goals",
-   "hours": -3.16,
+   "hours": -3.42,
    "bucket": "live/danach",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312167",
    "league": "Japanese J League 3",
    "match": "Kagoshima Utd – Tottori",
    "market": "Both teams to Score?",
-   "hours": -3.16,
+   "hours": -3.42,
    "bucket": "live/danach",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302386",
    "league": "Greek Super League 2",
    "match": "Apollon Kalamarias – Kallithea",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
-   "moneyEur": 615,
+   "moneyEur": 617,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302386",
    "league": "Greek Super League 2",
    "match": "Apollon Kalamarias – Kallithea",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
-   "moneyEur": 611,
+   "moneyEur": 612,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36302386",
    "league": "Greek Super League 2",
    "match": "Apollon Kalamarias – Kallithea",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 88,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304453",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "CD Cieza – Santa Eulalia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 370,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304453",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "CD Cieza – Santa Eulalia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 464,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304453",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "CD Cieza – Santa Eulalia",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304010",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Deportiva Minera – UD Poblense",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 359,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304010",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Deportiva Minera – UD Poblense",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 446,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304010",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Deportiva Minera – UD Poblense",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303987",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Lorca Deportiva CF – Mallorca B",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 233,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303987",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Lorca Deportiva CF – Mallorca B",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 321,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303987",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Lorca Deportiva CF – Mallorca B",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303914",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Elche B – Atletico Baleares",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 101,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303914",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Elche B – Atletico Baleares",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 130,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36303914",
    "league": "Spanish Segunda Federación - Group 3",
    "match": "Elche B – Atletico Baleares",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317474",
    "league": "Indian I-League",
    "match": "Dempo – Chanmari FC",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317474",
    "league": "Indian I-League",
    "match": "Dempo – Chanmari FC",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317474",
    "league": "Indian I-League",
    "match": "Dempo – Chanmari FC",
    "market": "Both teams to Score?",
-   "hours": 3.34,
+   "hours": 3.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36318913",
    "league": "UEFA Nations League C",
    "match": "Finland – San Marino",
    "market": "Over/Under 2.5 Goals",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
-   "moneyEur": 628,
+   "moneyEur": 688,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36318913",
    "league": "UEFA Nations League C",
    "match": "Finland – San Marino",
    "market": "Over/Under 3.5 Goals",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 314,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36318913",
    "league": "UEFA Nations League C",
    "match": "Finland – San Marino",
    "market": "Both teams to Score?",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "feuert",
-   "moneyEur": 13107,
-   "dev": 0.156,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 14098,
+   "dev": 0.1705,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305107",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "SS Reyes – Real Madrid C",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 569,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305107",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "SS Reyes – Real Madrid C",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 733,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305107",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "SS Reyes – Real Madrid C",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305011",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "Valladolid B – Numancia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 350,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305011",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "Valladolid B – Numancia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 475,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305011",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "Valladolid B – Numancia",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298881",
    "league": "Portuguese Segunda Liga",
    "match": "Tondela – Farense",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 7,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298881",
    "league": "Portuguese Segunda Liga",
    "match": "Tondela – Farense",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 96,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36298881",
    "league": "Portuguese Segunda Liga",
    "match": "Tondela – Farense",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36295810",
    "league": "Portuguese Segunda Liga",
    "match": "Amarante – Felgueiras",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36295810",
    "league": "Portuguese Segunda Liga",
    "match": "Amarante – Felgueiras",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36295810",
    "league": "Portuguese Segunda Liga",
    "match": "Amarante – Felgueiras",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305172",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Ibiza Eivissa – FC Cartagena",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305172",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Ibiza Eivissa – FC Cartagena",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305172",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Ibiza Eivissa – FC Cartagena",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304646",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "Naxara CD – Centre d'Esports Manresa",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304646",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "Naxara CD – Centre d'Esports Manresa",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304646",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "Naxara CD – Centre d'Esports Manresa",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305110",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "Tenerife B – Linares Deportivo",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305110",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "Tenerife B – Linares Deportivo",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305110",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "Tenerife B – Linares Deportivo",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317515",
    "league": "Spanish Liga F",
    "match": "Real Sociedad (W) – Athletic Bilbao (W)",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317515",
    "league": "Spanish Liga F",
    "match": "Real Sociedad (W) – Athletic Bilbao (W)",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317515",
    "league": "Spanish Liga F",
    "match": "Real Sociedad (W) – Athletic Bilbao (W)",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315129",
    "league": "Spanish Liga F",
    "match": "Madrid (W) – EDF Logrono (W)",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315129",
    "league": "Spanish Liga F",
    "match": "Madrid (W) – EDF Logrono (W)",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315129",
    "league": "Spanish Liga F",
    "match": "Madrid (W) – EDF Logrono (W)",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304839",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Atletico Madrid II – CD Teruel",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 73,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304839",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Atletico Madrid II – CD Teruel",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 21,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304839",
    "league": "Spanish Primera Federación - Group 2",
    "match": "Atletico Madrid II – CD Teruel",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304781",
    "league": "Spanish Primera Federación - Group 1",
    "match": "Extremadura UD – Pontevedra CF",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304781",
    "league": "Spanish Primera Federación - Group 1",
    "match": "Extremadura UD – Pontevedra CF",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304781",
    "league": "Spanish Primera Federación - Group 1",
    "match": "Extremadura UD – Pontevedra CF",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305016",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "RSD Alcala – Atletico Madrid C",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305016",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "RSD Alcala – Atletico Madrid C",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305016",
    "league": "Spanish Segunda Federación - Group 5",
    "match": "RSD Alcala – Atletico Madrid C",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304582",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Logrones II – Pena Sport",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304582",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Logrones II – Pena Sport",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304582",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Logrones II – Pena Sport",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304575",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Barbastro – CD Arnedo",
    "market": "Over/Under 2.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304575",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Barbastro – CD Arnedo",
    "market": "Over/Under 3.5 Goals",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36304575",
    "league": "Spanish Segunda Federación - Group 2",
    "match": "UD Barbastro – CD Arnedo",
    "market": "Both teams to Score?",
-   "hours": 3.84,
+   "hours": 3.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306636",
    "league": "UEFA Nations League C",
    "match": "Belarus – Albania",
    "market": "Over/Under 2.5 Goals",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
-   "moneyEur": 439,
+   "moneyEur": 481,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306636",
    "league": "UEFA Nations League C",
    "match": "Belarus – Albania",
    "market": "Over/Under 3.5 Goals",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 133,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36306636",
    "league": "UEFA Nations League C",
    "match": "Belarus – Albania",
    "market": "Both teams to Score?",
-   "hours": 9.84,
+   "hours": 9.58,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 124,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322627",
    "league": "Friendlies International",
    "match": "Andorra – Azerbaijan",
    "market": "Over/Under 2.5 Goals",
-   "hours": 34.84,
+   "hours": 34.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322627",
    "league": "Friendlies International",
    "match": "Andorra – Azerbaijan",
    "market": "Over/Under 3.5 Goals",
-   "hours": 34.84,
+   "hours": 34.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322627",
    "league": "Friendlies International",
    "match": "Andorra – Azerbaijan",
    "market": "Both teams to Score?",
-   "hours": 34.84,
+   "hours": 34.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
-  },
-  {
-   "matchId": "36304794",
-   "league": "Spanish Primera Federación - Group 1",
-   "match": "Zamora – Real Aviles",
-   "market": "Over/Under 2.5 Goals",
-   "hours": 6.09,
-   "bucket": "6-12h",
-   "reason": "wenig_sprossen",
-   "moneyEur": null,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
-  },
-  {
-   "matchId": "36304794",
-   "league": "Spanish Primera Federación - Group 1",
-   "match": "Zamora – Real Aviles",
-   "market": "Over/Under 3.5 Goals",
-   "hours": 6.09,
-   "bucket": "6-12h",
-   "reason": "wenig_sprossen",
-   "moneyEur": null,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
-  },
-  {
-   "matchId": "36304794",
-   "league": "Spanish Primera Federación - Group 1",
-   "match": "Zamora – Real Aviles",
-   "market": "Both teams to Score?",
-   "hours": 6.09,
-   "bucket": "6-12h",
-   "reason": "wenig_sprossen",
-   "moneyEur": null,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312216",
    "league": "Dutch Ladies Eredivisie",
    "match": "ADO Den Haag (W) – De Graafschap (W)",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.09,
+   "hours": 3.83,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312216",
    "league": "Dutch Ladies Eredivisie",
    "match": "ADO Den Haag (W) – De Graafschap (W)",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.09,
+   "hours": 3.83,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312216",
    "league": "Dutch Ladies Eredivisie",
    "match": "ADO Den Haag (W) – De Graafschap (W)",
    "market": "Both teams to Score?",
-   "hours": 4.09,
+   "hours": 3.83,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322148",
    "league": "Hong Kong 1st Division League",
    "match": "Sham Shui Po – Resources Capital FC",
    "market": "Over/Under 2.5 Goals",
-   "hours": -1.66,
+   "hours": -1.92,
    "bucket": "live/danach",
-   "reason": "kein_preis",
+   "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322148",
    "league": "Hong Kong 1st Division League",
    "match": "Sham Shui Po – Resources Capital FC",
    "market": "Over/Under 3.5 Goals",
-   "hours": -1.66,
+   "hours": -1.92,
    "bucket": "live/danach",
-   "reason": "kein_preis",
+   "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322148",
    "league": "Hong Kong 1st Division League",
    "match": "Sham Shui Po – Resources Capital FC",
    "market": "Both teams to Score?",
-   "hours": -1.66,
+   "hours": -1.92,
    "bucket": "live/danach",
-   "reason": "wenig_geld",
-   "moneyEur": 672,
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321613",
    "league": "Thai League 3",
    "match": "Assumption United – Suphanburi",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 21,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321613",
    "league": "Thai League 3",
    "match": "Assumption United – Suphanburi",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 26,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321613",
    "league": "Thai League 3",
    "match": "Assumption United – Suphanburi",
    "market": "Both teams to Score?",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321622",
    "league": "Thai League 3",
    "match": "Chamchuri United – Bangkapi FC",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 811,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321622",
    "league": "Thai League 3",
    "match": "Chamchuri United – Bangkapi FC",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 794,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321622",
    "league": "Thai League 3",
    "match": "Chamchuri United – Bangkapi FC",
    "market": "Both teams to Score?",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321629",
    "league": "Thai League 3",
    "match": "Singburi Warriors – Kasem Bundit University",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 188,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321629",
    "league": "Thai League 3",
    "match": "Singburi Warriors – Kasem Bundit University",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 1210,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321629",
    "league": "Thai League 3",
    "match": "Singburi Warriors – Kasem Bundit University",
    "market": "Both teams to Score?",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 3,
+   "moneyEur": 20,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321623",
    "league": "Thai League 3",
    "match": "North Bangkok University – Futera United",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321623",
    "league": "Thai League 3",
    "match": "North Bangkok University – Futera United",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321623",
    "league": "Thai League 3",
    "match": "North Bangkok University – Futera United",
    "market": "Both teams to Score?",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305101",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Las Palmas II – Lucena CF",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 396,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305101",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Las Palmas II – Lucena CF",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 467,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305101",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Las Palmas II – Lucena CF",
    "market": "Both teams to Score?",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
-   "moneyEur": 0,
+   "moneyEur": 24,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299639",
    "league": "Bulgarian B League",
    "match": "Dobrudzha – Etar",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299639",
    "league": "Bulgarian B League",
    "match": "Dobrudzha – Etar",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299639",
    "league": "Bulgarian B League",
    "match": "Dobrudzha – Etar",
    "market": "Both teams to Score?",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305004",
    "league": "Italian Serie C",
    "match": "Novara – Lecco",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305004",
    "league": "Italian Serie C",
    "match": "Novara – Lecco",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305004",
    "league": "Italian Serie C",
    "match": "Novara – Lecco",
    "market": "Both teams to Score?",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305007",
    "league": "Italian Serie C",
    "match": "FC Giugliano – US Savoia 1908",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305007",
    "league": "Italian Serie C",
    "match": "FC Giugliano – US Savoia 1908",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305007",
    "league": "Italian Serie C",
    "match": "FC Giugliano – US Savoia 1908",
    "market": "Both teams to Score?",
-   "hours": 4.34,
+   "hours": 4.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305014",
    "league": "Italian Serie C",
    "match": "FC Guidonia Montecelio 1937 – Ostia Mare Lido",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305014",
    "league": "Italian Serie C",
    "match": "FC Guidonia Montecelio 1937 – Ostia Mare Lido",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305014",
    "league": "Italian Serie C",
    "match": "FC Guidonia Montecelio 1937 – Ostia Mare Lido",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313056",
    "league": "Slovakian 3 Liga",
    "match": "KFC Komarno II – Spartak Myjava",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.59,
+   "hours": 4.33,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313056",
    "league": "Slovakian 3 Liga",
    "match": "KFC Komarno II – Spartak Myjava",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.59,
+   "hours": 4.33,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313056",
    "league": "Slovakian 3 Liga",
    "match": "KFC Komarno II – Spartak Myjava",
    "market": "Both teams to Score?",
-   "hours": 4.59,
+   "hours": 4.33,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315726",
    "league": "Japanese J League Cup",
    "match": "Kashima – Yokohama FM",
    "market": "Over/Under 2.5 Goals",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
    "reason": "zu_kleine_abweichung",
-   "moneyEur": 8334,
-   "dev": 0.0085,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 17080,
+   "dev": 0.0181,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315726",
    "league": "Japanese J League Cup",
    "match": "Kashima – Yokohama FM",
    "market": "Over/Under 3.5 Goals",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
-   "reason": "zu_kleine_abweichung",
-   "moneyEur": 22818,
-   "dev": 0.038,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "reason": "feuert",
+   "moneyEur": 31268,
+   "dev": 0.1769,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315726",
    "league": "Japanese J League Cup",
    "match": "Kashima – Yokohama FM",
    "market": "Both teams to Score?",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
    "reason": "wenig_geld",
    "moneyEur": 463,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315721",
    "league": "Japanese J League Cup",
    "match": "Cerezo Osaka – Urawa",
    "market": "Over/Under 2.5 Goals",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
    "reason": "zu_kleine_abweichung",
-   "moneyEur": 15452,
-   "dev": 0.0058,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "moneyEur": 19167,
+   "dev": 0.0193,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315721",
    "league": "Japanese J League Cup",
    "match": "Cerezo Osaka – Urawa",
    "market": "Over/Under 3.5 Goals",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
-   "reason": "zu_kleine_abweichung",
-   "moneyEur": 24470,
-   "dev": 0.0068,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "reason": "feuert",
+   "moneyEur": 27012,
+   "dev": 0.0948,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315721",
    "league": "Japanese J League Cup",
    "match": "Cerezo Osaka – Urawa",
    "market": "Both teams to Score?",
-   "hours": -1.16,
+   "hours": -1.42,
    "bucket": "live/danach",
    "reason": "wenig_geld",
-   "moneyEur": 1570,
+   "moneyEur": 1575,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321585",
    "league": "Ukrainian Persha Liga",
    "match": "SK Poltava – Agrobiznes Volochysk",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 399,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321585",
    "league": "Ukrainian Persha Liga",
    "match": "SK Poltava – Agrobiznes Volochysk",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 540,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321585",
    "league": "Ukrainian Persha Liga",
    "match": "SK Poltava – Agrobiznes Volochysk",
    "market": "Both teams to Score?",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 0,
+   "moneyEur": 8,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312185",
    "league": "Japanese J League 3",
    "match": "Mio Biwako Shiga – FC Osaka",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 327,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312185",
    "league": "Japanese J League 3",
    "match": "Mio Biwako Shiga – FC Osaka",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 410,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312185",
    "league": "Japanese J League 3",
    "match": "Mio Biwako Shiga – FC Osaka",
    "market": "Both teams to Score?",
-   "hours": 1.84,
+   "hours": 1.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 0,
+   "moneyEur": 2,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319912",
    "league": "Turkish 3 Lig",
    "match": "Altay – Bursa Yildirim Spor",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 83,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319912",
    "league": "Turkish 3 Lig",
    "match": "Altay – Bursa Yildirim Spor",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 111,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319912",
    "league": "Turkish 3 Lig",
    "match": "Altay – Bursa Yildirim Spor",
    "market": "Both teams to Score?",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305103",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Tamaraceite – Marbella",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 95,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305103",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Tamaraceite – Marbella",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 126,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305103",
    "league": "Spanish Segunda Federación - Group 4",
    "match": "UD Tamaraceite – Marbella",
    "market": "Both teams to Score?",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
-   "moneyEur": 70,
+   "moneyEur": 115,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321547",
    "league": "Slovenian 2 SNL",
    "match": "NK Primorje – Jesenice",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 6,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321547",
    "league": "Slovenian 2 SNL",
    "match": "NK Primorje – Jesenice",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 327,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321547",
    "league": "Slovenian 2 SNL",
    "match": "NK Primorje – Jesenice",
    "market": "Both teams to Score?",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312327",
    "league": "Scottish Ladies Premier League",
    "match": "Celtic (W) – Rangers LFC (W)",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312327",
    "league": "Scottish Ladies Premier League",
    "match": "Celtic (W) – Rangers LFC (W)",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312327",
    "league": "Scottish Ladies Premier League",
    "match": "Celtic (W) – Rangers LFC (W)",
    "market": "Both teams to Score?",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305512",
    "league": "Danish 2nd Division",
    "match": "Naestved – Frederiksberg 2000",
    "market": "Over/Under 2.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305512",
    "league": "Danish 2nd Division",
    "match": "Naestved – Frederiksberg 2000",
    "market": "Over/Under 3.5 Goals",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305512",
    "league": "Danish 2nd Division",
    "match": "Naestved – Frederiksberg 2000",
    "market": "Both teams to Score?",
-   "hours": 4.84,
+   "hours": 4.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321627",
    "league": "Thai League 3",
    "match": "Raj Pracha FC – VRN Muangnont FC",
    "market": "Over/Under 2.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321627",
    "league": "Thai League 3",
    "match": "Raj Pracha FC – VRN Muangnont FC",
    "market": "Over/Under 3.5 Goals",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321627",
    "league": "Thai League 3",
    "match": "Raj Pracha FC – VRN Muangnont FC",
    "market": "Both teams to Score?",
-   "hours": 1.34,
+   "hours": 1.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322806",
    "league": "Friendlies International",
    "match": "Jordan – Australia",
    "market": "Over/Under 2.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322806",
    "league": "Friendlies International",
    "match": "Jordan – Australia",
    "market": "Over/Under 3.5 Goals",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322806",
    "league": "Friendlies International",
    "match": "Jordan – Australia",
    "market": "Both teams to Score?",
-   "hours": 56.84,
+   "hours": 56.58,
    "bucket": ">24h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310907",
    "league": "Czech MSFL",
    "match": "MFK Havirov – FK Blansko",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310907",
    "league": "Czech MSFL",
    "match": "MFK Havirov – FK Blansko",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310907",
    "league": "Czech MSFL",
    "match": "MFK Havirov – FK Blansko",
    "market": "Both teams to Score?",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310804",
    "league": "Czech 3 Liga",
    "match": "Admira Prague – SK Slavia Praha U20",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310804",
    "league": "Czech 3 Liga",
    "match": "Admira Prague – SK Slavia Praha U20",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310804",
    "league": "Czech 3 Liga",
    "match": "Admira Prague – SK Slavia Praha U20",
    "market": "Both teams to Score?",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310738",
    "league": "Czech 3 Liga",
    "match": "Bohemians 1905 B – Kraluv Dvur",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310738",
    "league": "Czech 3 Liga",
    "match": "Bohemians 1905 B – Kraluv Dvur",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310738",
    "league": "Czech 3 Liga",
    "match": "Bohemians 1905 B – Kraluv Dvur",
    "market": "Both teams to Score?",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310822",
    "league": "Czech 3 Liga",
    "match": "FK Teplice B – Hradec Kralove B",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310822",
    "league": "Czech 3 Liga",
    "match": "FK Teplice B – Hradec Kralove B",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310822",
    "league": "Czech 3 Liga",
    "match": "FK Teplice B – Hradec Kralove B",
    "market": "Both teams to Score?",
-   "hours": 2.09,
+   "hours": 1.83,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322363",
    "league": "Hong Kong 1st Division League",
    "match": "Yuen Long – WSE",
    "market": "Over/Under 2.5 Goals",
-   "hours": 0.34,
+   "hours": 0.08,
    "bucket": "0-1h",
    "reason": "wenig_geld",
-   "moneyEur": 928,
+   "moneyEur": 943,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322363",
    "league": "Hong Kong 1st Division League",
    "match": "Yuen Long – WSE",
    "market": "Over/Under 3.5 Goals",
-   "hours": 0.34,
+   "hours": 0.08,
    "bucket": "0-1h",
    "reason": "wenig_geld",
-   "moneyEur": 1224,
+   "moneyEur": 1234,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322363",
    "league": "Hong Kong 1st Division League",
    "match": "Yuen Long – WSE",
    "market": "Both teams to Score?",
-   "hours": 0.34,
+   "hours": 0.08,
    "bucket": "0-1h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319054",
    "league": "Slovakian 2 Liga",
    "match": "MSK Zilina II – Inter Bratislava",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 865,
+   "moneyEur": 893,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319054",
    "league": "Slovakian 2 Liga",
    "match": "MSK Zilina II – Inter Bratislava",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 483,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319054",
    "league": "Slovakian 2 Liga",
    "match": "MSK Zilina II – Inter Bratislava",
    "market": "Both teams to Score?",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 17,
+   "moneyEur": 112,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322633",
    "league": "Hong Kong 1st Division League",
    "match": "Central & West DR & SA – Tung Sing",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322633",
    "league": "Hong Kong 1st Division League",
    "match": "Central & West DR & SA – Tung Sing",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36322633",
    "league": "Hong Kong 1st Division League",
    "match": "Central & West DR & SA – Tung Sing",
    "market": "Both teams to Score?",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319049",
    "league": "Slovakian 2 Liga",
    "match": "Slovan Bratislava II – Malzenice",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 356,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319049",
    "league": "Slovakian 2 Liga",
    "match": "Slovan Bratislava II – Malzenice",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 404,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319049",
    "league": "Slovakian 2 Liga",
    "match": "Slovan Bratislava II – Malzenice",
    "market": "Both teams to Score?",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 25,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313049",
    "league": "Slovakian 3 Liga",
    "match": "FK Raca Bratislava – Druzstevnik Velke Ludince",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 254,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313049",
    "league": "Slovakian 3 Liga",
    "match": "FK Raca Bratislava – Druzstevnik Velke Ludince",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 343,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313049",
    "league": "Slovakian 3 Liga",
    "match": "FK Raca Bratislava – Druzstevnik Velke Ludince",
    "market": "Both teams to Score?",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 4,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313012",
    "league": "Slovakian 3 Liga",
    "match": "DAC Dunajska Streda B – AS Trencin B",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 195,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313012",
    "league": "Slovakian 3 Liga",
    "match": "DAC Dunajska Streda B – AS Trencin B",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 255,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36313012",
    "league": "Slovakian 3 Liga",
    "match": "DAC Dunajska Streda B – AS Trencin B",
    "market": "Both teams to Score?",
-   "hours": 2.34,
+   "hours": 2.08,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 63,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299747",
    "league": "Bulgarian B League",
    "match": "Nesebar – FC Fratria",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299747",
    "league": "Bulgarian B League",
    "match": "Nesebar – FC Fratria",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299747",
    "league": "Bulgarian B League",
    "match": "Nesebar – FC Fratria",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320132",
    "league": "Turkish 3 Lig",
    "match": "Balikesirspor – Anadolu University",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 67,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320132",
    "league": "Turkish 3 Lig",
    "match": "Balikesirspor – Anadolu University",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 84,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320132",
    "league": "Turkish 3 Lig",
    "match": "Balikesirspor – Anadolu University",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299709",
    "league": "Bulgarian B League",
    "match": "Rilski Sportist – Hebar",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299709",
    "league": "Bulgarian B League",
    "match": "Rilski Sportist – Hebar",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299709",
    "league": "Bulgarian B League",
    "match": "Rilski Sportist – Hebar",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299670",
    "league": "Bulgarian B League",
    "match": "Lokomotiv GO – CSKA Sofia II",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299670",
    "league": "Bulgarian B League",
    "match": "Lokomotiv GO – CSKA Sofia II",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36299670",
    "league": "Bulgarian B League",
    "match": "Lokomotiv GO – CSKA Sofia II",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315154",
    "league": "Kenyan Premier League",
    "match": "Leopards SC – Mombasa Utd",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315154",
    "league": "Kenyan Premier League",
    "match": "Leopards SC – Mombasa Utd",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315154",
    "league": "Kenyan Premier League",
    "match": "Leopards SC – Mombasa Utd",
    "market": "Both teams to Score?",
-   "hours": 5.34,
+   "hours": 5.08,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305029",
    "league": "Italian Serie C",
    "match": "Cavese 1919 – Crotone",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305029",
    "league": "Italian Serie C",
    "match": "Cavese 1919 – Crotone",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305029",
    "league": "Italian Serie C",
    "match": "Cavese 1919 – Crotone",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305025",
    "league": "Italian Serie C",
    "match": "Spezia – FC Vado",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305025",
    "league": "Italian Serie C",
    "match": "Spezia – FC Vado",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305025",
    "league": "Italian Serie C",
    "match": "Spezia – FC Vado",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320190",
    "league": "UAE League Cup",
    "match": "Al Wahda (Abu Dhabi) – Al-Khaleej Khor Fakkan",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.67,
+   "hours": 5.41,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 160,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320190",
    "league": "UAE League Cup",
    "match": "Al Wahda (Abu Dhabi) – Al-Khaleej Khor Fakkan",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.67,
+   "hours": 5.41,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 148,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320190",
    "league": "UAE League Cup",
    "match": "Al Wahda (Abu Dhabi) – Al-Khaleej Khor Fakkan",
    "market": "Both teams to Score?",
-   "hours": 5.67,
+   "hours": 5.41,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317791",
    "league": "Hong Kong League Cup",
    "match": "Eastern District SA – Eastern AA",
    "market": "Over/Under 2.5 Goals",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
-   "reason": "wenig_geld",
-   "moneyEur": 747,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "reason": "feuert",
+   "moneyEur": 8975,
+   "dev": 0.077,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317791",
    "league": "Hong Kong League Cup",
    "match": "Eastern District SA – Eastern AA",
    "market": "Over/Under 3.5 Goals",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
-   "reason": "wenig_geld",
-   "moneyEur": 690,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "reason": "feuert",
+   "moneyEur": 5300,
+   "dev": 0.0445,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317791",
    "league": "Hong Kong League Cup",
    "match": "Eastern District SA – Eastern AA",
    "market": "Both teams to Score?",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
    "reason": "wenig_geld",
-   "moneyEur": 144,
+   "moneyEur": 145,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312148",
    "league": "Japanese J League 3",
    "match": "FC Ryukyu – Kochi United",
    "market": "Over/Under 2.5 Goals",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
-   "reason": "wenig_geld",
-   "moneyEur": 1254,
-   "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "reason": "zu_kleine_abweichung",
+   "moneyEur": 2300,
+   "dev": 0.0153,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312148",
    "league": "Japanese J League 3",
    "match": "FC Ryukyu – Kochi United",
    "market": "Over/Under 3.5 Goals",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
    "reason": "wenig_geld",
-   "moneyEur": 675,
+   "moneyEur": 881,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36312148",
    "league": "Japanese J League 3",
    "match": "FC Ryukyu – Kochi United",
    "market": "Both teams to Score?",
-   "hours": -0.16,
+   "hours": -0.42,
    "bucket": "live/danach",
    "reason": "wenig_geld",
-   "moneyEur": 329,
+   "moneyEur": 334,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315747",
    "league": "Japanese J League Cup",
    "match": "Kashiwa – Kawasaki",
    "market": "Over/Under 2.5 Goals",
-   "hours": 0.84,
+   "hours": 0.58,
    "bucket": "0-1h",
    "reason": "wenig_geld",
-   "moneyEur": 434,
+   "moneyEur": 573,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315747",
    "league": "Japanese J League Cup",
    "match": "Kashiwa – Kawasaki",
    "market": "Over/Under 3.5 Goals",
-   "hours": 0.84,
+   "hours": 0.58,
    "bucket": "0-1h",
    "reason": "wenig_geld",
    "moneyEur": 1172,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315747",
    "league": "Japanese J League Cup",
    "match": "Kashiwa – Kawasaki",
    "market": "Both teams to Score?",
-   "hours": 0.84,
+   "hours": 0.58,
    "bucket": "0-1h",
    "reason": "wenig_geld",
-   "moneyEur": 152,
+   "moneyEur": 176,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315182",
    "league": "Spanish Segunda Division",
    "match": "Tenerife – AD Ceuta FC",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 751,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315182",
    "league": "Spanish Segunda Division",
    "match": "Tenerife – AD Ceuta FC",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 126,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36315182",
    "league": "Spanish Segunda Division",
    "match": "Tenerife – AD Ceuta FC",
    "market": "Both teams to Score?",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 19,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320065",
    "league": "Turkish 3 Lig",
    "match": "Etimesgut Belediyespor – Gaziemir GOG Sor Yat AS",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 466,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320065",
    "league": "Turkish 3 Lig",
    "match": "Etimesgut Belediyespor – Gaziemir GOG Sor Yat AS",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 420,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36320065",
    "league": "Turkish 3 Lig",
    "match": "Etimesgut Belediyespor – Gaziemir GOG Sor Yat AS",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319931",
    "league": "Turkish 3 Lig",
    "match": "Orduspor 1967 Futbol Isletm – Beykoz Anadolu Spor",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 232,
+   "moneyEur": 238,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319931",
    "league": "Turkish 3 Lig",
    "match": "Orduspor 1967 Futbol Isletm – Beykoz Anadolu Spor",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 485,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319931",
    "league": "Turkish 3 Lig",
    "match": "Orduspor 1967 Futbol Isletm – Beykoz Anadolu Spor",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 13,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317595",
    "league": "French Cup",
    "match": "Paris 13 Atletico – Red Star",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 193,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317595",
    "league": "French Cup",
    "match": "Paris 13 Atletico – Red Star",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 233,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317595",
    "league": "French Cup",
    "match": "Paris 13 Atletico – Red Star",
    "market": "Both teams to Score?",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317725",
    "league": "Friendly Matches",
    "match": "Chindia Targoviste – FCSB",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 283,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317725",
    "league": "Friendly Matches",
    "match": "Chindia Targoviste – FCSB",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 21,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36317725",
    "league": "Friendly Matches",
    "match": "Chindia Targoviste – FCSB",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319104",
    "league": "Hong Kong League Cup",
    "match": "Lee Man Warriors – Wofoo Tai Po",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 53,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319104",
    "league": "Hong Kong League Cup",
    "match": "Lee Man Warriors – Wofoo Tai Po",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
-   "moneyEur": 96,
+   "moneyEur": 110,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319104",
    "league": "Hong Kong League Cup",
    "match": "Lee Man Warriors – Wofoo Tai Po",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_geld",
    "moneyEur": 26,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319835",
    "league": "Turkish 3 Lig",
    "match": "Bulvarspor – Kucukcekmece Sinop Spor",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319835",
    "league": "Turkish 3 Lig",
    "match": "Bulvarspor – Kucukcekmece Sinop Spor",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36319835",
    "league": "Turkish 3 Lig",
    "match": "Bulvarspor – Kucukcekmece Sinop Spor",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321636",
    "league": "Thai League 3",
    "match": "Chiangrai City – Paknampo NSRU",
    "market": "Over/Under 2.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321636",
    "league": "Thai League 3",
    "match": "Chiangrai City – Paknampo NSRU",
    "market": "Over/Under 3.5 Goals",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36321636",
    "league": "Thai League 3",
    "match": "Chiangrai City – Paknampo NSRU",
    "market": "Both teams to Score?",
-   "hours": 2.84,
+   "hours": 2.58,
    "bucket": "1-3h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310900",
    "league": "Czech 3 Liga",
    "match": "FK Caslav – Banik Most",
    "market": "Over/Under 2.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310900",
    "league": "Czech 3 Liga",
    "match": "FK Caslav – Banik Most",
    "market": "Over/Under 3.5 Goals",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36310900",
    "league": "Czech 3 Liga",
    "match": "FK Caslav – Banik Most",
    "market": "Both teams to Score?",
-   "hours": 5.84,
+   "hours": 5.58,
    "bucket": "3-6h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305020",
    "league": "Italian Serie C",
    "match": "Pescara – Sambenedettese",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305020",
    "league": "Italian Serie C",
    "match": "Pescara – Sambenedettese",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305020",
    "league": "Italian Serie C",
    "match": "Pescara – Sambenedettese",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305036",
    "league": "Italian Serie C",
    "match": "Potenza – Scafatese",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305036",
    "league": "Italian Serie C",
    "match": "Potenza – Scafatese",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36305036",
    "league": "Italian Serie C",
    "match": "Potenza – Scafatese",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_sprossen",
    "moneyEur": null,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36296394",
    "league": "Dutch Eerste Divisie",
    "match": "MVV Maastricht – Vitesse Arnhem",
    "market": "Over/Under 2.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 28,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36296394",
    "league": "Dutch Eerste Divisie",
    "match": "MVV Maastricht – Vitesse Arnhem",
    "market": "Over/Under 3.5 Goals",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 175,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   },
   {
    "matchId": "36296394",
    "league": "Dutch Eerste Divisie",
    "match": "MVV Maastricht – Vitesse Arnhem",
    "market": "Both teams to Score?",
-   "hours": 6.34,
+   "hours": 6.08,
    "bucket": "6-12h",
    "reason": "wenig_geld",
    "moneyEur": 0,
    "dev": null,
-   "seenAt": "2026-11-15T07:09:47.760121+00:00"
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
+  },
+  {
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
+   "market": "Over/Under 2.5 Goals",
+   "hours": 5.83,
+   "bucket": "3-6h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
+   "dev": null,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
+  },
+  {
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
+   "market": "Over/Under 3.5 Goals",
+   "hours": 5.83,
+   "bucket": "3-6h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
+   "dev": null,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
+  },
+  {
+   "matchId": "36304794",
+   "league": "Spanish Primera Federación - Group 1",
+   "match": "Zamora – Real Aviles",
+   "market": "Both teams to Score?",
+   "hours": 5.83,
+   "bucket": "3-6h",
+   "reason": "wenig_sprossen",
+   "moneyEur": null,
+   "dev": null,
+   "seenAt": "2026-11-15T07:25:07.081839+00:00"
   }
  ]
 }
