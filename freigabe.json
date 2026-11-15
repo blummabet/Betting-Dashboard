@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-15T03:54:35.900028+00:00",
+ "generatedAt": "2026-11-15T04:09:36.591187+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -699,7 +699,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 438.28,
+   "pl": 439.67,
    "roi": 0.011,
    "clv": 0.36,
    "belegte": 16
@@ -1007,6 +1007,18 @@
    "belegt": false
   },
   {
+   "liga": "Finnish Veikkausliiga",
+   "n": 127,
+   "wins": 76,
+   "hit": 0.5984,
+   "hitLb": 0.5255,
+   "roi": 0.1528,
+   "roiLb": -0.0251,
+   "pl": 19.41,
+   "clv": -0.367,
+   "belegt": false
+  },
+  {
    "liga": "Jordan 1st Division",
    "n": 186,
    "wins": 102,
@@ -1172,18 +1184,6 @@
    "roiLb": -0.0478,
    "pl": 14.77,
    "clv": 0.137,
-   "belegt": false
-  },
-  {
-   "liga": "Finnish Veikkausliiga",
-   "n": 132,
-   "wins": 77,
-   "hit": 0.5833,
-   "hitLb": 0.5118,
-   "roi": 0.1234,
-   "roiLb": -0.0503,
-   "pl": 16.29,
-   "clv": -0.308,
    "belegt": false
   },
   {
@@ -1859,6 +1859,18 @@
    "belegt": false
   },
   {
+   "liga": "Israeli National League",
+   "n": 169,
+   "wins": 86,
+   "hit": 0.5089,
+   "hitLb": 0.446,
+   "roi": 0.0327,
+   "roiLb": -0.1102,
+   "pl": 5.52,
+   "clv": 0.041,
+   "belegt": false
+  },
+  {
    "liga": "Bolivian Liga de Futbol Profesional",
    "n": 191,
    "wins": 102,
@@ -1880,18 +1892,6 @@
    "roiLb": -0.1115,
    "pl": -0.35,
    "clv": -0.436,
-   "belegt": false
-  },
-  {
-   "liga": "Israeli National League",
-   "n": 171,
-   "wins": 87,
-   "hit": 0.5088,
-   "hitLb": 0.4462,
-   "roi": 0.0294,
-   "roiLb": -0.1122,
-   "pl": 5.03,
-   "clv": 0.069,
    "belegt": false
   },
   {
@@ -4852,45 +4852,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
-   "strom": "betfair",
-   "n": 6488,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.038,
-   "pl": 246.46,
-   "roiLb": -0.0103,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 10483,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 9597,
-    "lo": 2370,
-    "hi": 353336,
-    "nieAnteil": 0.077,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
-   "zielN": 200,
-   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
-   "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 0,
-   "rueckblick": {
-    "n": 2720,
-    "roi": 0.0546,
-    "roiLb": 0.0099,
-    "clv": null,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Polish Ekstraklasa · Match Odds",
    "strom": "betfair",
    "n": 36,
@@ -4933,6 +4894,45 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
+   "strom": "betfair",
+   "n": 6486,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0376,
+   "pl": 244.01,
+   "roiLb": -0.0107,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 10690,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 10203,
+    "lo": 2333,
+    "hi": 472490,
+    "nieAnteil": 0.107,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
+   "zielN": 200,
+   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
+   "quelle": "betfair_track_results.json → fade_unter.py",
+   "nDavor": 0,
+   "rueckblick": {
+    "n": 2720,
+    "roi": 0.0546,
+    "roiLb": 0.0099,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Over/Under 3.5 Goals",
@@ -4987,12 +4987,12 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 4831,
+   "n": 4832,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0181,
-   "pl": 87.44,
-   "roiLb": -0.0147,
+   "roi": 0.0179,
+   "pl": 86.49,
+   "roiLb": -0.0149,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5046,6 +5046,28 @@
    }
   },
   {
+   "schublade": "First Half Goals 0.5",
+   "strom": "betfair",
+   "n": 5514,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0057,
+   "pl": 31.43,
+   "roiLb": -0.016,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
    "schublade": "UEFA Champions League · First Half Goals 1.5",
    "strom": "betfair",
    "n": 54,
@@ -5065,28 +5087,6 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "First Half Goals 0.5",
-   "strom": "betfair",
-   "n": 5514,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0055,
-   "pl": 30.33,
-   "roiLb": -0.0163,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
    "naeherung": false
   },
   {
@@ -5131,12 +5131,12 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 6197,
+   "n": 6196,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0027,
-   "pl": 16.73,
-   "roiLb": -0.0181,
+   "roi": 0.0029,
+   "pl": 17.97,
+   "roiLb": -0.0179,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6889,7 +6889,7 @@
     "nieAnteil": 0.862,
     "schaetzbar": false
    },
-   "alterTage": 13.0,
+   "alterTage": 13.1,
    "art": "mix",
    "wert": "bf+money"
   },
