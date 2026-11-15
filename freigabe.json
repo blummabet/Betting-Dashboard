@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-15T10:40:12.864970+00:00",
+ "generatedAt": "2026-11-15T10:55:20.782963+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -620,7 +620,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 13.7,
+   "alterTage": 13.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -648,7 +648,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 13.6,
+   "alterTage": 13.7,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   }
@@ -699,8 +699,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 445.52,
-   "roi": 0.0111,
+   "pl": 441.71,
+   "roi": 0.011,
    "clv": 0.36,
    "belegte": 16
   },
@@ -2207,6 +2207,18 @@
    "belegt": false
   },
   {
+   "liga": "English U21 Premier League Cup",
+   "n": 140,
+   "wins": 75,
+   "hit": 0.5357,
+   "hitLb": 0.4664,
+   "roi": 0.0334,
+   "roiLb": -0.1373,
+   "pl": 4.67,
+   "clv": 1.515,
+   "belegt": false
+  },
+  {
    "liga": "Swedish Allsvenskan",
    "n": 268,
    "wins": 130,
@@ -2240,18 +2252,6 @@
    "roiLb": -0.1408,
    "pl": -1.17,
    "clv": -0.187,
-   "belegt": false
-  },
-  {
-   "liga": "English U21 Premier League Cup",
-   "n": 143,
-   "wins": 76,
-   "hit": 0.5315,
-   "hitLb": 0.4629,
-   "roi": 0.0259,
-   "roiLb": -0.1424,
-   "pl": 3.71,
-   "clv": 1.467,
    "belegt": false
   },
   {
@@ -4713,7 +4713,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 13.7,
+   "alterTage": 13.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -4741,9 +4741,48 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 13.6,
+   "alterTage": 13.7,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
+  },
+  {
+   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
+   "strom": "betfair",
+   "n": 6488,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0483,
+   "pl": 313.31,
+   "roiLb": -0.0014,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 6862,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 6557,
+    "lo": 1905,
+    "hi": 172504,
+    "nieAnteil": 0.07,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
+   "zielN": 200,
+   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
+   "quelle": "betfair_track_results.json → fade_unter.py",
+   "nDavor": 0,
+   "rueckblick": {
+    "n": 2720,
+    "roi": 0.0546,
+    "roiLb": 0.0099,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Paraguayan Primera Division · Over/Under 3.5 Goals",
@@ -4788,45 +4827,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
-   "strom": "betfair",
-   "n": 6487,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0473,
-   "pl": 306.66,
-   "roiLb": -0.0023,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 7139,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 6648,
-    "lo": 1942,
-    "hi": 127543,
-    "nieAnteil": 0.045,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
-   "zielN": 200,
-   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
-   "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 0,
-   "rueckblick": {
-    "n": 2720,
-    "roi": 0.0546,
-    "roiLb": 0.0099,
-    "clv": null,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
@@ -4925,7 +4925,7 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 6076,
+   "n": 6075,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": 0.0082,
@@ -4968,19 +4968,19 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 16.5,
+   "alterTage": 16.6,
    "art": "mix",
    "wert": "sharp+steam"
   },
   {
-   "schublade": "First Half Goals 0.5",
+   "schublade": "Half Time",
    "strom": "betfair",
-   "n": 5513,
+   "n": 4834,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0063,
-   "pl": 34.73,
-   "roiLb": -0.0154,
+   "roi": 0.0175,
+   "pl": 84.6,
+   "roiLb": -0.0155,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -4995,14 +4995,14 @@
    "naeherung": false
   },
   {
-   "schublade": "Half Time",
+   "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 4834,
+   "n": 5513,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0175,
-   "pl": 84.6,
-   "roiLb": -0.0155,
+   "roi": 0.006,
+   "pl": 33.08,
+   "roiLb": -0.0157,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5044,9 +5044,9 @@
    "n": 6198,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0043,
-   "pl": 26.65,
-   "roiLb": -0.0165,
+   "roi": 0.0039,
+   "pl": 24.17,
+   "roiLb": -0.0169,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5169,12 +5169,12 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 5921,
+   "n": 5922,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0003,
-   "pl": -1.78,
-   "roiLb": -0.0226,
+   "roi": -0.0005,
+   "pl": -2.96,
+   "roiLb": -0.0228,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5332,9 +5332,9 @@
    "n": 4999,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0068,
-   "pl": -33.99,
-   "roiLb": -0.0313,
+   "roi": -0.0065,
+   "pl": -32.49,
+   "roiLb": -0.031,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5422,7 +5422,7 @@
     "nieAnteil": 0.212,
     "schaetzbar": false
    },
-   "alterTage": 6.9,
+   "alterTage": 7.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -6534,7 +6534,7 @@
     "nieAnteil": 0.635,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -6927,7 +6927,7 @@
     "nieAnteil": 0.615,
     "schaetzbar": false
    },
-   "alterTage": 12.9,
+   "alterTage": 13.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -13868,7 +13868,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 16.9,
+   "alterTage": 17.0,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -13957,7 +13957,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 118.9,
+   "alterTage": 119.0,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -13979,7 +13979,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 133.9,
+   "alterTage": 134.0,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
@@ -14001,7 +14001,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "fehltN": 0,
-   "alterTage": 24.5,
+   "alterTage": 24.6,
    "art": "mix",
    "wert": "bf+sharp"
   },
