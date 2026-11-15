@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 61 von 79 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Cavalier v Treasure Beach FC (Jamaican Premier League); Dunbeholden FC v Chapelton (Jamaican Premier League); Molynes United FC v Portmore Utd (Jamaican Premier League)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 802493 verbraucht, 4197507 uebrig"
+      "note": "Kontingent: 803071 verbraucht, 4196929 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -104,7 +106,7 @@
         "SD Compostela v Ourense CF (Spanish Segunda Federación - Group 1): name — bester Kandidat „SD Eibar v Cádiz CF“",
         "CP Mijas Las Lagunas v CD Estepona (Spanish Segunda Federación - Group 4): name — bester Kandidat „Granada CF v Las Palmas“"
       ],
-      "note": "ohne Anker: kein_kandidat 75 · kein_pinnacle 1 · name 4 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 74 · kein_pinnacle 1 · name 4 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -188,6 +190,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-15T13:55:59.982355+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-15T14:11:06.971676+00:00"
 }
