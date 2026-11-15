@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-11-15T18:56:06.357553+00:00",
-"count": 11,
+"generatedAt": "2026-11-15T19:11:09.292294+00:00",
+"count": 10,
 "covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -48,14 +48,13 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
-"Spanish Segunda Division",
 "UEFA Nations League A",
 "UEFA Nations League B"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 47,
 "oddsKeysMitDaten": 47,
-"oddsEvents": 480,
+"oddsEvents": 478,
 "oddsTotals": {
 "versucht": 2,
 "mitDaten": 0,
@@ -64,13 +63,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 814884,
-"remaining": 4185116,
+"used": 815453,
+"remaining": 4184547,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.5,
+"ankerQuote": 0.0,
 "games": [
 {
 "matchId": "36291346",
@@ -82,12 +81,12 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Spain",
-"moneySharePct": 70,
-"moneyOdd": 2.08,
-"moneyDir": "flat",
-"totVol": 993271,
-"pinnOdd": 2.03,
-"softOdd": 1.95,
+"moneySharePct": 71,
+"moneyOdd": 2.1,
+"moneyDir": "out",
+"totVol": 1140806,
+"pinnOdd": 2.05,
+"softOdd": 2.0,
 "softN": 44,
 "poly": {
 "vol": 2085,
@@ -100,77 +99,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4775,
-"draw": 0.2382,
-"away": 0.2843,
+"home": 0.4725,
+"draw": 0.2392,
+"away": 0.2883,
 "fav": "home"
 },
 "soft": {
-"home": 0.4749,
-"draw": 0.2435,
-"away": 0.2816,
+"home": 0.4683,
+"draw": 0.2443,
+"away": 0.2874,
 "fav": "home",
 "n": 44
 },
-"pinnMovePP": -0.9,
+"pinnMovePP": -1.4,
 "pinnMove": {
-"movePP": -0.9,
-"stepPP": 0.9,
+"movePP": -1.4,
+"stepPP": -0.5,
 "n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36299529",
-"home": "France",
-"away": "Türkiye",
-"league": "UEFA Nations League A",
-"country": "International",
-"kickoff": "2026-11-15T19:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "France",
-"moneySharePct": 88,
-"moneyOdd": 1.2,
-"moneyDir": "in",
-"totVol": 460262,
-"pinnOdd": 1.19,
-"softOdd": 1.18,
-"softN": 43,
-"poly": {
-"vol": 445,
-"odd": 1.25,
-"sharePct": 80,
-"shareSrc": "preis",
-"key": "unl-fra-tur-2026-11-15",
-"sideKey": "France",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.8072,
-"draw": 0.1216,
-"away": 0.0712,
-"fav": "home"
-},
-"soft": {
-"home": 0.8063,
-"draw": 0.1187,
-"away": 0.075,
-"fav": "home",
-"n": 43
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -186,29 +133,85 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Eibar",
-"moneySharePct": 58,
-"moneyOdd": 1.25,
-"moneyDir": "in",
-"totVol": 409534,
-"pinnOdd": 1.94,
-"softOdd": 1.15,
+"moneySharePct": 60,
+"moneyOdd": 3.4,
+"moneyDir": "out",
+"totVol": 639301,
+"pinnOdd": null,
+"softOdd": 3.08,
 "softN": 34,
 "poly": null,
-"pinn": {
-"home": 0.4876,
-"draw": 0.361,
-"away": 0.1514,
-"fav": "home"
-},
+"pinn": null,
 "soft": {
-"home": 0.7867,
-"draw": 0.1712,
-"away": 0.0421,
-"fav": "home",
+"home": 0.3015,
+"draw": 0.5809,
+"away": 0.1176,
+"fav": "draw",
 "n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Eibar v Cadiz",
+"grund": "kein_pinnacle",
+"kandidat": "SD Eibar v Cádiz CF",
+"key": "soccer_spain_segunda_division",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34
+}
+},
+{
+"matchId": "36299529",
+"home": "France",
+"away": "Türkiye",
+"league": "UEFA Nations League A",
+"country": "International",
+"kickoff": "2026-11-15T19:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "France",
+"moneySharePct": 89,
+"moneyOdd": 1.21,
+"moneyDir": "out",
+"totVol": 498331,
+"pinnOdd": 1.19,
+"softOdd": 1.18,
+"softN": 43,
+"poly": {
+"vol": 445,
+"odd": 1.25,
+"sharePct": 80,
+"shareSrc": "preis",
+"key": "unl-fra-tur-2026-11-15",
+"sideKey": "France",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.8085,
+"draw": 0.1203,
+"away": 0.0713,
+"fav": "home"
+},
+"soft": {
+"home": 0.7999,
+"draw": 0.1194,
+"away": 0.0807,
+"fav": "home",
+"n": 43
+},
+"pinnMovePP": 0.1,
+"pinnMove": {
+"movePP": 0.1,
+"stepPP": 0.1,
+"n": 25,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -223,11 +226,11 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Belgium",
-"moneySharePct": 64,
-"moneyOdd": 2.18,
-"moneyDir": "in",
-"totVol": 309675,
-"pinnOdd": 2.23,
+"moneySharePct": 66,
+"moneyOdd": 2.2,
+"moneyDir": "out",
+"totVol": 346978,
+"pinnOdd": 2.14,
 "softOdd": 2.1,
 "softN": 44,
 "poly": {
@@ -241,25 +244,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4346,
-"draw": 0.2577,
-"away": 0.3077,
+"home": 0.4538,
+"draw": 0.2589,
+"away": 0.2873,
 "fav": "home"
 },
 "soft": {
-"home": 0.4438,
-"draw": 0.2568,
-"away": 0.2994,
+"home": 0.4455,
+"draw": 0.256,
+"away": 0.2986,
 "fav": "home",
 "n": 44
 },
-"pinnMovePP": -0.7,
+"pinnMovePP": 1.3,
 "pinnMove": {
-"movePP": -0.7,
-"stepPP": 3.2,
+"movePP": 1.3,
+"stepPP": 1.9,
 "n": 25,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -277,32 +280,32 @@
 "moneyName": "Croatia",
 "moneySharePct": 79,
 "moneyOdd": 1.47,
-"moneyDir": "out",
-"totVol": 159127,
-"pinnOdd": 1.43,
+"moneyDir": "flat",
+"totVol": 163751,
+"pinnOdd": 1.44,
 "softOdd": 1.4,
 "softN": 44,
 "poly": null,
 "pinn": {
-"home": 0.6767,
-"draw": 0.2016,
-"away": 0.1217,
+"home": 0.6702,
+"draw": 0.2053,
+"away": 0.1245,
 "fav": "home"
 },
 "soft": {
-"home": 0.6682,
-"draw": 0.2019,
-"away": 0.1299,
+"home": 0.6663,
+"draw": 0.2029,
+"away": 0.1307,
 "fav": "home",
 "n": 44
 },
-"pinnMovePP": 7.9,
+"pinnMovePP": 7.2,
 "pinnMove": {
-"movePP": 7.9,
-"stepPP": 2.3,
-"n": 21,
+"movePP": 7.2,
+"stepPP": -0.7,
+"n": 22,
 "move": true,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -318,21 +321,21 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Eldense",
-"moneySharePct": 89,
-"moneyOdd": 1.02,
+"moneySharePct": 90,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 149310,
+"totVol": 163313,
 "pinnOdd": null,
 "softOdd": 1.0,
-"softN": 17,
+"softN": 14,
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.9499,
-"draw": 0.0315,
-"away": 0.0186,
+"home": 0.9681,
+"draw": 0.0234,
+"away": 0.0085,
 "fav": "home",
-"n": 17
+"n": 14
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -344,9 +347,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "CD Eldense v Sabadell FC",
 "key": "soccer_spain_segunda_division",
-"nSoft": 17,
+"nSoft": 14,
 "pinnacleImEvent": false,
-"nBuecher": 17
+"nBuecher": 14
 }
 },
 {
@@ -359,10 +362,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Switzerland",
-"moneySharePct": 77,
+"moneySharePct": 76,
 "moneyOdd": 1.81,
 "moneyDir": "flat",
-"totVol": 38942,
+"totVol": 39030,
 "pinnOdd": 1.72,
 "softOdd": 1.7,
 "softN": 38,
@@ -393,40 +396,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36315094",
-"home": "Deportivo La Coruna (W)",
-"away": "Barcelona (W)",
-"league": "Spanish Liga F",
-"country": "ES",
-"kickoff": "2026-11-15T17:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Barcelona (W)",
-"moneySharePct": 74,
-"moneyOdd": 250.0,
-"moneyDir": "out",
-"totVol": 207596,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Deportivo La Coruna (W) v Barcelona (W)",
-"kandidat": "Deportivo La Coruña v Barcelona",
-"key": "soccer_spain_la_liga",
-"score": 1.25,
-"grund": "zeit",
-"abstandH": 334.2
-}
-},
-{
 "matchId": "36297464",
 "home": "Comerciantes Unidos",
 "away": "Sport Boys (Per)",
@@ -436,10 +405,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Comerciantes Unidos",
-"moneySharePct": 93,
-"moneyOdd": 1.18,
-"moneyDir": "in",
-"totVol": 41385,
+"moneySharePct": 92,
+"moneyOdd": 1.69,
+"moneyDir": "out",
+"totVol": 44523,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -470,7 +439,7 @@
 "moneySharePct": 72,
 "moneyOdd": 3.35,
 "moneyDir": "flat",
-"totVol": 40883,
+"totVol": 40912,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -497,10 +466,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Leixoes",
-"moneySharePct": 80,
-"moneyOdd": 1.29,
+"moneySharePct": 82,
+"moneyOdd": 1.26,
 "moneyDir": "in",
-"totVol": 19925,
+"totVol": 23866,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -520,13 +489,13 @@
 ],
 "ankerN": 2,
 "ankerNOffen": 77,
-"ankerMit": 1,
+"ankerMit": 0,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 60,
-"zeit": 3,
+"kein_kandidat": 61,
+"zeit": 2,
 "name": 2,
-"kein_pinnacle": 1
+"kein_pinnacle": 2
 },
 "beispiele": [
 {
@@ -568,25 +537,26 @@
 "liga": "Friendlies International U21"
 },
 {
+"spiel": "Eibar v Cadiz",
+"grund": "kein_pinnacle",
+"kandidat": "SD Eibar v Cádiz CF",
+"key": "soccer_spain_segunda_division",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34,
+"matchId": "36296957",
+"liga": "Spanish Segunda Division"
+},
+{
 "spiel": "Eldense v Sabadell",
 "grund": "kein_pinnacle",
 "kandidat": "CD Eldense v Sabadell FC",
 "key": "soccer_spain_segunda_division",
-"nSoft": 17,
+"nSoft": 14,
 "pinnacleImEvent": false,
-"nBuecher": 17,
+"nBuecher": 14,
 "matchId": "36301631",
 "liga": "Spanish Segunda Division"
-},
-{
-"spiel": "Deportivo La Coruna (W) v Barcelona (W)",
-"kandidat": "Deportivo La Coruña v Barcelona",
-"key": "soccer_spain_la_liga",
-"score": 1.25,
-"grund": "zeit",
-"abstandH": 334.2,
-"matchId": "36315094",
-"liga": "Spanish Liga F"
 }
 ]
 }
