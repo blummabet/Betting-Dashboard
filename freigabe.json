@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-16T00:26:45.225514+00:00",
+ "generatedAt": "2026-11-16T00:42:15.497819+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -14,24 +14,24 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6540,
+   "n": 6542,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +8.9 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.1543,
-   "pl": 1009.3,
-   "roiLb": 0.0891,
+   "roi": 0.154,
+   "pl": 1007.3,
+   "roiLb": 0.0888,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1169,
+   "noetigNRoi": 1174,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 1129,
-    "lo": 673,
-    "hi": 2835,
+    "median": 1137,
+    "lo": 677,
+    "hi": 2804,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -54,8 +54,8 @@
     "nBei": 6494,
     "roiBei": 0.0529,
     "rausgefallen": 0,
-    "nNeu": 46,
-    "roiNeu": 14.4693
+    "nNeu": 48,
+    "roiNeu": 13.832
    }
   },
   {
@@ -508,6 +508,40 @@
    }
   },
   {
+   "schublade": "UEFA Champions League · Match Odds",
+   "strom": "betfair",
+   "n": 51,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 409 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.2273,
+   "pl": 11.59,
+   "roiLb": 0.0354,
+   "clv": 0.59,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 30,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 409,
+    "erwartet": 20.5,
+    "nUeber": 18,
+    "ueberschuss": false
+   },
+   "zielN": 81,
+   "seitKandidat": {
+    "ab": "2026-11-04T21:55:20.070073+00:00",
+    "nBei": 51,
+    "nNeu": 0
+   }
+  },
+  {
    "schublade": "Italian Serie B · First Half Goals 0.5",
    "strom": "betfair",
    "n": 48,
@@ -607,40 +641,6 @@
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
     "nNeu": 103
-   }
-  },
-  {
-   "schublade": "UEFA Champions League · Match Odds",
-   "strom": "betfair",
-   "n": 52,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 409 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.2037,
-   "pl": 10.59,
-   "roiLb": 0.0116,
-   "clv": 0.65,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 29,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 409,
-    "erwartet": 20.5,
-    "nUeber": 18,
-    "ueberschuss": false
-   },
-   "zielN": 81,
-   "seitKandidat": {
-    "ab": "2026-11-04T21:55:20.070073+00:00",
-    "nBei": 51,
-    "nNeu": 1
    }
   },
   {
@@ -747,8 +747,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 412.17,
-   "roi": 0.0103,
+   "pl": 418.63,
+   "roi": 0.0105,
    "clv": 0.38,
    "belegte": 17
   },
@@ -769,7 +769,7 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "roiLb": 0.0891,
+   "roiLb": 0.0888,
    "clvUrteil": "nicht erhoben",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -1030,6 +1030,18 @@
    "belegt": false
   },
   {
+   "liga": "UEFA Champions League",
+   "n": 363,
+   "wins": 227,
+   "hit": 0.6253,
+   "hitLb": 0.5828,
+   "roi": 0.0609,
+   "roiLb": -0.0163,
+   "pl": 22.1,
+   "clv": 0.845,
+   "belegt": false
+  },
+  {
    "liga": "Norwegian Cup",
    "n": 62,
    "wins": 40,
@@ -1039,18 +1051,6 @@
    "roiLb": -0.0171,
    "pl": 12.48,
    "clv": 0.581,
-   "belegt": false
-  },
-  {
-   "liga": "UEFA Champions League",
-   "n": 364,
-   "wins": 227,
-   "hit": 0.6236,
-   "hitLb": 0.5811,
-   "roi": 0.058,
-   "roiLb": -0.0191,
-   "pl": 21.1,
-   "clv": 0.853,
    "belegt": false
   },
   {
@@ -3682,6 +3682,18 @@
    "belegt": false
   },
   {
+   "liga": "Polish 2 Liga",
+   "n": 144,
+   "wins": 63,
+   "hit": 0.4375,
+   "hitLb": 0.3713,
+   "roi": -0.1844,
+   "roiLb": -0.3183,
+   "pl": -26.56,
+   "clv": 0.032,
+   "belegt": false
+  },
+  {
    "liga": "Swiss Challenge League",
    "n": 83,
    "wins": 38,
@@ -3715,18 +3727,6 @@
    "roiLb": -0.3347,
    "pl": -8.28,
    "clv": 0.349,
-   "belegt": false
-  },
-  {
-   "liga": "Polish 2 Liga",
-   "n": 137,
-   "wins": 59,
-   "hit": 0.4307,
-   "hitLb": 0.3631,
-   "roi": -0.2096,
-   "roiLb": -0.3436,
-   "pl": -28.72,
-   "clv": -0.083,
    "belegt": false
   },
   {
@@ -4228,24 +4228,24 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6540,
+   "n": 6542,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +8.9 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.1543,
-   "pl": 1009.3,
-   "roiLb": 0.0891,
+   "roi": 0.154,
+   "pl": 1007.3,
+   "roiLb": 0.0888,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1169,
+   "noetigNRoi": 1174,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 1129,
-    "lo": 673,
-    "hi": 2835,
+    "median": 1137,
+    "lo": 677,
+    "hi": 2804,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -4268,8 +4268,8 @@
     "nBei": 6494,
     "roiBei": 0.0529,
     "rausgefallen": 0,
-    "nNeu": 46,
-    "roiNeu": 14.4693
+    "nNeu": 48,
+    "roiNeu": 13.832
    }
   },
   {
@@ -4720,6 +4720,40 @@
    }
   },
   {
+   "schublade": "UEFA Champions League · Match Odds",
+   "strom": "betfair",
+   "n": 51,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 409 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.2273,
+   "pl": 11.59,
+   "roiLb": 0.0354,
+   "clv": 0.59,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 30,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 409,
+    "erwartet": 20.5,
+    "nUeber": 18,
+    "ueberschuss": false
+   },
+   "zielN": 81,
+   "seitKandidat": {
+    "ab": "2026-11-04T21:55:20.070073+00:00",
+    "nBei": 51,
+    "nNeu": 0
+   }
+  },
+  {
    "schublade": "Italian Serie B · First Half Goals 0.5",
    "strom": "betfair",
    "n": 48,
@@ -4819,40 +4853,6 @@
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
     "nNeu": 103
-   }
-  },
-  {
-   "schublade": "UEFA Champions League · Match Odds",
-   "strom": "betfair",
-   "n": 52,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 409 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.2037,
-   "pl": 10.59,
-   "roiLb": 0.0116,
-   "clv": 0.65,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 29,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 409,
-    "erwartet": 20.5,
-    "nUeber": 18,
-    "ueberschuss": false
-   },
-   "zielN": 81,
-   "seitKandidat": {
-    "ab": "2026-11-04T21:55:20.070073+00:00",
-    "nBei": 51,
-    "nNeu": 1
    }
   },
   {
@@ -5011,9 +5011,9 @@
    "n": 6076,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0116,
-   "pl": 70.48,
-   "roiLb": -0.0087,
+   "roi": 0.0119,
+   "pl": 72.3,
+   "roiLb": -0.0084,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5055,9 +5055,9 @@
    "n": 5537,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0115,
-   "pl": 63.68,
-   "roiLb": -0.0103,
+   "roi": 0.0119,
+   "pl": 65.89,
+   "roiLb": -0.0099,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5122,6 +5122,28 @@
    "wert": "sharp+steam"
   },
   {
+   "schublade": "Over/Under 2.5 Goals",
+   "strom": "betfair",
+   "n": 6184,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.004,
+   "pl": 24.74,
+   "roiLb": -0.0167,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
    "n": 443,
@@ -5159,28 +5181,6 @@
     "clv": -0.693,
     "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
    }
-  },
-  {
-   "schublade": "Over/Under 2.5 Goals",
-   "strom": "betfair",
-   "n": 6184,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0036,
-   "pl": 22.26,
-   "roiLb": -0.017,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
   },
   {
    "schublade": "Mix bf+money+sharp",
@@ -5299,9 +5299,9 @@
    "n": 4835,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0091,
-   "pl": 44.0,
-   "roiLb": -0.0238,
+   "roi": 0.0094,
+   "pl": 45.45,
+   "roiLb": -0.0236,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5415,9 +5415,9 @@
    "n": 5005,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0066,
-   "pl": -33.03,
-   "roiLb": -0.0311,
+   "roi": -0.0069,
+   "pl": -34.53,
+   "roiLb": -0.0314,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -13905,7 +13905,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "fehltN": 0,
-   "alterTage": 24.0,
+   "alterTage": 24.1,
    "art": "conviction",
    "wert": 4
   },
