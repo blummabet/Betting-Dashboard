@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-16T01:41:57.009803+00:00",
+"generatedAt": "2026-11-16T01:56:54.296580+00:00",
 "byVerdict": {
 "konsens": {
-"n": 931,
-"wins": 555,
-"hitRate": 0.5961,
-"polyN": 910,
-"polyWins": 536,
-"polyHitRate": 0.589,
-"pinnN": 834,
-"pinnHitRate": 0.5995,
-"nRoi": 931,
-"roi": 0.0792,
-"roiLb": 0.028,
-"nClv": 931,
+"n": 934,
+"wins": 557,
+"hitRate": 0.5964,
+"polyN": 913,
+"polyWins": 538,
+"polyHitRate": 0.5893,
+"pinnN": 837,
+"pinnHitRate": 0.5998,
+"nRoi": 934,
+"roi": 0.0796,
+"roiLb": 0.0285,
+"nClv": 934,
 "clv": 0.13,
-"clvLb": -0.0052
+"clvLb": -0.0086
 },
 "uneinig": {
 "n": 48,
@@ -131,6 +131,11 @@
 "wins": 11,
 "hitRate": 0.6471
 },
+"UEFA Nations League A": {
+"n": 17,
+"wins": 14,
+"hitRate": 0.8235
+},
 "UEFA Nations League C": {
 "n": 17,
 "wins": 11,
@@ -150,11 +155,6 @@
 "n": 15,
 "wins": 5,
 "hitRate": 0.3333
-},
-"UEFA Nations League A": {
-"n": 14,
-"wins": 12,
-"hitRate": 0.8571
 },
 "AFC Champions League": {
 "n": 13,
@@ -439,26 +439,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 618,
-"wins": 390,
-"hitRate": 0.6311,
-"nRoi": 618,
-"roi": 0.0404,
-"roiLb": -0.0155,
-"nClv": 618,
-"clv": 0.21,
-"clvLb": 0.03
+"n": 620,
+"wins": 391,
+"hitRate": 0.6306,
+"nRoi": 620,
+"roi": 0.0391,
+"roiLb": -0.0167,
+"nClv": 620,
+"clv": 0.2,
+"clvLb": 0.0176
 },
 "weak": {
-"n": 362,
-"wins": 182,
-"hitRate": 0.5028,
-"nRoi": 362,
-"roi": 0.1366,
-"roiLb": 0.0357,
-"nClv": 362,
-"clv": -0.02,
-"clvLb": -0.2287
+"n": 363,
+"wins": 183,
+"hitRate": 0.5041,
+"nRoi": 363,
+"roi": 0.14,
+"roiLb": 0.0392,
+"nClv": 363,
+"clv": -0.01,
+"clvLb": -0.217
 }
 },
 "divergence": {
@@ -470,6 +470,63 @@
 "polyRate": 0.4043
 },
 "recent": [
+{
+"matchId": "36299529",
+"home": "France",
+"away": "Türkiye",
+"league": "UEFA Nations League A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "France",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-15T19:45:00Z",
+"settledAt": "2026-11-16T01:56:54.028343+00:00"
+},
+{
+"matchId": "36291346",
+"home": "Spain",
+"away": "England",
+"league": "UEFA Nations League A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Spain",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-11-15T19:45:00Z",
+"settledAt": "2026-11-16T01:56:54.028343+00:00"
+},
+{
+"matchId": "36303915",
+"home": "Belgium",
+"away": "Italy",
+"league": "UEFA Nations League A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Belgium",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-11-15T19:45:00Z",
+"settledAt": "2026-11-16T01:56:54.028343+00:00"
+},
 {
 "matchId": "36318913",
 "home": "Finland",
@@ -1172,76 +1229,19 @@
 ],
 "kickoff": "2026-11-11T22:00:00Z",
 "settledAt": "2026-11-12T01:01:01.448780+00:00"
-},
-{
-"matchId": "36303965",
-"home": "Tavernes",
-"away": "Valencia",
-"league": "Spanish Copa del Rey",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Valencia",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-6
-],
-"kickoff": "2026-11-10T20:00:00Z",
-"settledAt": "2026-11-10T23:12:59.747109+00:00"
-},
-{
-"matchId": "36277810",
-"home": "Tecnico Universitario",
-"away": "Manta FC",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tecnico Universitario",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-11-09T20:30:00Z",
-"settledAt": "2026-11-09T23:39:41.643097+00:00"
-},
-{
-"matchId": "36275458",
-"home": "ASD Pineto Calcio",
-"away": "Pesaro",
-"league": "Italian Serie C",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "ASD Pineto Calcio",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-11-09T19:30:00Z",
-"settledAt": "2026-11-09T22:39:19.754324+00:00"
 }
 ],
 "global": {
-"n": 980,
-"wins": 572,
-"hitRate": 0.5837,
-"nRoi": 980,
-"roi": 0.076,
-"roiLb": 0.0246,
-"nClv": 980,
+"n": 983,
+"wins": 574,
+"hitRate": 0.5839,
+"nRoi": 983,
+"roi": 0.0764,
+"roiLb": 0.0251,
+"nClv": 983,
 "clv": 0.12,
-"clvLb": -0.0132
+"clvLb": -0.0164
 },
-"pending": 12,
+"pending": 9,
 "ausgeschlossenLive": 1008
 }
