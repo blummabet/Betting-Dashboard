@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-16T19:14:12.154592+00:00",
+ "generatedAt": "2026-11-16T19:29:44.359614+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -17,21 +17,21 @@
    "n": 6565,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +14.2 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.2138,
-   "pl": 1403.66,
-   "roiLb": 0.1422,
+   "roi": 0.2134,
+   "pl": 1400.97,
+   "roiLb": 0.1417,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 738,
+   "noetigNRoi": 741,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 757,
-    "lo": 508,
-    "hi": 1294,
+    "median": 730,
+    "lo": 492,
+    "hi": 1358,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -55,7 +55,7 @@
     "roiBei": 0.0529,
     "rausgefallen": 0,
     "nNeu": 71,
-    "roiNeu": 14.9305
+    "roiNeu": 14.8935
    }
   },
   {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.038,
     "schaetzbar": false
    },
-   "alterTage": 7.8,
+   "alterTage": 7.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -580,10 +580,10 @@
    "strom": "betfair",
    "n": 6441,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.5 %) — aber von 410 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0405,
-   "pl": 260.86,
-   "roiLb": 0.0147,
+   "grund": "ROI belegt (Untergrenze +1.4 %) — aber von 410 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0402,
+   "pl": 258.93,
+   "roiLb": 0.0144,
    "clv": 0.39,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -747,7 +747,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 382.0,
+   "pl": 379.52,
    "roi": 0.0095,
    "clv": 0.39,
    "belegte": 17
@@ -769,7 +769,7 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "roiLb": 0.1422,
+   "roiLb": 0.1417,
    "clvUrteil": "nicht erhoben",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -1126,6 +1126,18 @@
    "belegt": false
   },
   {
+   "liga": "Friendlies International U21",
+   "n": 49,
+   "wins": 29,
+   "hit": 0.5918,
+   "hitLb": 0.4745,
+   "roi": 0.26,
+   "roiLb": -0.0352,
+   "pl": 12.74,
+   "clv": 0.245,
+   "belegt": false
+  },
+  {
    "liga": "French Cup",
    "n": 39,
    "wins": 26,
@@ -1159,18 +1171,6 @@
    "roiLb": -0.0373,
    "pl": 16.73,
    "clv": 0.261,
-   "belegt": false
-  },
-  {
-   "liga": "Friendlies International U21",
-   "n": 42,
-   "wins": 25,
-   "hit": 0.5952,
-   "hitLb": 0.4686,
-   "roi": 0.2893,
-   "roiLb": -0.0376,
-   "pl": 12.15,
-   "clv": 0.31,
    "belegt": false
   },
   {
@@ -1291,18 +1291,6 @@
    "roiLb": -0.0579,
    "pl": 11.18,
    "clv": 0.09,
-   "belegt": false
-  },
-  {
-   "liga": "Japanese J League Cup",
-   "n": 140,
-   "wins": 82,
-   "hit": 0.5857,
-   "hitLb": 0.5162,
-   "roi": 0.0758,
-   "roiLb": -0.0586,
-   "pl": 10.61,
-   "clv": 0.228,
    "belegt": false
   },
   {
@@ -1507,6 +1495,18 @@
    "roiLb": -0.0781,
    "pl": 6.33,
    "clv": -0.254,
+   "belegt": false
+  },
+  {
+   "liga": "Japanese J League Cup",
+   "n": 133,
+   "wins": 77,
+   "hit": 0.5789,
+   "hitLb": 0.5076,
+   "roi": 0.0579,
+   "roiLb": -0.0794,
+   "pl": 7.7,
+   "clv": 0.239,
    "belegt": false
   },
   {
@@ -4267,21 +4267,21 @@
    "n": 6565,
    "status": "freigegeben",
    "grund": "ROI belegt (Untergrenze +14.2 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.2138,
-   "pl": 1403.66,
-   "roiLb": 0.1422,
+   "roi": 0.2134,
+   "pl": 1400.97,
+   "roiLb": 0.1417,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 738,
+   "noetigNRoi": 741,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 757,
-    "lo": 508,
-    "hi": 1294,
+    "median": 730,
+    "lo": 492,
+    "hi": 1358,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -4305,7 +4305,7 @@
     "roiBei": 0.0529,
     "rausgefallen": 0,
     "nNeu": 71,
-    "roiNeu": 14.9305
+    "roiNeu": 14.8935
    }
   },
   {
@@ -4369,7 +4369,7 @@
     "nieAnteil": 0.038,
     "schaetzbar": false
    },
-   "alterTage": 7.8,
+   "alterTage": 7.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4828,10 +4828,10 @@
    "strom": "betfair",
    "n": 6441,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.5 %) — aber von 410 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.0405,
-   "pl": 260.86,
-   "roiLb": 0.0147,
+   "grund": "ROI belegt (Untergrenze +1.4 %) — aber von 410 gleichzeitig geprüften Schubladen legt der Zufall allein 20.5 über diese Hürde, und drüber liegen 18. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.0402,
+   "pl": 258.93,
+   "roiLb": 0.0144,
    "clv": 0.39,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -5069,9 +5069,9 @@
    "n": 6076,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0094,
-   "pl": 57.11,
-   "roiLb": -0.0109,
+   "roi": 0.0096,
+   "pl": 58.33,
+   "roiLb": -0.0106,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5093,7 +5093,7 @@
    "grund": "ROI nicht belegt über null",
    "roi": 0.0108,
    "pl": 59.78,
-   "roiLb": -0.011,
+   "roiLb": -0.0109,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5141,8 +5141,8 @@
    "n": 6184,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0037,
-   "pl": 22.88,
+   "roi": 0.0038,
+   "pl": 23.5,
    "roiLb": -0.0169,
    "clv": null,
    "clvLb": null,
@@ -5252,9 +5252,9 @@
    "n": 4836,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0101,
-   "pl": 48.84,
-   "roiLb": -0.0229,
+   "roi": 0.0095,
+   "pl": 45.94,
+   "roiLb": -0.0234,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5473,8 +5473,8 @@
    "n": 5005,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0091,
-   "pl": -45.55,
+   "roi": -0.009,
+   "pl": -45.04,
    "roiLb": -0.0335,
    "clv": null,
    "clvLb": null,
@@ -6631,7 +6631,7 @@
     "nieAnteil": 0.858,
     "schaetzbar": false
    },
-   "alterTage": 7.8,
+   "alterTage": 7.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
