@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-11-17T21:32:07.419810+00:00",
+"generatedAt": "2026-11-17T21:47:32.457710+00:00",
 "byVerdict": {
 "konsens": {
-"n": 940,
+"n": 942,
 "wins": 562,
-"hitRate": 0.5979,
+"hitRate": 0.5966,
 "polyN": 914,
 "polyWins": 538,
 "polyHitRate": 0.5886,
-"pinnN": 843,
-"pinnHitRate": 0.6014,
-"nRoi": 940,
-"roi": 0.0825,
-"roiLb": 0.0316,
-"nClv": 940,
+"pinnN": 845,
+"pinnHitRate": 0.6,
+"nRoi": 942,
+"roi": 0.0802,
+"roiLb": 0.0293,
+"nClv": 942,
 "clv": 0.12,
-"clvLb": -0.017
+"clvLb": -0.0196
 },
 "uneinig": {
-"n": 48,
-"wins": 17,
-"hitRate": 0.3542,
+"n": 49,
+"wins": 18,
+"hitRate": 0.3673,
 "polyN": 47,
 "polyWins": 19,
 "polyHitRate": 0.4043,
-"pinnN": 36,
-"pinnHitRate": 0.3056,
-"nRoi": 48,
-"roi": 0.0365,
-"roiLb": -0.3039,
-"nClv": 48,
-"clv": -0.13,
-"clvLb": -0.6501
+"pinnN": 37,
+"pinnHitRate": 0.2973,
+"nRoi": 49,
+"roi": 0.0663,
+"roiLb": -0.2706,
+"nClv": 49,
+"clv": -0.17,
+"clvLb": -0.6844
 },
 "teil": {
 "n": 1,
@@ -122,9 +122,14 @@
 "hitRate": 0.3846
 },
 "UEFA Nations League A": {
+"n": 20,
+"wins": 17,
+"hitRate": 0.85
+},
+"UEFA Nations League B": {
 "n": 19,
-"wins": 16,
-"hitRate": 0.8421
+"wins": 7,
+"hitRate": 0.3684
 },
 "UEFA Nations League C": {
 "n": 19,
@@ -140,11 +145,6 @@
 "n": 17,
 "wins": 11,
 "hitRate": 0.6471
-},
-"UEFA Nations League B": {
-"n": 17,
-"wins": 7,
-"hitRate": 0.4118
 },
 "English Sky Bet League 1": {
 "n": 16,
@@ -450,26 +450,83 @@
 "clvLb": 0.0162
 },
 "weak": {
-"n": 368,
-"wins": 188,
-"hitRate": 0.5109,
-"nRoi": 368,
-"roi": 0.1496,
-"roiLb": 0.0499,
-"nClv": 368,
-"clv": -0.03,
-"clvLb": -0.2342
+"n": 371,
+"wins": 189,
+"hitRate": 0.5094,
+"nRoi": 371,
+"roi": 0.147,
+"roiLb": 0.0477,
+"nClv": 371,
+"clv": -0.04,
+"clvLb": -0.2449
 }
 },
 "divergence": {
-"n": 48,
-"betfairWins": 17,
-"betfairRate": 0.3542,
+"n": 49,
+"betfairWins": 18,
+"betfairRate": 0.3673,
 "polyN": 47,
 "polyWins": 19,
 "polyRate": 0.4043
 },
 "recent": [
+{
+"matchId": "36308392",
+"home": "Denmark",
+"away": "Norway",
+"league": "UEFA Nations League A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Norway",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-11-17T19:45:00Z",
+"settledAt": "2026-11-17T21:47:32.169857+00:00"
+},
+{
+"matchId": "36308404",
+"home": "Israel",
+"away": "Austria",
+"league": "UEFA Nations League B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Austria",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-17T19:45:00Z",
+"settledAt": "2026-11-17T21:47:32.169857+00:00"
+},
+{
+"matchId": "36308413",
+"home": "Hungary",
+"away": "Northern Ireland",
+"league": "UEFA Nations League B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hungary",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-17T19:45:00Z",
+"settledAt": "2026-11-17T21:47:32.169857+00:00"
+},
 {
 "matchId": "36308400",
 "home": "Switzerland",
@@ -1172,76 +1229,19 @@
 ],
 "kickoff": "2026-11-12T19:45:00Z",
 "settledAt": "2026-11-12T22:48:33.713320+00:00"
-},
-{
-"matchId": "36260326",
-"home": "Albania",
-"away": "Finland",
-"league": "UEFA Nations League C",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Albania",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-12T19:45:00Z",
-"settledAt": "2026-11-12T22:48:33.713320+00:00"
-},
-{
-"matchId": "36190241",
-"home": "Italy",
-"away": "France",
-"league": "UEFA Nations League A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "France",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-12T19:45:00Z",
-"settledAt": "2026-11-12T22:48:33.713320+00:00"
-},
-{
-"matchId": "36260212",
-"home": "San Marino",
-"away": "Belarus",
-"league": "UEFA Nations League C",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Belarus",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-11-12T19:45:00Z",
-"settledAt": "2026-11-12T22:48:33.713320+00:00"
 }
 ],
 "global": {
-"n": 989,
-"wins": 579,
-"hitRate": 0.5854,
-"nRoi": 989,
-"roi": 0.0792,
-"roiLb": 0.0281,
-"nClv": 989,
+"n": 992,
+"wins": 580,
+"hitRate": 0.5847,
+"nRoi": 992,
+"roi": 0.0784,
+"roiLb": 0.0274,
+"nClv": 992,
 "clv": 0.11,
-"clvLb": -0.0244
+"clvLb": -0.0289
 },
-"pending": 15,
+"pending": 12,
 "ausgeschlossenLive": 996
 }
