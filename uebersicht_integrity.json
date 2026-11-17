@@ -106,7 +106,7 @@
     },
     {
       "label": "Money Map meldet ihre Luecken",
-      "severity": "error",
+      "severity": "warn",
       "failures": [],
       "nFail": 0,
       "ok": true,
@@ -171,7 +171,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "102 Picks im Fenster, 24 % ohne Preis-Signal."
+      "hinweis": "98 Picks im Fenster, 26 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -200,11 +200,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.8 %, UG +3.4 %, Geldseite +1.6 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+7.5 %, UG +3.2 %, Geldseite +1.7 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6558 (UG +12.0 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6575 (UG +18.3 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -226,10 +226,9 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "liga-aufstellungen.yml: Cron sagt alle 20 Min, gemessen alle 34 Min (liga-aufstellungen, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 39 Laeufen/Tag, geliefert werden eher 23. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 81 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 9. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 81 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
-      "nFail": 2,
+      "nFail": 1,
       "ok": false,
       "hinweis": ""
     },
@@ -237,11 +236,10 @@
       "label": "Der Deckel hat Luft",
       "severity": "warn",
       "failures": [
-        "betfair.yml: laengster Lauf 42.0 Min (Median 1.5) bei einem Deckel von 14 Min — 300 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
-        "poly-global-scan.yml: laengster Lauf 19.2 Min (Median 0.7) bei einem Deckel von 25 Min — 77 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
+        "betfair.yml: laengster Lauf 12.9 Min (Median 1.4) bei einem Deckel von 14 Min — 92 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
         "poly-live-scan.yml: laengster Lauf 11.7 Min (Median 5.4) bei einem Deckel von 12 Min — 98 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
       ],
-      "nFail": 3,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -257,8 +255,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 547 h — die Datei selbst ist 547 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 537 h — die Datei selbst ist 537 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 556 h — die Datei selbst ist 556 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 545 h — die Datei selbst ist 545 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -268,7 +266,7 @@
       "label": "Public-Stille ist erklaert",
       "severity": "warn",
       "failures": [
-        "Betfair-Public schweigt seit 14 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (266), fix (180), drift (134)"
+        "Betfair-Public schweigt seit 15 Tagen (2026-11-02), obwohl Alarme ankamen — sie bleiben haengen an: einseitig (274), fix (199), drift (141)"
       ],
       "nFail": 1,
       "ok": false,
@@ -280,7 +278,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1447 Zeilen · 1434 abgerechnet · 1 offen"
+      "hinweis": "1454 Zeilen · 1439 abgerechnet · 3 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -327,24 +325,22 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [
-        "liga-data.json: der Datenbau hat zuletzt vor 18 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 832.7 h, MLS 840.4 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 841.3 h, MLS 848.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 12,
-  "generatedAt": "2026-11-16T17:28:14.135550+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-11-17T01:59:35.927386+00:00"
 }
