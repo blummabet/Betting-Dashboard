@@ -1,8 +1,23 @@
 {
-"generatedAt": "2026-11-18T20:20:12.548486+00:00",
-"n": 85,
+"generatedAt": "2026-11-18T20:35:44.239424+00:00",
+"n": 88,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
+"36333181": {
+"moneySide": "home",
+"moneyName": "Carabobo FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Venezuelan Cup",
+"kickoff": "2026-11-18T20:30:00Z",
+"verdict": "no_anchor",
+"totVol": 2146,
+"ankerGrund": {
+"spiel": "Carabobo FC v Zamora FC",
+"grund": "kein_kandidat"
+}
+},
 "36335279": {
 "moneySide": "home",
 "moneyName": "ASC Gendrim",
@@ -12,7 +27,7 @@
 "league": "Mauritanian Ligue 1",
 "kickoff": "2026-11-18T19:50:00Z",
 "verdict": "no_anchor",
-"totVol": 97,
+"totVol": 231,
 "ankerGrund": {
 "spiel": "ASC Gendrim v ASC Tevragh-Zeina",
 "grund": "kein_kandidat"
@@ -27,12 +42,28 @@
 "league": "Scottish Ladies Premier League",
 "kickoff": "2026-11-18T19:45:00Z",
 "verdict": "no_anchor",
-"totVol": 7206,
+"totVol": 9058,
 "ankerGrund": {
 "spiel": "Partick Thistle (W) v Glasgow City (W)",
 "grund": "kein_kandidat",
 "naechster": "Manchester City v Fulham"
 }
+},
+"36334572": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": {
+"home": 0.2102,
+"draw": 0.4242,
+"away": 0.3656,
+"fav": "draw"
+},
+"pinnMove": null,
+"league": "Spanish Copa del Rey",
+"kickoff": "2026-11-18T19:30:00Z",
+"verdict": "konsens",
+"totVol": 4304
 },
 "36328124": {
 "moneySide": "home",
@@ -43,31 +74,11 @@
 "league": "Uruguayan Segunda Division",
 "kickoff": "2026-11-18T19:30:00Z",
 "verdict": "no_anchor",
-"totVol": 4840,
+"totVol": 5903,
 "ankerGrund": {
 "spiel": "Atenas v Centro Atletico Fenix",
 "grund": "kein_kandidat",
 "naechster": "Getafe v Atlético Madrid"
-}
-},
-"36334583": {
-"moneySide": "away",
-"moneyName": "Tenerife",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Spanish Copa del Rey",
-"kickoff": "2026-11-18T19:00:00Z",
-"verdict": "konsens",
-"totVol": 13976,
-"ankerGrund": {
-"spiel": "CD Badajoz v Tenerife",
-"grund": "kein_pinnacle",
-"kandidat": "Badajoz v Tenerife",
-"key": "soccer_spain_copa_del_rey",
-"nSoft": 18,
-"pinnacleImEvent": false,
-"nBuecher": 18
 }
 },
 "36335301": {
@@ -86,24 +97,6 @@
 "naechster": "Huddersfield Town v Leicester City"
 }
 },
-"36330816": {
-"moneySide": "home",
-"moneyName": "London City Lionesses",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "English Ladies League Cup",
-"kickoff": "2026-11-18T19:00:00Z",
-"verdict": "no_anchor",
-"totVol": 10397,
-"ankerGrund": {
-"spiel": "London City Lionesses v Brighton (W)",
-"kandidat": "Hull City v Brighton and Hove Albion",
-"key": "soccer_epl",
-"score": 0.58,
-"grund": "name"
-}
-},
 "36330786": {
 "moneySide": "away",
 "moneyName": "Liverpool (W)",
@@ -118,6 +111,24 @@
 "spiel": "Nottm Forest (W) v Liverpool (W)",
 "grund": "kein_kandidat",
 "naechster": "Bournemouth v Nottingham Forest"
+}
+},
+"36330816": {
+"moneySide": "away",
+"moneyName": "Brighton (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "English Ladies League Cup",
+"kickoff": "2026-11-18T19:00:00Z",
+"verdict": "no_anchor",
+"totVol": 13712,
+"ankerGrund": {
+"spiel": "London City Lionesses v Brighton (W)",
+"kandidat": "Hull City v Brighton and Hove Albion",
+"key": "soccer_epl",
+"score": 0.58,
+"grund": "name"
 }
 },
 "36333506": {
@@ -151,53 +162,37 @@
 "grund": "kein_kandidat"
 }
 },
-"36299325": {
-"moneySide": "home",
-"moneyName": "Remo",
-"poly": null,
-"pinn": {
-"home": 0.6642,
-"draw": 0.2046,
-"away": 0.1312,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Brazilian Serie A",
-"kickoff": "2026-11-18T23:00:00Z",
-"verdict": "konsens",
-"totVol": 12065
-},
 "36293516": {
 "moneySide": "away",
 "moneyName": "Santos",
 "poly": null,
 "pinn": {
-"home": 0.2582,
-"draw": 0.2682,
-"away": 0.4736,
+"home": 0.2552,
+"draw": 0.2671,
+"away": 0.4777,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "Brazilian Serie A",
 "kickoff": "2026-11-18T22:30:00Z",
 "verdict": "konsens",
-"totVol": 10695
+"totVol": 10957
 },
 "36293515": {
 "moneySide": "away",
 "moneyName": "Bahia",
 "poly": null,
 "pinn": {
-"home": 0.3939,
-"draw": 0.2684,
-"away": 0.3376,
+"home": 0.3903,
+"draw": 0.2689,
+"away": 0.3408,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Brazilian Serie A",
 "kickoff": "2026-11-19T00:30:00Z",
 "verdict": "uneinig",
-"totVol": 10363
+"totVol": 10367
 },
 "36328123": {
 "moneySide": "home",
@@ -208,26 +203,11 @@
 "league": "Uruguayan Segunda Division",
 "kickoff": "2026-11-18T22:30:00Z",
 "verdict": "no_anchor",
-"totVol": 608,
+"totVol": 610,
 "ankerGrund": {
 "spiel": "Colon FC v Club Oriental de La Paz",
 "grund": "kein_kandidat",
 "naechster": "Alavés v Deportivo La Coruña"
-}
-},
-"36333181": {
-"moneySide": "home",
-"moneyName": "Carabobo FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Venezuelan Cup",
-"kickoff": "2026-11-18T20:30:00Z",
-"verdict": "no_anchor",
-"totVol": 2043,
-"ankerGrund": {
-"spiel": "Carabobo FC v Zamora FC",
-"grund": "kein_kandidat"
 }
 },
 "36333321": {
@@ -239,7 +219,7 @@
 "league": "Venezuelan Cup",
 "kickoff": "2026-11-18T22:00:00Z",
 "verdict": "no_anchor",
-"totVol": 919,
+"totVol": 958,
 "ankerGrund": {
 "spiel": "Deportivo Tachira v Puerto Cabello",
 "grund": "kein_kandidat",
@@ -308,7 +288,7 @@
 "league": "Italian Serie A",
 "kickoff": "2026-11-21T14:00:00Z",
 "verdict": "konsens",
-"totVol": 17297
+"totVol": 17646
 },
 "36293470": {
 "moneySide": "away",
@@ -340,7 +320,7 @@
 "league": "Spanish La Liga",
 "kickoff": "2026-11-20T20:00:00Z",
 "verdict": "konsens",
-"totVol": 14695
+"totVol": 16249
 },
 "36292923": {
 "moneySide": "home",
@@ -356,7 +336,27 @@
 "league": "English Premier League",
 "kickoff": "2026-11-21T15:00:00Z",
 "verdict": "konsens",
-"totVol": 13629
+"totVol": 13689
+},
+"36330371": {
+"moneySide": "home",
+"moneyName": "Barcelona (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Women's Champions League",
+"kickoff": "2026-11-19T20:00:00Z",
+"verdict": "konsens",
+"totVol": 6586,
+"ankerGrund": {
+"spiel": "Barcelona (W) v Servette FC (W)",
+"grund": "kein_pinnacle",
+"kandidat": "Barcelona v Servette FC",
+"key": "soccer_uefa_champs_league_women",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15
+}
 },
 "36293779": {
 "moneySide": "home",
@@ -390,26 +390,6 @@
 "verdict": "konsens",
 "totVol": 9447
 },
-"36330371": {
-"moneySide": "home",
-"moneyName": "Barcelona (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "UEFA Women's Champions League",
-"kickoff": "2026-11-19T20:00:00Z",
-"verdict": "konsens",
-"totVol": 6586,
-"ankerGrund": {
-"spiel": "Barcelona (W) v Servette FC (W)",
-"grund": "kein_pinnacle",
-"kandidat": "Barcelona v Servette FC",
-"key": "soccer_uefa_champs_league_women",
-"nSoft": 16,
-"pinnacleImEvent": false,
-"nBuecher": 16
-}
-},
 "36293556": {
 "moneySide": "away",
 "moneyName": "Arsenal",
@@ -426,22 +406,6 @@
 "verdict": "konsens",
 "totVol": 8463
 },
-"36294900": {
-"moneySide": "away",
-"moneyName": "Paris St-G",
-"poly": null,
-"pinn": {
-"home": 0.1584,
-"draw": 0.1852,
-"away": 0.6564,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "French Ligue 1",
-"kickoff": "2026-11-21T16:15:00Z",
-"verdict": "konsens",
-"totVol": 6686
-},
 "36294873": {
 "moneySide": "home",
 "moneyName": "Chelsea",
@@ -457,6 +421,22 @@
 "kickoff": "2026-11-21T15:00:00Z",
 "verdict": "konsens",
 "totVol": 6571
+},
+"36294900": {
+"moneySide": "away",
+"moneyName": "Paris St-G",
+"poly": null,
+"pinn": {
+"home": 0.1584,
+"draw": 0.1852,
+"away": 0.6564,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "French Ligue 1",
+"kickoff": "2026-11-21T16:15:00Z",
+"verdict": "konsens",
+"totVol": 6699
 },
 "36291552": {
 "moneySide": "away",
@@ -483,7 +463,7 @@
 "league": "German Bundesliga",
 "kickoff": "2026-11-21T14:30:00Z",
 "verdict": "no_anchor",
-"totVol": 5568,
+"totVol": 5659,
 "ankerGrund": {
 "spiel": "Mgladbach v Dortmund",
 "kandidat": "Borussia Monchengladbach v Borussia Dortmund",
@@ -507,6 +487,22 @@
 "kickoff": "2026-11-21T14:00:00Z",
 "verdict": "konsens",
 "totVol": 4449
+},
+"36298788": {
+"moneySide": "home",
+"moneyName": "Eintracht Frankfurt",
+"poly": null,
+"pinn": {
+"home": 0.4013,
+"draw": 0.2404,
+"away": 0.3583,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "German Bundesliga",
+"kickoff": "2026-11-21T14:30:00Z",
+"verdict": "konsens",
+"totVol": 3223
 },
 "36293561": {
 "moneySide": "away",
@@ -538,23 +534,7 @@
 "league": "French Ligue 1",
 "kickoff": "2026-11-20T19:45:00Z",
 "verdict": "uneinig",
-"totVol": 3315
-},
-"36298788": {
-"moneySide": "home",
-"moneyName": "Eintracht Frankfurt",
-"poly": null,
-"pinn": {
-"home": 0.4013,
-"draw": 0.2404,
-"away": 0.3583,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "German Bundesliga",
-"kickoff": "2026-11-21T14:30:00Z",
-"verdict": "konsens",
-"totVol": 3223
+"totVol": 3329
 },
 "36291384": {
 "moneySide": "home",
@@ -716,6 +696,22 @@
 "verdict": "konsens",
 "totVol": 1126
 },
+"36325159": {
+"moneySide": "away",
+"moneyName": "Lyon (W)",
+"poly": null,
+"pinn": {
+"home": 0.2244,
+"draw": 0.2451,
+"away": 0.5305,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "UEFA Women's Champions League",
+"kickoff": "2026-11-19T20:00:00Z",
+"verdict": "konsens",
+"totVol": 344
+},
 "36295647": {
 "moneySide": "home",
 "moneyName": "Lens",
@@ -746,7 +742,7 @@
 "league": "German Bundesliga 2",
 "kickoff": "2026-11-20T17:30:00Z",
 "verdict": "konsens",
-"totVol": 486
+"totVol": 487
 },
 "36313067": {
 "moneySide": "draw",
@@ -795,22 +791,6 @@
 "kickoff": "2026-11-21T19:45:00Z",
 "verdict": "konsens",
 "totVol": 128
-},
-"36325159": {
-"moneySide": "away",
-"moneyName": "Lyon (W)",
-"poly": null,
-"pinn": {
-"home": 0.2244,
-"draw": 0.2451,
-"away": 0.5305,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "UEFA Women's Champions League",
-"kickoff": "2026-11-19T20:00:00Z",
-"verdict": "konsens",
-"totVol": 344
 },
 "36324784": {
 "moneySide": "home",
@@ -1047,15 +1027,15 @@
 }
 },
 "36318926": {
-"moneySide": "away",
-"moneyName": "Hatta",
+"moneySide": "home",
+"moneyName": "Al Wasl",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "UAE Arabian Gulf League",
 "kickoff": "2026-11-19T12:45:00Z",
 "verdict": "no_anchor",
-"totVol": 36,
+"totVol": 58,
 "ankerGrund": {
 "spiel": "Al Wasl v Hatta",
 "grund": "kein_kandidat"
@@ -1352,6 +1332,70 @@
 "spiel": "ZED FC v Smouha",
 "grund": "kein_kandidat"
 }
+},
+"36291424": {
+"moneySide": "home",
+"moneyName": "EC Vitoria Salvador",
+"poly": null,
+"pinn": {
+"home": 0.3506,
+"draw": 0.2799,
+"away": 0.3695,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "Brazilian Serie A",
+"kickoff": "2026-11-19T22:30:00Z",
+"verdict": "uneinig",
+"totVol": 544
+},
+"36335462": {
+"moneySide": "home",
+"moneyName": "Independiente Yumbo",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Colombian Primera B",
+"kickoff": "2026-11-19T22:30:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Independiente Yumbo v Envigado",
+"grund": "kein_kandidat",
+"naechster": "Argentinos Juniors v Independiente"
+}
+},
+"36335804": {
+"moneySide": "home",
+"moneyName": "Union Magdalena",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Colombian Primera B",
+"kickoff": "2026-11-19T22:30:00Z",
+"verdict": "no_anchor",
+"totVol": 10,
+"ankerGrund": {
+"spiel": "Union Magdalena v Boca Juniors de Cali",
+"grund": "kein_kandidat",
+"naechster": "Boca Juniors v Independiente Rivadavia"
+}
+},
+"36287138": {
+"moneySide": "home",
+"moneyName": "Vasco Da Gama",
+"poly": null,
+"pinn": {
+"home": 0.581,
+"draw": 0.233,
+"away": 0.1861,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Brazilian Serie A",
+"kickoff": "2026-11-19T22:30:00Z",
+"verdict": "konsens",
+"totVol": 237
 }
 }
 }
