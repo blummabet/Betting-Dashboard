@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-11-18T09:48:31.579914+00:00",
-"count": 1,
+"generatedAt": "2026-11-18T10:03:54.028132+00:00",
+"count": 2,
 "covered": 1,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -53,17 +53,17 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
 "oddsKeysMitDaten": 46,
-"oddsEvents": 487,
+"oddsEvents": 486,
 "oddsTotals": {
-"versucht": 1,
+"versucht": 2,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 1,
+"gewollt": 2,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1001916,
-"remaining": 3998084,
+"used": 1003641,
+"remaining": 3996359,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -104,9 +104,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8737,
+"home": 0.8736,
 "draw": 0.0795,
-"away": 0.0468,
+"away": 0.047,
 "fav": "home",
 "n": 48
 },
@@ -121,6 +121,39 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36299314",
+"home": "Flamengo",
+"away": "Athletico-PR",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-11-18T23:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Flamengo",
+"moneySharePct": 80,
+"moneyOdd": 1.24,
+"moneyDir": "out",
+"totVol": 4975,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Flamengo v Athletico-PR",
+"kandidat": "Flamengo v Atletico Paranaense",
+"key": "soccer_brazil_campeonato",
+"score": 1.0,
+"grund": "name"
+}
 }
 ],
 "ankerN": 13,
@@ -128,9 +161,9 @@
 "ankerMit": 12,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 62,
+"kein_kandidat": 61,
 "kein_pinnacle": 1,
-"name": 2
+"name": 3
 },
 "beispiele": [
 {
@@ -145,13 +178,13 @@
 "liga": "UEFA Women's Champions League"
 },
 {
-"spiel": "Flamengo v Athletico-PR",
+"spiel": "Atletico Independiente v Tauro FC",
 "kandidat": "Flamengo v Atletico Paranaense",
 "key": "soccer_brazil_campeonato",
-"score": 1.0,
+"score": 0.5,
 "grund": "name",
-"matchId": "36299314",
-"liga": "Brazilian Serie A"
+"matchId": "36333662",
+"liga": "Panamanian Premier League"
 },
 {
 "spiel": "London City Lionesses v Brighton (W)",
@@ -161,6 +194,15 @@
 "grund": "name",
 "matchId": "36330816",
 "liga": "English Ladies League Cup"
+},
+{
+"spiel": "Flamengo v Athletico-PR",
+"kandidat": "Flamengo v Atletico Paranaense",
+"key": "soccer_brazil_campeonato",
+"score": 1.0,
+"grund": "name",
+"matchId": "36299314",
+"liga": "Brazilian Serie A"
 }
 ]
 }
