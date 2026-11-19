@@ -88,18 +88,19 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1108113 verbraucht, 3891887 uebrig"
+      "note": "Kontingent: 1110962 verbraucht, 3889038 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“"
+        "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
+        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“"
       ],
-      "note": "ohne Anker: kein_kandidat 69 · kein_pinnacle 1 · name 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 78 · kein_pinnacle 1 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -184,5 +185,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-19T12:22:42.220105+00:00"
+  "generatedAt": "2026-11-19T13:07:21.416878+00:00"
 }
