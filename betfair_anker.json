@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-19T06:05:55.481879+00:00",
+"generatedAt": "2026-11-19T06:20:59.318834+00:00",
 "n": 80,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
@@ -12,7 +12,7 @@
 "league": "Bangalore Super Division League",
 "kickoff": "2026-11-19T05:30:00Z",
 "verdict": "no_anchor",
-"totVol": 925,
+"totVol": 1408,
 "ankerGrund": {
 "spiel": "Bangalore Dream United v FC Agniputhra",
 "grund": "kein_kandidat",
@@ -28,7 +28,7 @@
 "league": "Other Competitions Soccer",
 "kickoff": "2026-11-19T12:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1273,
+"totVol": 1316,
 "ankerGrund": {
 "spiel": "Persib Bandung v Shan United",
 "grund": "kein_kandidat",
@@ -44,7 +44,7 @@
 "league": "Other Competitions Soccer",
 "kickoff": "2026-11-19T12:00:00Z",
 "verdict": "no_anchor",
-"totVol": 30,
+"totVol": 75,
 "ankerGrund": {
 "spiel": "Svay Rieng FC v Port FC",
 "grund": "kein_kandidat",
@@ -76,25 +76,45 @@
 "league": "Slovakian Cup",
 "kickoff": "2026-11-19T12:00:00Z",
 "verdict": "no_anchor",
-"totVol": 109,
+"totVol": 149,
 "ankerGrund": {
 "spiel": "Lokomotiva Zvolen v FC Kosice",
 "grund": "kein_kandidat"
 }
 },
 "36337091": {
-"moneySide": "home",
-"moneyName": "MOIK Baku",
+"moneySide": "draw",
+"moneyName": "The Draw",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Azerbaijan 1st Division",
 "kickoff": "2026-11-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 7,
 "ankerGrund": {
 "spiel": "Moik Baku v Sabail",
 "grund": "kein_kandidat"
+}
+},
+"36330371": {
+"moneySide": "home",
+"moneyName": "Barcelona (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Women's Champions League",
+"kickoff": "2026-11-19T20:00:00Z",
+"verdict": "konsens",
+"totVol": 13701,
+"ankerGrund": {
+"spiel": "Barcelona (W) v Servette FC (W)",
+"grund": "kein_pinnacle",
+"kandidat": "Barcelona v Servette FC",
+"key": "soccer_uefa_champs_league_women",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15
 }
 },
 "36289341": {
@@ -113,25 +133,21 @@
 "verdict": "konsens",
 "totVol": 16461
 },
-"36330371": {
+"36293332": {
 "moneySide": "home",
-"moneyName": "Barcelona (W)",
+"moneyName": "Lazio",
 "poly": null,
-"pinn": null,
+"pinn": {
+"home": 0.7003,
+"draw": 0.1837,
+"away": 0.116,
+"fav": "home"
+},
 "pinnMove": null,
-"league": "UEFA Women's Champions League",
-"kickoff": "2026-11-19T20:00:00Z",
+"league": "Italian Serie A",
+"kickoff": "2026-11-21T14:00:00Z",
 "verdict": "konsens",
-"totVol": 13701,
-"ankerGrund": {
-"spiel": "Barcelona (W) v Servette FC (W)",
-"grund": "kein_pinnacle",
-"kandidat": "Barcelona v Servette FC",
-"key": "soccer_uefa_champs_league_women",
-"nSoft": 13,
-"pinnacleImEvent": false,
-"nBuecher": 13
-}
+"totVol": 18683
 },
 "36293470": {
 "moneySide": "away",
@@ -148,22 +164,6 @@
 "kickoff": "2026-11-21T17:30:00Z",
 "verdict": "konsens",
 "totVol": 19064
-},
-"36293332": {
-"moneySide": "home",
-"moneyName": "Lazio",
-"poly": null,
-"pinn": {
-"home": 0.7003,
-"draw": 0.1837,
-"away": 0.116,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Italian Serie A",
-"kickoff": "2026-11-21T14:00:00Z",
-"verdict": "konsens",
-"totVol": 18683
 },
 "36292923": {
 "moneySide": "home",
@@ -195,7 +195,7 @@
 "league": "English Premier League",
 "kickoff": "2026-11-21T15:00:00Z",
 "verdict": "konsens",
-"totVol": 10657
+"totVol": 10658
 },
 "36293556": {
 "moneySide": "away",
@@ -243,7 +243,7 @@
 "league": "French Ligue 1",
 "kickoff": "2026-11-21T16:15:00Z",
 "verdict": "konsens",
-"totVol": 7957
+"totVol": 8573
 },
 "36294873": {
 "moneySide": "home",
@@ -259,7 +259,7 @@
 "league": "English Premier League",
 "kickoff": "2026-11-21T15:00:00Z",
 "verdict": "konsens",
-"totVol": 7029
+"totVol": 7044
 },
 "36291552": {
 "moneySide": "away",
@@ -325,16 +325,16 @@
 "league": "French Ligue 1",
 "kickoff": "2026-11-20T19:45:00Z",
 "verdict": "uneinig",
-"totVol": 5821
+"totVol": 5853
 },
 "36325144": {
 "moneySide": "away",
 "moneyName": "Bayern Munich (W)",
 "poly": null,
 "pinn": {
-"home": 0.0495,
-"draw": 0.1159,
-"away": 0.8346,
+"home": 0.0499,
+"draw": 0.1166,
+"away": 0.8334,
 "fav": "away"
 },
 "pinnMove": null,
@@ -396,16 +396,16 @@
 "moneyName": "Seattle Sounders",
 "poly": null,
 "pinn": {
-"home": 0.4934,
-"draw": 0.243,
-"away": 0.2636,
+"home": 0.4892,
+"draw": 0.2446,
+"away": 0.2662,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-11-20T03:00:00Z",
 "verdict": "konsens",
-"totVol": 2343
+"totVol": 2359
 },
 "36291384": {
 "moneySide": "home",
@@ -439,6 +439,22 @@
 "verdict": "konsens",
 "totVol": 2878
 },
+"36325159": {
+"moneySide": "away",
+"moneyName": "Lyon (W)",
+"poly": null,
+"pinn": {
+"home": 0.2209,
+"draw": 0.2452,
+"away": 0.5339,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "UEFA Women's Champions League",
+"kickoff": "2026-11-19T20:00:00Z",
+"verdict": "konsens",
+"totVol": 1265
+},
 "36324827": {
 "moneySide": "home",
 "moneyName": "Paris FC (W)",
@@ -470,22 +486,6 @@
 "kickoff": "2026-11-21T19:45:00Z",
 "verdict": "konsens",
 "totVol": 1835
-},
-"36325159": {
-"moneySide": "away",
-"moneyName": "Lyon (W)",
-"poly": null,
-"pinn": {
-"home": 0.2209,
-"draw": 0.2452,
-"away": 0.5339,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "UEFA Women's Champions League",
-"kickoff": "2026-11-19T20:00:00Z",
-"verdict": "konsens",
-"totVol": 623
 },
 "36295643": {
 "moneySide": "home",
@@ -613,7 +613,7 @@
 "league": "UEFA Women's Champions League",
 "kickoff": "2026-11-19T20:00:00Z",
 "verdict": "konsens",
-"totVol": 366
+"totVol": 405
 },
 "36313067": {
 "moneySide": "draw",
@@ -804,21 +804,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36335768": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Jordanian Cup",
-"kickoff": "2026-11-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 21,
-"ankerGrund": {
-"spiel": "Al-Jazeera v Hayy Al-Amir Hassan",
-"grund": "kein_kandidat"
-}
-},
 "36291424": {
 "moneySide": "away",
 "moneyName": "Red Bull Bragantino",
@@ -835,21 +820,36 @@
 "verdict": "konsens",
 "totVol": 1065
 },
+"36335768": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Jordanian Cup",
+"kickoff": "2026-11-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 21,
+"ankerGrund": {
+"spiel": "Al-Jazeera v Hayy Al-Amir Hassan",
+"grund": "kein_kandidat"
+}
+},
 "36287138": {
 "moneySide": "home",
 "moneyName": "Vasco Da Gama",
 "poly": null,
 "pinn": {
-"home": 0.6007,
-"draw": 0.2261,
-"away": 0.1732,
+"home": 0.601,
+"draw": 0.2257,
+"away": 0.1733,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Brazilian Serie A",
 "kickoff": "2026-11-19T22:30:00Z",
 "verdict": "konsens",
-"totVol": 1759
+"totVol": 1847
 },
 "36329825": {
 "moneySide": "away",
@@ -875,26 +875,10 @@
 "league": "Danish 1st Division",
 "kickoff": "2026-11-19T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 684,
+"totVol": 839,
 "ankerGrund": {
 "spiel": "Fredericia v Hillerod Fodbold",
 "grund": "kein_kandidat"
-}
-},
-"36329826": {
-"moneySide": "away",
-"moneyName": "Deportivo Maldonado",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Primera Division",
-"kickoff": "2026-11-19T19:30:00Z",
-"verdict": "no_anchor",
-"totVol": 240,
-"ankerGrund": {
-"spiel": "Boston River v Deportivo Maldonado",
-"grund": "kein_kandidat",
-"naechster": "River Plate v Lanus"
 }
 },
 "36293513": {
@@ -912,6 +896,22 @@
 "kickoff": "2026-11-20T00:30:00Z",
 "verdict": "konsens",
 "totVol": 428
+},
+"36329826": {
+"moneySide": "away",
+"moneyName": "Deportivo Maldonado",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Primera Division",
+"kickoff": "2026-11-19T19:30:00Z",
+"verdict": "no_anchor",
+"totVol": 240,
+"ankerGrund": {
+"spiel": "Boston River v Deportivo Maldonado",
+"grund": "kein_kandidat",
+"naechster": "River Plate v Lanus"
+}
 },
 "36318926": {
 "moneySide": "home",
@@ -937,7 +937,7 @@
 "league": "Qatari Stars League",
 "kickoff": "2026-11-19T15:30:00Z",
 "verdict": "no_anchor",
-"totVol": 556,
+"totVol": 732,
 "ankerGrund": {
 "spiel": "Al Ahli (QAT) v Al Shamal",
 "grund": "kein_kandidat"
@@ -967,9 +967,55 @@
 "league": "UAE Arabian Gulf League",
 "kickoff": "2026-11-19T15:25:00Z",
 "verdict": "no_anchor",
-"totVol": 351,
+"totVol": 353,
 "ankerGrund": {
 "spiel": "Al Ain v Al Dhafra",
+"grund": "kein_kandidat"
+}
+},
+"36336280": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Egyptian Cup",
+"kickoff": "2026-11-19T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 133,
+"ankerGrund": {
+"spiel": "ZED FC v Smouha",
+"grund": "kein_kandidat"
+}
+},
+"36335255": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Egyptian 2nd Division",
+"kickoff": "2026-11-19T12:30:00Z",
+"verdict": "no_anchor",
+"totVol": 86,
+"ankerGrund": {
+"spiel": "La Viena FC v El Seka Elhadeed",
+"grund": "kein_kandidat",
+"naechster": "Deportes Limache v La Serena"
+}
+},
+"36335254": {
+"moneySide": "away",
+"moneyName": "Ismaily",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Egyptian 2nd Division",
+"kickoff": "2026-11-19T12:30:00Z",
+"verdict": "no_anchor",
+"totVol": 208,
+"ankerGrund": {
+"spiel": "El Daklyeh v Ismaily",
 "grund": "kein_kandidat"
 }
 },
@@ -988,37 +1034,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36335255": {
-"moneySide": "home",
-"moneyName": "La Viena FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Egyptian 2nd Division",
-"kickoff": "2026-11-19T12:30:00Z",
-"verdict": "no_anchor",
-"totVol": 46,
-"ankerGrund": {
-"spiel": "La Viena FC v El Seka Elhadeed",
-"grund": "kein_kandidat",
-"naechster": "Deportes Limache v La Serena"
-}
-},
-"36336280": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Egyptian Cup",
-"kickoff": "2026-11-19T18:00:00Z",
-"verdict": "no_anchor",
-"totVol": 133,
-"ankerGrund": {
-"spiel": "ZED FC v Smouha",
-"grund": "kein_kandidat"
-}
-},
 "36336158": {
 "moneySide": "home",
 "moneyName": "MC Alger",
@@ -1034,18 +1049,18 @@
 "grund": "kein_kandidat"
 }
 },
-"36335254": {
-"moneySide": "away",
-"moneyName": "Ismaily",
+"36336546": {
+"moneySide": "draw",
+"moneyName": "The Draw",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Egyptian 2nd Division",
 "kickoff": "2026-11-19T12:30:00Z",
 "verdict": "no_anchor",
-"totVol": 208,
+"totVol": 100,
 "ankerGrund": {
-"spiel": "El Daklyeh v Ismaily",
+"spiel": "Tersana SC v Telecom Egypt SC",
 "grund": "kein_kandidat"
 }
 },
@@ -1076,21 +1091,6 @@
 "totVol": 33,
 "ankerGrund": {
 "spiel": "Baladeyet Al-Mahalla v Haras El Hodood",
-"grund": "kein_kandidat"
-}
-},
-"36336546": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Egyptian 2nd Division",
-"kickoff": "2026-11-19T12:30:00Z",
-"verdict": "no_anchor",
-"totVol": 100,
-"ankerGrund": {
-"spiel": "Tersana SC v Telecom Egypt SC",
 "grund": "kein_kandidat"
 }
 },
