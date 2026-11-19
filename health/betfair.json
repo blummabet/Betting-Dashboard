@@ -1,14 +1,14 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-11-19T12:07:31.547237+00:00",
+  "updatedAt": "2026-11-19T12:22:44.083786+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 4.8,
-    "proTag": 95.7,
+    "proTag": 95.6,
     "lueckeMinMin": 3.8,
-    "lueckeMedianMin": 15.0,
+    "lueckeMedianMin": 15.1,
     "lueckeMaxMin": 30.1,
     "sollProTag": null,
     "liefergradPct": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 627.2,
     "erzeugtProTag": 3.8,
-    "widerspruch": "erzeugtProTag 3.8 gegen eine gemessene Kadenz von 95.7/Tag (Faktor 25.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 3.8 gegen eine gemessene Kadenz von 95.6/Tag (Faktor 25.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-19T12:22:44.083786+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "44523032751",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/44523032751",
+      "nSteps": 43,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-19T12:20:53Z",
+      "startedAt": "2026-11-19T12:20:53Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 111.1,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-11-19T12:07:31.547237+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-11-19T07:35:18Z",
       "wartetS": 0.0,
       "laeuftSeitS": 75.7,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-19T07:21:32.422745+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "44478825668",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/44478825668",
-      "nSteps": 43,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-19T07:20:17Z",
-      "startedAt": "2026-11-19T07:20:17Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 75.4,
       "event": "workflow_dispatch"
     }
   ]
