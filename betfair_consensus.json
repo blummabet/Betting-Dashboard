@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-19T19:53:14.836859+00:00",
+"generatedAt": "2026-11-19T20:08:01.491839+00:00",
 "count": 20,
-"covered": 16,
+"covered": 17,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -50,6 +50,7 @@
 "leaguesMitAnker": [
 "Brazilian Serie A",
 "English Premier League",
+"French Ligue 1",
 "German Bundesliga",
 "Italian Serie A",
 "Spanish La Liga",
@@ -59,22 +60,22 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
 "oddsKeysMitDaten": 46,
-"oddsEvents": 490,
+"oddsEvents": 491,
 "oddsTotals": {
-"versucht": 7,
+"versucht": 8,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 7,
+"gewollt": 8,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1137637,
-"remaining": 3862363,
+"used": 1138589,
+"remaining": 3861411,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.969,
+"ankerQuote": 0.97,
 "games": [
 {
 "matchId": "36330371",
@@ -83,24 +84,24 @@
 "league": "UEFA Women's Champions League",
 "country": "International",
 "kickoff": "2026-11-19T20:00:00Z",
-"live": false,
+"live": true,
 "moneySide": "home",
 "moneyName": "Barcelona (W)",
 "moneySharePct": 97,
 "moneyOdd": 1.02,
 "moneyDir": "flat",
-"totVol": 115857,
+"totVol": 133548,
 "pinnOdd": null,
 "softOdd": 1.0,
-"softN": 17,
+"softN": 16,
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.9434,
-"draw": 0.0374,
-"away": 0.0192,
+"home": 0.9442,
+"draw": 0.0364,
+"away": 0.0194,
 "fav": "home",
-"n": 17
+"n": 16
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -112,7 +113,7 @@
 "grund": "kein_pinnacle",
 "kandidat": "Barcelona v Servette FC",
 "key": "soccer_uefa_champs_league_women",
-"nSoft": 17,
+"nSoft": 16,
 "pinnacleImEvent": false,
 "nBuecher": 17
 }
@@ -130,7 +131,7 @@
 "moneySharePct": 90,
 "moneyOdd": 1.82,
 "moneyDir": "flat",
-"totVol": 73769,
+"totVol": 73787,
 "pinnOdd": 1.8,
 "softOdd": 1.76,
 "softN": 51,
@@ -170,6 +171,43 @@
 "pinnTotals": null
 },
 {
+"matchId": "36325159",
+"home": "Arsenal (W)",
+"away": "Lyon (W)",
+"league": "UEFA Women's Champions League",
+"country": "International",
+"kickoff": "2026-11-19T20:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Lyon (W)",
+"moneySharePct": 73,
+"moneyOdd": 1.77,
+"moneyDir": "out",
+"totVol": 47228,
+"pinnOdd": 1.63,
+"softOdd": 1.61,
+"softN": 29,
+"poly": null,
+"pinn": {
+"home": 0.2107,
+"draw": 0.2089,
+"away": 0.5804,
+"fav": "away"
+},
+"soft": {
+"home": 0.2173,
+"draw": 0.2221,
+"away": 0.5607,
+"fav": "away",
+"n": 29
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36293092",
 "home": "Man City",
 "away": "Fulham",
@@ -179,12 +217,12 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Man City",
-"moneySharePct": 77,
+"moneySharePct": 78,
 "moneyOdd": 1.43,
 "moneyDir": "flat",
-"totVol": 45798,
+"totVol": 46308,
 "pinnOdd": 1.39,
-"softOdd": 1.37,
+"softOdd": 1.36,
 "softN": 51,
 "poly": null,
 "pinn": {
@@ -194,9 +232,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6863,
+"home": 0.6866,
 "draw": 0.1811,
-"away": 0.1327,
+"away": 0.1323,
 "fav": "home",
 "n": 51
 },
@@ -206,6 +244,58 @@
 "stepPP": 0.0,
 "n": 25,
 "move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36293332",
+"home": "Lazio",
+"away": "Lecce",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-11-21T14:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Lazio",
+"moneySharePct": 84,
+"moneyOdd": 1.44,
+"moneyDir": "flat",
+"totVol": 44248,
+"pinnOdd": 1.38,
+"softOdd": 1.36,
+"softN": 49,
+"poly": {
+"vol": 1895,
+"odd": 1.4,
+"sharePct": 72,
+"shareSrc": "preis",
+"key": "sea-laz-lec-2026-11-21",
+"sideKey": "SS Lazio",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.7004,
+"draw": 0.1837,
+"away": 0.1159,
+"fav": "home"
+},
+"soft": {
+"home": 0.6918,
+"draw": 0.1877,
+"away": 0.1206,
+"fav": "home",
+"n": 49
+},
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": -0.0,
+"n": 17,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -224,8 +314,8 @@
 "moneyName": "Bayern Munich",
 "moneySharePct": 95,
 "moneyOdd": 1.1,
-"moneyDir": "out",
-"totVol": 44094,
+"moneyDir": "flat",
+"totVol": 44101,
 "pinnOdd": 1.07,
 "softOdd": 1.07,
 "softN": 49,
@@ -252,63 +342,11 @@
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": 0.2,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": 0.2,
+"movePP": 0.1,
 "stepPP": 0.0,
 "n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36293332",
-"home": "Lazio",
-"away": "Lecce",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-11-21T14:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Lazio",
-"moneySharePct": 84,
-"moneyOdd": 1.44,
-"moneyDir": "out",
-"totVol": 44004,
-"pinnOdd": 1.38,
-"softOdd": 1.36,
-"softN": 48,
-"poly": {
-"vol": 1895,
-"odd": 1.4,
-"sharePct": 72,
-"shareSrc": "preis",
-"key": "sea-laz-lec-2026-11-21",
-"sideKey": "SS Lazio",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.7004,
-"draw": 0.1837,
-"away": 0.1159,
-"fav": "home"
-},
-"soft": {
-"home": 0.6919,
-"draw": 0.1876,
-"away": 0.1206,
-"fav": "home",
-"n": 48
-},
-"pinnMovePP": 0.0,
-"pinnMove": {
-"movePP": 0.0,
-"stepPP": -0.0,
-"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -342,8 +380,8 @@
 },
 "soft": {
 "home": 0.4899,
-"draw": 0.2727,
-"away": 0.2375,
+"draw": 0.2726,
+"away": 0.2374,
 "fav": "home",
 "n": 45
 },
@@ -372,7 +410,7 @@
 "moneySharePct": 96,
 "moneyOdd": 1.18,
 "moneyDir": "flat",
-"totVol": 32714,
+"totVol": 32717,
 "pinnOdd": 1.17,
 "softOdd": 1.17,
 "softN": 45,
@@ -384,9 +422,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.813,
-"draw": 0.123,
-"away": 0.064,
+"home": 0.8131,
+"draw": 0.1231,
+"away": 0.0638,
 "fav": "home",
 "n": 45
 },
@@ -415,7 +453,7 @@
 "moneySharePct": 86,
 "moneyOdd": 2.14,
 "moneyDir": "flat",
-"totVol": 29912,
+"totVol": 29917,
 "pinnOdd": 2.09,
 "softOdd": 2.0,
 "softN": 45,
@@ -427,19 +465,19 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4708,
-"draw": 0.2525,
-"away": 0.2767,
+"home": 0.4706,
+"draw": 0.2524,
+"away": 0.277,
 "fav": "home",
 "n": 45
 },
 "pinnMovePP": -1.3,
 "pinnMove": {
 "movePP": -1.3,
-"stepPP": -1.3,
-"n": 2,
+"stepPP": 0.0,
+"n": 3,
 "move": true,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -457,11 +495,11 @@
 "moneyName": "Genoa",
 "moneySharePct": 68,
 "moneyOdd": 2.6,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 29851,
 "pinnOdd": 2.6,
 "softOdd": 2.5,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 224,
 "odd": 2.94,
@@ -479,17 +517,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3433,
-"draw": 0.2809,
-"away": 0.3758,
+"home": 0.3429,
+"draw": 0.281,
+"away": 0.3761,
 "fav": "away",
-"n": 48
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 13,
+"n": 14,
 "move": false,
 "laeuft": false
 },
@@ -498,43 +536,43 @@
 "pinnTotals": null
 },
 {
-"matchId": "36325159",
-"home": "Arsenal (W)",
-"away": "Lyon (W)",
-"league": "UEFA Women's Champions League",
-"country": "International",
-"kickoff": "2026-11-19T20:00:00Z",
+"matchId": "36289341",
+"home": "Athletic Bilbao",
+"away": "Espanyol",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-11-20T20:00:00Z",
 "live": false,
-"moneySide": "away",
-"moneyName": "Lyon (W)",
-"moneySharePct": 67,
-"moneyOdd": 1.69,
-"moneyDir": "in",
-"totVol": 27302,
-"pinnOdd": 1.6,
-"softOdd": 1.59,
-"softN": 29,
+"moneySide": "home",
+"moneyName": "Athletic Bilbao",
+"moneySharePct": 83,
+"moneyOdd": 1.53,
+"moneyDir": "flat",
+"totVol": 26508,
+"pinnOdd": 1.51,
+"softOdd": 1.47,
+"softN": 45,
 "poly": null,
 "pinn": {
-"home": 0.205,
-"draw": 0.2045,
-"away": 0.5905,
-"fav": "away"
+"home": 0.6411,
+"draw": 0.2151,
+"away": 0.1438,
+"fav": "home"
 },
 "soft": {
-"home": 0.2155,
-"draw": 0.2114,
-"away": 0.5731,
-"fav": "away",
-"n": 29
+"home": 0.6411,
+"draw": 0.2163,
+"away": 0.1426,
+"fav": "home",
+"n": 45
 },
-"pinnMovePP": -0.4,
+"pinnMovePP": -0.9,
 "pinnMove": {
-"movePP": -0.4,
-"stepPP": -0.4,
-"n": 2,
+"movePP": -0.9,
+"stepPP": -0.0,
+"n": 15,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -553,7 +591,7 @@
 "moneySharePct": 66,
 "moneyOdd": 1.81,
 "moneyDir": "flat",
-"totVol": 26290,
+"totVol": 26369,
 "pinnOdd": 1.78,
 "softOdd": 1.74,
 "softN": 51,
@@ -565,8 +603,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.542,
-"draw": 0.2283,
+"home": 0.5421,
+"draw": 0.2282,
 "away": 0.2297,
 "fav": "home",
 "n": 51
@@ -575,50 +613,7 @@
 "pinnMove": {
 "movePP": 0.3,
 "stepPP": -0.0,
-"n": 8,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36289341",
-"home": "Athletic Bilbao",
-"away": "Espanyol",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-11-20T20:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Athletic Bilbao",
-"moneySharePct": 84,
-"moneyOdd": 1.53,
-"moneyDir": "flat",
-"totVol": 25022,
-"pinnOdd": 1.51,
-"softOdd": 1.47,
-"softN": 45,
-"poly": null,
-"pinn": {
-"home": 0.6411,
-"draw": 0.2151,
-"away": 0.1438,
-"fav": "home"
-},
-"soft": {
-"home": 0.6419,
-"draw": 0.2163,
-"away": 0.1418,
-"fav": "home",
-"n": 45
-},
-"pinnMovePP": -0.9,
-"pinnMove": {
-"movePP": -0.9,
-"stepPP": -0.0,
-"n": 14,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -637,33 +632,33 @@
 "moneySide": "home",
 "moneyName": "Vasco Da Gama",
 "moneySharePct": 83,
-"moneyOdd": 1.58,
-"moneyDir": "in",
-"totVol": 22741,
-"pinnOdd": 1.56,
+"moneyOdd": 1.59,
+"moneyDir": "out",
+"totVol": 23178,
+"pinnOdd": 1.55,
 "softOdd": 1.53,
 "softN": 48,
 "poly": null,
 "pinn": {
-"home": 0.6213,
-"draw": 0.2183,
-"away": 0.1605,
+"home": 0.6248,
+"draw": 0.2162,
+"away": 0.159,
 "fav": "home"
 },
 "soft": {
-"home": 0.6123,
-"draw": 0.2217,
-"away": 0.166,
+"home": 0.6125,
+"draw": 0.222,
+"away": 0.1656,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": -0.4,
+"pinnMovePP": -0.1,
 "pinnMove": {
-"movePP": -0.4,
-"stepPP": -0.7,
-"n": 9,
+"movePP": -0.1,
+"stepPP": 0.4,
+"n": 10,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -685,7 +680,7 @@
 "totVol": 22685,
 "pinnOdd": 1.76,
 "softOdd": 1.72,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 450,
 "odd": 1.79,
@@ -703,17 +698,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5492,
-"draw": 0.2511,
-"away": 0.1997,
+"home": 0.5491,
+"draw": 0.2513,
+"away": 0.1996,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 13,
+"n": 14,
 "move": false,
 "laeuft": false
 },
@@ -734,7 +729,7 @@
 "moneySharePct": 70,
 "moneyOdd": 2.48,
 "moneyDir": "flat",
-"totVol": 20196,
+"totVol": 20321,
 "pinnOdd": 2.42,
 "softOdd": 2.35,
 "softN": 45,
@@ -755,9 +750,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3235,
-"draw": 0.2744,
-"away": 0.402,
+"home": 0.3232,
+"draw": 0.2745,
+"away": 0.4023,
 "fav": "away",
 "n": 45
 },
@@ -765,12 +760,58 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 5,
+"n": 6,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36291230",
+"home": "ESTAC Troyes",
+"away": "Le Havre",
+"league": "French Ligue 1",
+"country": "FR",
+"kickoff": "2026-11-20T19:45:00Z",
+"live": false,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 45,
+"moneyOdd": 3.65,
+"moneyDir": "flat",
+"totVol": 20197,
+"pinnOdd": 3.47,
+"softOdd": 3.4,
+"softN": 47,
+"poly": {
+"vol": 103,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "fl1-tro-hac-2026-11-20",
+"sideKey": null,
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4369,
+"draw": 0.2795,
+"away": 0.2836,
+"fav": "home"
+},
+"soft": {
+"home": 0.4386,
+"draw": 0.2753,
+"away": 0.2861,
+"fav": "home",
+"n": 47
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -783,68 +824,38 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Red Bull Bragantino",
-"moneySharePct": 46,
+"moneySharePct": 47,
 "moneyOdd": 2.84,
-"moneyDir": "out",
-"totVol": 8853,
-"pinnOdd": 2.77,
+"moneyDir": "flat",
+"totVol": 8999,
+"pinnOdd": 2.76,
 "softOdd": 2.62,
 "softN": 49,
 "poly": null,
 "pinn": {
-"home": 0.3673,
+"home": 0.3659,
 "draw": 0.2827,
-"away": 0.35,
+"away": 0.3513,
 "fav": "home"
 },
 "soft": {
-"home": 0.3606,
-"draw": 0.2785,
-"away": 0.3609,
+"home": 0.3604,
+"draw": 0.2788,
+"away": 0.3608,
 "fav": "away",
 "n": 49
 },
-"pinnMovePP": -0.8,
+"pinnMovePP": -0.7,
 "pinnMove": {
-"movePP": -0.8,
-"stepPP": -0.4,
-"n": 7,
+"movePP": -0.7,
+"stepPP": 0.1,
+"n": 8,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
 "pinnTotals": null
-},
-{
-"matchId": "36317476",
-"home": "Fredericia",
-"away": "Hillerod Fodbold",
-"league": "Danish 1st Division",
-"country": "DK",
-"kickoff": "2026-11-19T18:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Fredericia",
-"moneySharePct": 96,
-"moneyOdd": 1.01,
-"moneyDir": "flat",
-"totVol": 60036,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Fredericia v Hillerod Fodbold",
-"grund": "kein_kandidat"
-}
 },
 {
 "matchId": "36329826",
@@ -856,10 +867,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Deportivo Maldonado",
-"moneySharePct": 89,
-"moneyOdd": 1.88,
-"moneyDir": "in",
-"totVol": 54399,
+"moneySharePct": 87,
+"moneyOdd": 2.06,
+"moneyDir": "out",
+"totVol": 62383,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -878,19 +889,19 @@
 }
 },
 {
-"matchId": "36336280",
-"home": "ZED FC",
-"away": "Smouha",
-"league": "Egyptian Cup",
-"country": "EG",
-"kickoff": "2026-11-19T18:00:00Z",
+"matchId": "36329824",
+"home": "Penarol",
+"away": "Cerro Largo FC",
+"league": "Uruguayan Primera Division",
+"country": "UY",
+"kickoff": "2026-11-19T19:30:00Z",
 "live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 80,
-"moneyOdd": 1.2,
+"moneySide": "home",
+"moneyName": "Penarol",
+"moneySharePct": 83,
+"moneyOdd": 1.04,
 "moneyDir": "in",
-"totVol": 27717,
+"totVol": 22157,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -903,24 +914,24 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "ZED FC v Smouha",
+"spiel": "Penarol v Cerro Largo FC",
 "grund": "kein_kandidat"
 }
 },
 {
-"matchId": "36336378",
-"home": "Kabylie",
-"away": "USM Alger",
-"league": "Algerian Ligue 1",
-"country": "DZ",
-"kickoff": "2026-11-19T19:00:00Z",
+"matchId": "36329825",
+"home": "Progreso",
+"away": "Torque",
+"league": "Uruguayan Primera Division",
+"country": "UY",
+"kickoff": "2026-11-19T19:30:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Kabylie",
-"moneySharePct": 78,
-"moneyOdd": 1.41,
-"moneyDir": "flat",
-"totVol": 10120,
+"moneySide": "away",
+"moneyName": "Torque",
+"moneySharePct": 87,
+"moneyOdd": 1.58,
+"moneyDir": "out",
+"totVol": 18659,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -933,19 +944,19 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Kabylie v USM Alger",
+"spiel": "Progreso v Torque",
 "grund": "kein_kandidat"
 }
 }
 ],
-"ankerN": 65,
-"ankerNOffen": 136,
-"ankerMit": 63,
+"ankerN": 66,
+"ankerNOffen": 135,
+"ankerMit": 64,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 61,
+"kein_kandidat": 58,
 "name": 3,
-"zeit": 4,
+"zeit": 5,
 "kein_pinnacle": 1
 },
 "beispiele": [
@@ -997,14 +1008,14 @@
 "liga": "UAE Division 1"
 },
 {
-"spiel": "Al Hamriyah v Al-Thaid",
+"spiel": "Al Taraji v Al Safa",
 "kandidat": "Al-Ahli v Al-Nassr",
 "key": "soccer_saudi_arabia_pro_league",
 "score": 1.0,
 "grund": "zeit",
-"abstandH": 4.8,
-"matchId": "36339261",
-"liga": "UAE Division 1"
+"abstandH": 5.7,
+"matchId": "36340253",
+"liga": "Saudi 2nd Division"
 },
 {
 "spiel": "Palm City FC v City FC",
@@ -1017,11 +1028,21 @@
 "liga": "UAE Division 1"
 },
 {
+"spiel": "Al Hamriyah v Al-Thaid",
+"kandidat": "Al-Ahli v Al-Nassr",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 4.8,
+"matchId": "36339261",
+"liga": "UAE Division 1"
+},
+{
 "spiel": "Barcelona (W) v Servette FC (W)",
 "grund": "kein_pinnacle",
 "kandidat": "Barcelona v Servette FC",
 "key": "soccer_uefa_champs_league_women",
-"nSoft": 17,
+"nSoft": 16,
 "pinnacleImEvent": false,
 "nBuecher": 17,
 "matchId": "36330371",
