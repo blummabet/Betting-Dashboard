@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-19T03:50:42.651234+00:00",
+ "generatedAt": "2026-11-19T04:06:10.458468+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -16,22 +16,22 @@
    "strom": "betfair",
    "n": 6649,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +42.4 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.5305,
-   "pl": 3527.56,
-   "roiLb": 0.4239,
+   "grund": "ROI belegt (Untergrenze +43.5 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
+   "roi": 0.5426,
+   "pl": 3607.46,
+   "roiLb": 0.435,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 269,
+   "noetigNRoi": 262,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 271,
-    "lo": 217,
-    "hi": 351,
+    "median": 262,
+    "lo": 210,
+    "hi": 341,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -55,7 +55,7 @@
     "roiBei": 0.0529,
     "rausgefallen": 0,
     "nNeu": 155,
-    "roiNeu": 20.5404
+    "roiNeu": 21.0595
    }
   },
   {
@@ -155,7 +155,7 @@
     "nieAnteil": 0.035,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -854,8 +854,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 406.42,
-   "roi": 0.0102,
+   "pl": 401.57,
+   "roi": 0.01,
    "clv": 0.39,
    "belegte": 20
   },
@@ -876,7 +876,7 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "roiLb": 0.4239,
+   "roiLb": 0.435,
    "clvUrteil": "nicht erhoben",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -4100,18 +4100,6 @@
    "belegt": false
   },
   {
-   "liga": "Venezuelan Cup",
-   "n": 77,
-   "wins": 29,
-   "hit": 0.3766,
-   "hitLb": 0.2914,
-   "roi": -0.207,
-   "roiLb": -0.4231,
-   "pl": -15.94,
-   "clv": -1.963,
-   "belegt": false
-  },
-  {
    "liga": "South Korean K3 League",
    "n": 66,
    "wins": 26,
@@ -4193,6 +4181,18 @@
    "roiLb": -0.4825,
    "pl": -8.25,
    "clv": 1.054,
+   "belegt": false
+  },
+  {
+   "liga": "Venezuelan Cup",
+   "n": 77,
+   "wins": 26,
+   "hit": 0.3377,
+   "hitLb": 0.2559,
+   "roi": -0.273,
+   "roiLb": -0.4879,
+   "pl": -21.02,
+   "clv": -1.963,
    "belegt": false
   },
   {
@@ -4444,22 +4444,22 @@
    "strom": "betfair",
    "n": 6649,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +42.4 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
-   "roi": 0.5305,
-   "pl": 3527.56,
-   "roiLb": 0.4239,
+   "grund": "ROI belegt (Untergrenze +43.5 %) — für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein, aber auch kein Ja.",
+   "roi": 0.5426,
+   "pl": 3607.46,
+   "roiLb": 0.435,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 269,
+   "noetigNRoi": 262,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 271,
-    "lo": 217,
-    "hi": 351,
+    "median": 262,
+    "lo": 210,
+    "hi": 341,
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
@@ -4483,7 +4483,7 @@
     "roiBei": 0.0529,
     "rausgefallen": 0,
     "nNeu": 155,
-    "roiNeu": 20.5404
+    "roiNeu": 21.0595
    }
   },
   {
@@ -4583,7 +4583,7 @@
     "nieAnteil": 0.035,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json",
    "seitFreigabe": {
@@ -5301,9 +5301,9 @@
    "n": 6080,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0084,
-   "pl": 51.07,
-   "roiLb": -0.0117,
+   "roi": 0.0082,
+   "pl": 49.86,
+   "roiLb": -0.012,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5373,9 +5373,9 @@
    "n": 6194,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0047,
-   "pl": 29.11,
-   "roiLb": -0.0161,
+   "roi": 0.0044,
+   "pl": 27.25,
+   "roiLb": -0.0164,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5413,7 +5413,7 @@
     "nieAnteil": 0.157,
     "schaetzbar": false
    },
-   "alterTage": 16.6,
+   "alterTage": 16.7,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -5452,7 +5452,7 @@
     "nieAnteil": 0.103,
     "schaetzbar": false
    },
-   "alterTage": 16.1,
+   "alterTage": 16.2,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -5484,9 +5484,9 @@
    "n": 5929,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0006,
-   "pl": -3.56,
-   "roiLb": -0.0228,
+   "roi": -0.0009,
+   "pl": -5.34,
+   "roiLb": -0.0232,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5640,7 +5640,7 @@
     "nieAnteil": 0.165,
     "schaetzbar": false
    },
-   "alterTage": 16.1,
+   "alterTage": 16.2,
    "art": "conviction",
    "wert": 7
   },
@@ -5780,7 +5780,7 @@
     "nieAnteil": 0.302,
     "schaetzbar": false
    },
-   "alterTage": 16.1,
+   "alterTage": 16.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -6012,7 +6012,7 @@
     "nieAnteil": 0.232,
     "schaetzbar": false
    },
-   "alterTage": 16.1,
+   "alterTage": 16.2,
    "art": "mix",
    "wert": "money+sharp+steam"
   },
@@ -6891,7 +6891,7 @@
     "nieAnteil": 0.703,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -7074,7 +7074,7 @@
     "nieAnteil": 0.862,
     "schaetzbar": false
    },
-   "alterTage": 17.0,
+   "alterTage": 17.1,
    "art": "mix",
    "wert": "bf+money"
   },
@@ -8275,7 +8275,7 @@
     "nieAnteil": 0.672,
     "schaetzbar": false
    },
-   "alterTage": 16.1,
+   "alterTage": 16.2,
    "art": "conviction",
    "wert": 8
   },
