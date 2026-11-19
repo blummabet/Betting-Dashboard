@@ -88,19 +88,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1131513 verbraucht, 3868487 uebrig"
+      "note": "Kontingent: 1132037 verbraucht, 3867963 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
-        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“"
+        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“",
+        "Palm City FC v City FC (UAE Division 1): zeit — bester Kandidat „Norwich City v Cardiff City“ · 23.8h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 57 · kein_pinnacle 2 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 64 · kein_pinnacle 2 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -109,7 +110,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — FK Austria Wien (W) v Bayern Munich (W) (21 Buecher, ohne Pinnacle); Barcelona (W) v Servette FC (W) (17 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — FK Austria Wien (W) v Bayern Munich (W) (16 Buecher, ohne Pinnacle); Barcelona (W) v Servette FC (W) (16 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -185,5 +186,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-19T18:29:22.905460+00:00"
+  "generatedAt": "2026-11-19T18:38:25.659753+00:00"
 }
