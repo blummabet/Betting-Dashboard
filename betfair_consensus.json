@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-19T07:06:25.138211+00:00",
-"count": 5,
-"covered": 5,
+"generatedAt": "2026-11-19T07:21:08.128419+00:00",
+"count": 6,
+"covered": 6,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -64,8 +64,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1086953,
-"remaining": 3913047,
+"used": 1087903,
+"remaining": 3912097,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -106,9 +106,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8825,
-"draw": 0.0745,
-"away": 0.043,
+"home": 0.8828,
+"draw": 0.0743,
+"away": 0.0429,
 "fav": "home",
 "n": 49
 },
@@ -136,7 +136,7 @@
 "moneyName": "Man City",
 "moneySharePct": 79,
 "moneyOdd": 1.43,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 31205,
 "pinnOdd": 1.42,
 "softOdd": 1.39,
@@ -149,9 +149,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6793,
+"home": 0.6794,
 "draw": 0.1853,
-"away": 0.1355,
+"away": 0.1354,
 "fav": "home",
 "n": 51
 },
@@ -166,6 +166,47 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36330371",
+"home": "Barcelona (W)",
+"away": "Servette FC (W)",
+"league": "UEFA Women's Champions League",
+"country": "International",
+"kickoff": "2026-11-19T20:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Barcelona (W)",
+"moneySharePct": 100,
+"moneyOdd": 1.02,
+"moneyDir": "flat",
+"totVol": 27337,
+"pinnOdd": null,
+"softOdd": 1.01,
+"softN": 15,
+"poly": null,
+"pinn": null,
+"soft": {
+"home": 0.9346,
+"draw": 0.0463,
+"away": 0.0191,
+"fav": "home",
+"n": 15
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Barcelona (W) v Servette FC (W)",
+"grund": "kein_pinnacle",
+"kandidat": "Barcelona v Servette FC",
+"key": "soccer_uefa_champs_league_women",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15
+}
 },
 {
 "matchId": "36294872",
@@ -232,7 +273,7 @@
 "moneySharePct": 96,
 "moneyOdd": 1.2,
 "moneyDir": "flat",
-"totVol": 26228,
+"totVol": 26293,
 "pinnOdd": 1.17,
 "softOdd": 1.17,
 "softN": 45,
@@ -244,9 +285,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8076,
+"home": 0.8077,
 "draw": 0.1259,
-"away": 0.0665,
+"away": 0.0664,
 "fav": "home",
 "n": 45
 },
@@ -312,10 +353,19 @@
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 40,
-"kein_pinnacle": 1,
-"name": 1
+"name": 1,
+"kein_pinnacle": 1
 },
 "beispiele": [
+{
+"spiel": "Mgladbach v Dortmund",
+"kandidat": "Borussia Monchengladbach v Borussia Dortmund",
+"key": "soccer_germany_bundesliga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36292392",
+"liga": "German Bundesliga"
+},
 {
 "spiel": "Barcelona (W) v Servette FC (W)",
 "grund": "kein_pinnacle",
@@ -326,15 +376,6 @@
 "nBuecher": 15,
 "matchId": "36330371",
 "liga": "UEFA Women's Champions League"
-},
-{
-"spiel": "Mgladbach v Dortmund",
-"kandidat": "Borussia Monchengladbach v Borussia Dortmund",
-"key": "soccer_germany_bundesliga",
-"score": 0.5,
-"grund": "name",
-"matchId": "36292392",
-"liga": "German Bundesliga"
 }
 ]
 }
