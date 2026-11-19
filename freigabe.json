@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-19T11:51:47.476244+00:00",
+ "generatedAt": "2026-11-19T12:07:12.551769+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -839,12 +839,12 @@
    "strom": "cards",
    "zerlegung": "nach Verdikt",
    "art": "verdict",
-   "gruppen": 4,
+   "gruppen": 3,
    "basis": null,
-   "n": 512,
-   "pl": 5.97,
-   "roi": 0.0117,
-   "clv": -1.721,
+   "n": 504,
+   "pl": 10.93,
+   "roi": 0.0217,
+   "clv": -1.741,
    "belegte": 1
   },
   {
@@ -6084,7 +6084,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 16.6,
+   "alterTage": 16.7,
    "art": "gate"
   },
   {
@@ -6177,7 +6177,7 @@
     "nieAnteil": 0.798,
     "schaetzbar": false
    },
-   "alterTage": 16.6,
+   "alterTage": 16.7,
    "art": "mix",
    "wert": "money+sharp"
   },
@@ -13520,29 +13520,6 @@
    "naeherung": false
   },
   {
-   "schublade": "MLS · BET",
-   "strom": "cards",
-   "n": 8,
-   "status": "sammelt",
-   "grund": "8 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
-   "roi": -0.62,
-   "pl": -4.96,
-   "roiLb": null,
-   "clv": -0.456,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 22,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "zu_wenige",
-   "entfernung": null,
-   "alterTage": 21.0,
-   "art": "verdict",
-   "wert": "BET",
-   "datensatz": "MLS"
-  },
-  {
    "schublade": "Conviction 3",
    "strom": "poly",
    "n": 7,
@@ -13651,6 +13628,28 @@
    "alterTage": 21.4,
    "art": "conviction",
    "wert": 9
+  },
+  {
+   "schublade": "MLS · BET",
+   "strom": "cards",
+   "n": 8,
+   "status": "ruht",
+   "grund": "letzter Play vor 21 Tagen — die Schublade liefert nichts mehr",
+   "roi": -0.62,
+   "pl": -4.96,
+   "roiLb": null,
+   "clv": -0.456,
+   "clvLb": null,
+   "clvOg": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "zu_wenige",
+   "fehltN": 0,
+   "alterTage": 21.0,
+   "art": "verdict",
+   "wert": "BET",
+   "datensatz": "MLS"
   },
   {
    "schublade": "Mix bf+sharp",
@@ -13783,7 +13782,7 @@
   "schubladen": 404,
   "freigegeben": 4,
   "kandidaten": 19,
-  "ruhend": 9,
+  "ruhend": 10,
   "naechsteFreigabe": 0,
   "naechsterBeleg": 19
  }
