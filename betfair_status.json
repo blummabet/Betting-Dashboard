@@ -88,19 +88,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1149566 verbraucht, 3850434 uebrig"
+      "note": "Kontingent: 1151461 verbraucht, 3848539 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
-        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“"
+        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“",
+        "Palm City FC v City FC (UAE Division 1): zeit — bester Kandidat „Norwich City v Cardiff City“ · 23.8h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 68 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 68 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -185,5 +186,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-19T22:53:40.874265+00:00"
+  "generatedAt": "2026-11-19T23:24:02.344299+00:00"
 }
