@@ -88,20 +88,24 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1136696 verbraucht, 3863304 uebrig"
+      "note": "Kontingent: 1137637 verbraucht, 3862363 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 7,
       "failures": [
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
         "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“",
+        "Al-Zawraa v Al Talaba (Other Competitions Soccer): zeit — bester Kandidat „Al-Ahli v Al-Nassr“ · 6.2h Anpfiff-Abstand",
+        "Al-Ittihad Kalba v Al Sharjah (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Ahli v Al-Nassr“ · 4.8h Anpfiff-Abstand",
+        "Al-Arabi Umm Quwain v Al Jazira Al Hamra (UAE Division 1): name — bester Kandidat „Al-Ahli v Al-Nassr“",
+        "Al Hamriyah v Al-Thaid (UAE Division 1): zeit — bester Kandidat „Al-Ahli v Al-Nassr“ · 4.8h Anpfiff-Abstand",
         "Palm City FC v City FC (UAE Division 1): zeit — bester Kandidat „Norwich City v Cardiff City“ · 23.8h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 70 · kein_pinnacle 2 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 1 · name 3 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -110,7 +114,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — FK Austria Wien (W) v Bayern Munich (W) (5 Buecher, ohne Pinnacle); Barcelona (W) v Servette FC (W) (15 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — Barcelona (W) v Servette FC (W) (17 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -186,5 +190,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-19T19:38:35.892100+00:00"
+  "generatedAt": "2026-11-19T19:53:40.123791+00:00"
 }
