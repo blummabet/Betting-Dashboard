@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 54 von 89 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Ind Medellin v Santa Fe (Colombian Primera A); Deportes Recoleta v Santiago Wanderers (Chilean Primera B); Cobresal v Audax Italiano (Chilean Primera Division)"
+        "nur 51 von 79 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Ind Medellin v Santa Fe (Colombian Primera A); Deportes Recoleta v Santiago Wanderers (Chilean Primera B); Cobresal v Audax Italiano (Chilean Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,20 +90,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1215908 verbraucht, 3784092 uebrig"
+      "note": "Kontingent: 1216859 verbraucht, 3783141 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "Aarhus Fremad v Hobro (Danish 1st Division): name — bester Kandidat „AGF Aarhus v Lyngby“",
         "AF Elbasani v Dinamo Tirana (Albanian Superliga): name — bester Kandidat „Guingamp v Rodez AF“",
+        "Bristol City U21 v Norwich U21 (English U21 Premier League Cup): zeit — bester Kandidat „Norwich City v Cardiff City“ · 17.5h Anpfiff-Abstand",
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“"
       ],
-      "note": "ohne Anker: kein_kandidat 58 · name 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 58 · name 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -188,5 +189,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-20T15:55:38.969607+00:00"
+  "generatedAt": "2026-11-20T16:10:41.391249+00:00"
 }
