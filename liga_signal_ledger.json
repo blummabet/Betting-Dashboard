@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-20T16:29:12Z",
-    "total_records": 350,
+    "updated_at": "2026-11-21T00:15:34Z",
+    "total_records": 352,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -4712,6 +4712,51 @@
       "clvBasis": "fair"
     },
     {
+      "key": "ESP-13-531-540|Heimsieg",
+      "matchKey": "ESP-13-531-540",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.21
+        },
+        {
+          "name": "lineup_signal",
+          "score": 0.23
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.83
+        },
+        {
+          "name": "form_rating",
+          "score": 2.54
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-11-21T00:15:31Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.75,
+      "clvResolved": true,
+      "odds": 1.47,
+      "entryOdd": 1.47,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 0.53,
+      "clvBasis": "fair"
+    },
+    {
       "key": "ESP-2-543-548|Heimsieg",
       "matchKey": "ESP-2-543-548",
       "market": "Heimsieg",
@@ -8357,6 +8402,55 @@
       "entryBook": "soft",
       "processVerdict": "UNLUCKY",
       "clvFairPP": -0.74,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-11-110-111|Heimsieg",
+      "matchKey": "FRA-11-110-111",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 0.84
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.74
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.46
+        },
+        {
+          "name": "form_rating",
+          "score": 2.1
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.69
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "opener_move",
+          "score": 0.79
+        }
+      ],
+      "resolvedAt": "2026-11-21T00:15:31Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -6.45,
+      "clvResolved": true,
+      "odds": 2.02,
+      "entryOdd": 2.02,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": -3.97,
       "clvBasis": "fair"
     },
     {
@@ -16047,7 +16141,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-20T16:29:12Z",
+      "resolvedAt": "2026-11-21T00:15:34Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
