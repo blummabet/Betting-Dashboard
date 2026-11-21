@@ -58,17 +58,9 @@
       "id": "direction_covers_money",
       "label": "Richtung/Vor-Quote deckt Geld-Spiele (Braga-Schutz)",
       "severity": "error",
-      "ok": false,
-      "nFail": 7,
-      "failures": [
-        "nur 19/32 aufgewaermte Geld-Spiele mit Vor-Quote (59% < 60%) → Sprung-/Sub-Schwellen-Guards laufen blind",
-        "FC Dallas v Portland Timbers: keine Vor-Quote fuer 'FC Dallas'",
-        "Juventus v Venezia: keine Vor-Quote fuer 'Juventus'",
-        "Barcelona v Villarreal: keine Vor-Quote fuer 'Barcelona'",
-        "Hull v Brighton: keine Vor-Quote fuer 'Brighton'",
-        "Sassuolo v Genoa: keine Vor-Quote fuer 'Genoa'",
-        "Bologna v Udinese: keine Vor-Quote fuer 'Bologna'"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "leadPrev aus betfair_direction.json traegt die Sprung-Erkennung UND den Sub-Schwellen-Filter. Ohne Vor-Quote koennen beide die Post-Tor-Push nicht mehr abfangen."
     },
     {
@@ -96,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1341426 verbraucht, 3658574 uebrig"
+      "note": "Kontingent: 1342477 verbraucht, 3657523 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -117,7 +109,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Yellow-Red Mechelen v Club Brugge (21 Buecher, ohne Pinnacle); St Pauli v Bochum (24 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Sion v Servette (16 Buecher, ohne Pinnacle); Yellow-Red Mechelen v Club Brugge (7 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -126,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
+      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -192,6 +184,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-21T21:13:43.366564+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-11-21T21:29:15.029628+00:00"
 }
