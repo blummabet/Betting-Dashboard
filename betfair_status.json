@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 90 von 125 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Mlada Boleslav v Zlin (Czech 1 Liga); Sudtirol v US Cremonese (Italian Serie B); Mjallby v Malmo FF (Swedish Allsvenskan)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,24 +90,25 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1282056 verbraucht, 3717944 uebrig"
+      "note": "Kontingent: 1283055 verbraucht, 3716945 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 8,
       "failures": [
         "Gimpo Citizen v Suwon FC (South Korean K2 League): name — bester Kandidat „Gangwon FC v Daejeon Citizen“",
         "Millwall v QPR (English Sky Bet Championship): name — bester Kandidat „Millwall v Queens Park Rangers“",
+        "Persebaya Surabaya v Malut United (Indonesian Super League): name — bester Kandidat „Incheon United v Ulsan Hyundai FC“",
         "Al-Khaleej Khor Fakkan v Al Jazira (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.5h Anpfiff-Abstand",
-        "Al-Wakra v Al Sailiya (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.2h Anpfiff-Abstand",
         "BTS Rekord B-B v Slask Wroclaw II (Polish 2 Liga): name — bester Kandidat „TSG Hoffenheim II v SC Preußen Münster“",
+        "Al-Wakra v Al Sailiya (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.2h Anpfiff-Abstand",
         "GP TS Avia Swidnik v FC Legia Warsaw II (Polish 2 Liga): name — bester Kandidat „TSG Hoffenheim II v SC Preußen Münster“",
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“"
       ],
-      "note": "ohne Anker: kein_kandidat 65 · kein_pinnacle 1 · name 5 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 64 · kein_pinnacle 1 · name 6 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -114,7 +117,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Kawasaki v Fukuoka (23 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -189,6 +192,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-21T07:57:27.544543+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-21T08:12:43.337309+00:00"
 }
