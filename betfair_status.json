@@ -26,10 +26,10 @@
       "nFail": 6,
       "failures": [
         "36294459: zuletzt 39.924 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36293717: zuletzt 303.699 € und Anpfiff erst in 0.8 h — trotzdem nicht mehr im Feed",
-        "36296466: zuletzt 41.617 € und Anpfiff erst in 17.8 h — trotzdem nicht mehr im Feed",
-        "36296032: zuletzt 50.560 € und Anpfiff erst in 18.8 h — trotzdem nicht mehr im Feed",
-        "36296168: zuletzt 33.699 € und Anpfiff erst in 18.8 h — trotzdem nicht mehr im Feed",
+        "36293717: zuletzt 303.699 € und Anpfiff erst in 0.7 h — trotzdem nicht mehr im Feed",
+        "36296466: zuletzt 41.617 € und Anpfiff erst in 17.7 h — trotzdem nicht mehr im Feed",
+        "36296032: zuletzt 50.560 € und Anpfiff erst in 18.7 h — trotzdem nicht mehr im Feed",
+        "36296168: zuletzt 33.699 € und Anpfiff erst in 18.7 h — trotzdem nicht mehr im Feed",
         "36296523: zuletzt 26.864 € und Anpfiff erst in 20.0 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
@@ -97,18 +97,16 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1332861 verbraucht, 3667139 uebrig"
+      "note": "Kontingent: 1333243 verbraucht, 3666757 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Real Tomayapo v Nacional Potosi (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Sevilla v Real Betis“"
-      ],
-      "note": "ohne Anker: kein_kandidat 13 · kein_pinnacle 4 · name 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "ohne Anker: kein_kandidat 14 · kein_pinnacle 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -117,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Kalamata v AEK Athens (32 Buecher, ohne Pinnacle); CD Castellon v Eldense (34 Buecher, ohne Pinnacle); Dundee v Hearts (7 Buecher, ohne Pinnacle); Grazer AK v Rapid Vienna (33 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Kalamata v AEK Athens (32 Buecher, ohne Pinnacle); CD Castellon v Eldense (34 Buecher, ohne Pinnacle); Dundee v Hearts (7 Buecher, ohne Pinnacle); Grazer AK v Rapid Vienna (32 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -192,6 +190,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-11-21T19:13:30.597685+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-21T19:15:08.817079+00:00"
 }
