@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-21T08:27:05.445967+00:00",
-"count": 26,
-"covered": 25,
+"generatedAt": "2026-11-21T08:42:03.798497+00:00",
+"count": 28,
+"covered": 26,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -53,6 +53,7 @@
 "German Bundesliga",
 "Italian Serie A",
 "Japanese J League",
+"South Korean K1 League",
 "Spanish La Liga",
 "Turkish Super League"
 ],
@@ -61,15 +62,15 @@
 "oddsKeysMitDaten": 47,
 "oddsEvents": 486,
 "oddsTotals": {
-"versucht": 7,
+"versucht": 8,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 7,
+"gewollt": 8,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1284085,
-"remaining": 3715915,
+"used": 1285126,
+"remaining": 3714874,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -88,28 +89,80 @@
 "moneyName": "Man City",
 "moneySharePct": 86,
 "moneyOdd": 1.41,
-"moneyDir": "out",
-"totVol": 285143,
-"pinnOdd": 1.38,
+"moneyDir": "flat",
+"totVol": 287592,
+"pinnOdd": 1.39,
 "softOdd": 1.36,
 "softN": 51,
 "poly": null,
 "pinn": {
-"home": 0.7059,
-"draw": 0.1768,
-"away": 0.1174,
+"home": 0.7007,
+"draw": 0.1787,
+"away": 0.1205,
 "fav": "home"
 },
 "soft": {
-"home": 0.6924,
-"draw": 0.1769,
-"away": 0.1307,
+"home": 0.6921,
+"draw": 0.1768,
+"away": 0.1311,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 2.0,
+"pinnMovePP": 1.5,
 "pinnMove": {
-"movePP": 2.0,
+"movePP": 1.5,
+"stepPP": -0.5,
+"n": 25,
+"move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36293332",
+"home": "Lazio",
+"away": "Lecce",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-11-21T14:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Lazio",
+"moneySharePct": 86,
+"moneyOdd": 1.52,
+"moneyDir": "out",
+"totVol": 196838,
+"pinnOdd": 1.5,
+"softOdd": 1.48,
+"softN": 49,
+"poly": {
+"vol": 1895,
+"odd": 1.4,
+"sharePct": 72,
+"shareSrc": "preis",
+"key": "sea-laz-lec-2026-11-21",
+"sideKey": "SS Lazio",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.6444,
+"draw": 0.2115,
+"away": 0.1441,
+"fav": "home"
+},
+"soft": {
+"home": 0.6458,
+"draw": 0.2074,
+"away": 0.1468,
+"fav": "home",
+"n": 49
+},
+"pinnMovePP": -3.9,
+"pinnMove": {
+"movePP": -3.9,
 "stepPP": 0.0,
 "n": 25,
 "move": true,
@@ -130,9 +183,9 @@
 "moneySide": "home",
 "moneyName": "Real Madrid",
 "moneySharePct": 96,
-"moneyOdd": 1.17,
-"moneyDir": "in",
-"totVol": 195534,
+"moneyOdd": 1.18,
+"moneyDir": "out",
+"totVol": 196241,
 "pinnOdd": 1.16,
 "softOdd": 1.16,
 "softN": 44,
@@ -144,9 +197,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8187,
-"draw": 0.1188,
-"away": 0.0625,
+"home": 0.8186,
+"draw": 0.119,
+"away": 0.0624,
 "fav": "home",
 "n": 44
 },
@@ -157,58 +210,6 @@
 "n": 25,
 "move": false,
 "laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36293332",
-"home": "Lazio",
-"away": "Lecce",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-11-21T14:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Lazio",
-"moneySharePct": 86,
-"moneyOdd": 1.5,
-"moneyDir": "in",
-"totVol": 192350,
-"pinnOdd": 1.5,
-"softOdd": 1.48,
-"softN": 49,
-"poly": {
-"vol": 1895,
-"odd": 1.4,
-"sharePct": 72,
-"shareSrc": "preis",
-"key": "sea-laz-lec-2026-11-21",
-"sideKey": "SS Lazio",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6443,
-"draw": 0.2115,
-"away": 0.1442,
-"fav": "home"
-},
-"soft": {
-"home": 0.6449,
-"draw": 0.2081,
-"away": 0.147,
-"fav": "home",
-"n": 49
-},
-"pinnMovePP": -3.6,
-"pinnMove": {
-"movePP": -3.6,
-"stepPP": -0.5,
-"n": 25,
-"move": true,
-"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -226,9 +227,9 @@
 "moneyName": "Aston Villa",
 "moneySharePct": 88,
 "moneyOdd": 1.82,
-"moneyDir": "out",
-"totVol": 172049,
-"pinnOdd": 1.78,
+"moneyDir": "flat",
+"totVol": 172291,
+"pinnOdd": 1.79,
 "softOdd": 1.75,
 "softN": 51,
 "poly": {
@@ -242,22 +243,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5466,
-"draw": 0.2495,
-"away": 0.204,
+"home": 0.5445,
+"draw": 0.2525,
+"away": 0.203,
 "fav": "home"
 },
 "soft": {
-"home": 0.5416,
-"draw": 0.2467,
-"away": 0.2117,
+"home": 0.5413,
+"draw": 0.2469,
+"away": 0.2118,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 0.7,
+"pinnMovePP": 0.5,
 "pinnMove": {
-"movePP": 0.7,
-"stepPP": -0.0,
+"movePP": 0.5,
+"stepPP": -0.2,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -276,12 +277,12 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Chelsea",
-"moneySharePct": 71,
-"moneyOdd": 2.12,
-"moneyDir": "flat",
-"totVol": 142978,
-"pinnOdd": 2.08,
-"softOdd": 2.01,
+"moneySharePct": 70,
+"moneyOdd": 2.14,
+"moneyDir": "out",
+"totVol": 146221,
+"pinnOdd": 2.11,
+"softOdd": 2.0,
 "softN": 51,
 "poly": {
 "vol": 5669,
@@ -294,25 +295,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4687,
-"draw": 0.2762,
-"away": 0.2552,
+"home": 0.4625,
+"draw": 0.278,
+"away": 0.2595,
 "fav": "home"
 },
 "soft": {
-"home": 0.4704,
+"home": 0.4698,
 "draw": 0.27,
-"away": 0.2596,
+"away": 0.2602,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": -1.1,
+"pinnMovePP": -1.8,
 "pinnMove": {
-"movePP": -1.1,
-"stepPP": -0.0,
+"movePP": -1.8,
+"stepPP": -0.6,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -329,23 +330,23 @@
 "moneySide": "away",
 "moneyName": "Okayama",
 "moneySharePct": 78,
-"moneyOdd": 1.23,
+"moneyOdd": 1.2,
 "moneyDir": "in",
-"totVol": 119050,
-"pinnOdd": 1.21,
-"softOdd": 1.17,
+"totVol": 126697,
+"pinnOdd": 1.17,
+"softOdd": 1.12,
 "softN": 34,
 "poly": null,
 "pinn": {
-"home": 0.0525,
-"draw": 0.1756,
-"away": 0.7719,
+"home": 0.0375,
+"draw": 0.1604,
+"away": 0.8021,
 "fav": "away"
 },
 "soft": {
-"home": 0.0465,
-"draw": 0.1808,
-"away": 0.7727,
+"home": 0.0255,
+"draw": 0.1584,
+"away": 0.8161,
 "fav": "away",
 "n": 34
 },
@@ -365,10 +366,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Bournemouth",
-"moneySharePct": 67,
-"moneyOdd": 1.98,
-"moneyDir": "flat",
-"totVol": 93644,
+"moneySharePct": 66,
+"moneyOdd": 2.0,
+"moneyDir": "out",
+"totVol": 100770,
 "pinnOdd": 1.94,
 "softOdd": 1.91,
 "softN": 51,
@@ -383,21 +384,21 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5019,
-"draw": 0.2712,
-"away": 0.2269,
+"home": 0.5016,
+"draw": 0.2726,
+"away": 0.2258,
 "fav": "home"
 },
 "soft": {
-"home": 0.497,
-"draw": 0.2677,
-"away": 0.2353,
+"home": 0.4951,
+"draw": 0.2684,
+"away": 0.2365,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 0.5,
+"pinnMovePP": 0.4,
 "pinnMove": {
-"movePP": 0.5,
+"movePP": 0.4,
 "stepPP": -0.0,
 "n": 25,
 "move": false,
@@ -419,9 +420,9 @@
 "moneyName": "Tottenham",
 "moneySharePct": 78,
 "moneyOdd": 1.57,
-"moneyDir": "in",
-"totVol": 81642,
-"pinnOdd": 1.54,
+"moneyDir": "flat",
+"totVol": 82601,
+"pinnOdd": 1.53,
 "softOdd": 1.51,
 "softN": 51,
 "poly": {
@@ -435,25 +436,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6312,
-"draw": 0.2113,
-"away": 0.1575,
+"home": 0.6368,
+"draw": 0.2095,
+"away": 0.1537,
 "fav": "home"
 },
 "soft": {
-"home": 0.6259,
-"draw": 0.2113,
-"away": 0.1627,
+"home": 0.6262,
+"draw": 0.211,
+"away": 0.1628,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 1.7,
+"pinnMovePP": 2.2,
 "pinnMove": {
-"movePP": 1.7,
-"stepPP": -0.0,
+"movePP": 2.2,
+"stepPP": 0.6,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -472,31 +473,31 @@
 "moneySharePct": 90,
 "moneyOdd": 2.02,
 "moneyDir": "flat",
-"totVol": 76304,
-"pinnOdd": 1.95,
+"totVol": 76893,
+"pinnOdd": 1.96,
 "softOdd": 1.91,
 "softN": 45,
 "poly": null,
 "pinn": {
-"home": 0.4964,
-"draw": 0.2758,
-"away": 0.2278,
+"home": 0.4937,
+"draw": 0.2765,
+"away": 0.2298,
 "fav": "home"
 },
 "soft": {
-"home": 0.4927,
-"draw": 0.273,
-"away": 0.2343,
+"home": 0.492,
+"draw": 0.2738,
+"away": 0.2342,
 "fav": "home",
 "n": 45
 },
-"pinnMovePP": -1.6,
+"pinnMovePP": -1.9,
 "pinnMove": {
-"movePP": -1.6,
-"stepPP": 0.0,
+"movePP": -1.9,
+"stepPP": -0.3,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -513,9 +514,9 @@
 "moneySide": "home",
 "moneyName": "Liverpool",
 "moneySharePct": 69,
-"moneyOdd": 1.77,
-"moneyDir": "flat",
-"totVol": 64798,
+"moneyOdd": 1.76,
+"moneyDir": "in",
+"totVol": 64812,
 "pinnOdd": 1.71,
 "softOdd": 1.69,
 "softN": 51,
@@ -546,6 +547,58 @@
 "pinnTotals": null
 },
 {
+"matchId": "36293470",
+"home": "Sevilla",
+"away": "Betis",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-11-21T17:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Betis",
+"moneySharePct": 73,
+"moneyOdd": 2.54,
+"moneyDir": "out",
+"totVol": 60638,
+"pinnOdd": 2.45,
+"softOdd": 2.4,
+"softN": 45,
+"poly": {
+"vol": 1151,
+"odd": 2.35,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "lal-sev-bet-2026-11-21",
+"sideKey": "Real Betis Balompié",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3153,
+"draw": 0.2882,
+"away": 0.3964,
+"fav": "away"
+},
+"soft": {
+"home": 0.319,
+"draw": 0.285,
+"away": 0.396,
+"fav": "away",
+"n": 45
+},
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.2,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36293556",
 "home": "Newcastle",
 "away": "Arsenal",
@@ -555,10 +608,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Arsenal",
-"moneySharePct": 78,
-"moneyOdd": 1.6,
-"moneyDir": "in",
-"totVol": 59634,
+"moneySharePct": 79,
+"moneyOdd": 1.61,
+"moneyDir": "out",
+"totVol": 60623,
 "pinnOdd": 1.58,
 "softOdd": 1.56,
 "softN": 51,
@@ -579,9 +632,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1656,
+"home": 0.1657,
 "draw": 0.226,
-"away": 0.6084,
+"away": 0.6083,
 "fav": "away",
 "n": 51
 },
@@ -589,58 +642,6 @@
 "pinnMove": {
 "movePP": -0.2,
 "stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36293470",
-"home": "Sevilla",
-"away": "Betis",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-11-21T17:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Betis",
-"moneySharePct": 74,
-"moneyOdd": 2.5,
-"moneyDir": "in",
-"totVol": 53309,
-"pinnOdd": 2.46,
-"softOdd": 2.4,
-"softN": 45,
-"poly": {
-"vol": 1151,
-"odd": 2.35,
-"sharePct": 42,
-"shareSrc": "preis",
-"key": "lal-sev-bet-2026-11-21",
-"sideKey": "Real Betis Balompié",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.3141,
-"draw": 0.2914,
-"away": 0.3945,
-"fav": "away"
-},
-"soft": {
-"home": 0.3177,
-"draw": 0.2847,
-"away": 0.3975,
-"fav": "away",
-"n": 45
-},
-"pinnMovePP": -0.2,
-"pinnMove": {
-"movePP": -0.2,
-"stepPP": 0.1,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -662,7 +663,7 @@
 "moneySharePct": 88,
 "moneyOdd": 1.5,
 "moneyDir": "flat",
-"totVol": 45491,
+"totVol": 45520,
 "pinnOdd": 1.49,
 "softOdd": 1.44,
 "softN": 48,
@@ -674,8 +675,8 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1597,
-"draw": 0.1879,
+"home": 0.1596,
+"draw": 0.188,
 "away": 0.6524,
 "fav": "away",
 "n": 48
@@ -705,21 +706,21 @@
 "moneySharePct": 50,
 "moneyOdd": 2.4,
 "moneyDir": "flat",
-"totVol": 40665,
+"totVol": 40851,
 "pinnOdd": 2.36,
 "softOdd": 2.3,
 "softN": 44,
 "poly": null,
 "pinn": {
-"home": 0.4115,
-"draw": 0.2934,
-"away": 0.2952,
+"home": 0.4111,
+"draw": 0.2949,
+"away": 0.294,
 "fav": "home"
 },
 "soft": {
-"home": 0.4119,
-"draw": 0.2903,
-"away": 0.2978,
+"home": 0.4115,
+"draw": 0.2904,
+"away": 0.2981,
 "fav": "home",
 "n": 44
 },
@@ -727,7 +728,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": -0.0,
-"n": 21,
+"n": 22,
 "move": false,
 "laeuft": false
 },
@@ -748,8 +749,8 @@
 "moneySharePct": 40,
 "moneyOdd": 3.6,
 "moneyDir": "flat",
-"totVol": 38225,
-"pinnOdd": 3.5,
+"totVol": 38693,
+"pinnOdd": 3.44,
 "softOdd": 3.42,
 "softN": 51,
 "poly": {
@@ -763,25 +764,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3826,
-"draw": 0.2787,
-"away": 0.3387,
+"home": 0.3798,
+"draw": 0.2837,
+"away": 0.3365,
 "fav": "home"
 },
 "soft": {
-"home": 0.3823,
+"home": 0.3825,
 "draw": 0.2759,
-"away": 0.3418,
+"away": 0.3417,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 0.6,
+"pinnMovePP": 1.1,
 "pinnMove": {
-"movePP": 0.6,
-"stepPP": 0.0,
+"movePP": 1.1,
+"stepPP": 0.5,
 "n": 25,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "uneinig",
 "agree": false,
@@ -800,7 +801,7 @@
 "moneySharePct": 89,
 "moneyOdd": 1.3,
 "moneyDir": "flat",
-"totVol": 37625,
+"totVol": 38192,
 "pinnOdd": 1.29,
 "softOdd": 1.29,
 "softN": 49,
@@ -851,9 +852,9 @@
 "moneyName": "Roma",
 "moneySharePct": 84,
 "moneyOdd": 1.26,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 37072,
-"pinnOdd": 1.23,
+"pinnOdd": 1.24,
 "softOdd": 1.22,
 "softN": 49,
 "poly": {
@@ -867,25 +868,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.0778,
-"draw": 0.14,
-"away": 0.7821,
+"home": 0.0807,
+"draw": 0.1427,
+"away": 0.7767,
 "fav": "away"
 },
 "soft": {
-"home": 0.0829,
-"draw": 0.1477,
-"away": 0.7694,
+"home": 0.0831,
+"draw": 0.1479,
+"away": 0.7691,
 "fav": "away",
 "n": 49
 },
-"pinnMovePP": 3.1,
+"pinnMovePP": 2.6,
 "pinnMove": {
-"movePP": 3.1,
-"stepPP": 0.3,
+"movePP": 2.6,
+"stepPP": -0.3,
 "n": 23,
 "move": true,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -902,9 +903,9 @@
 "moneySide": "home",
 "moneyName": "Leverkusen",
 "moneySharePct": 85,
-"moneyOdd": 1.29,
-"moneyDir": "in",
-"totVol": 35860,
+"moneyOdd": 1.31,
+"moneyDir": "out",
+"totVol": 36586,
 "pinnOdd": 1.27,
 "softOdd": 1.26,
 "softN": 49,
@@ -919,22 +920,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.758,
-"draw": 0.1377,
-"away": 0.1043,
+"home": 0.7575,
+"draw": 0.1378,
+"away": 0.1047,
 "fav": "home"
 },
 "soft": {
-"home": 0.7488,
-"draw": 0.1451,
-"away": 0.1061,
+"home": 0.7475,
+"draw": 0.1462,
+"away": 0.1063,
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": -0.4,
+"pinnMovePP": -0.5,
 "pinnMove": {
-"movePP": -0.4,
-"stepPP": -0.0,
+"movePP": -0.5,
+"stepPP": -0.1,
 "n": 24,
 "move": false,
 "laeuft": false
@@ -954,9 +955,9 @@
 "moneySide": "away",
 "moneyName": "Genoa",
 "moneySharePct": 63,
-"moneyOdd": 2.72,
-"moneyDir": "flat",
-"totVol": 35595,
+"moneyOdd": 2.74,
+"moneyDir": "out",
+"totVol": 35606,
 "pinnOdd": 2.69,
 "softOdd": 2.55,
 "softN": 49,
@@ -1005,10 +1006,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "RB Leipzig",
-"moneySharePct": 87,
+"moneySharePct": 88,
 "moneyOdd": 1.55,
 "moneyDir": "flat",
-"totVol": 31548,
+"totVol": 33515,
 "pinnOdd": 1.5,
 "softOdd": 1.49,
 "softN": 49,
@@ -1023,15 +1024,15 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.1586,
-"draw": 0.1975,
-"away": 0.6439,
+"home": 0.1587,
+"draw": 0.1978,
+"away": 0.6435,
 "fav": "away"
 },
 "soft": {
-"home": 0.1665,
+"home": 0.1664,
 "draw": 0.2006,
-"away": 0.6329,
+"away": 0.633,
 "fav": "away",
 "n": 49
 },
@@ -1060,7 +1061,7 @@
 "moneySharePct": 83,
 "moneyOdd": 1.8,
 "moneyDir": "flat",
-"totVol": 28429,
+"totVol": 28448,
 "pinnOdd": 1.76,
 "softOdd": 1.73,
 "softN": 49,
@@ -1081,58 +1082,15 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.548,
-"draw": 0.2521,
-"away": 0.1998,
+"home": 0.5478,
+"draw": 0.252,
+"away": 0.2001,
 "fav": "home",
 "n": 49
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
 "movePP": -0.2,
-"stepPP": -0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36296466",
-"home": "Barcelona",
-"away": "Villarreal",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-11-22T13:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Barcelona",
-"moneySharePct": 87,
-"moneyOdd": 1.23,
-"moneyDir": "flat",
-"totVol": 25163,
-"pinnOdd": 1.21,
-"softOdd": 1.19,
-"softN": 45,
-"poly": null,
-"pinn": {
-"home": 0.7965,
-"draw": 0.1329,
-"away": 0.0706,
-"fav": "home"
-},
-"soft": {
-"home": 0.791,
-"draw": 0.1259,
-"away": 0.083,
-"fav": "home",
-"n": 45
-},
-"pinnMovePP": 0.6,
-"pinnMove": {
-"movePP": 0.6,
 "stepPP": -0.0,
 "n": 25,
 "move": false,
@@ -1155,31 +1113,74 @@
 "moneySharePct": 86,
 "moneyOdd": 1.22,
 "moneyDir": "flat",
-"totVol": 24006,
+"totVol": 25400,
 "pinnOdd": 1.21,
 "softOdd": 1.18,
 "softN": 42,
 "poly": null,
 "pinn": {
-"home": 0.7954,
-"draw": 0.1261,
-"away": 0.0784,
+"home": 0.7947,
+"draw": 0.1267,
+"away": 0.0786,
 "fav": "home"
 },
 "soft": {
-"home": 0.7878,
-"draw": 0.132,
-"away": 0.0803,
+"home": 0.7886,
+"draw": 0.1321,
+"away": 0.0794,
 "fav": "home",
 "n": 42
 },
-"pinnMovePP": -0.7,
+"pinnMovePP": -0.8,
 "pinnMove": {
-"movePP": -0.7,
-"stepPP": -0.8,
+"movePP": -0.8,
+"stepPP": -0.9,
 "n": 3,
 "move": false,
 "laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36296466",
+"home": "Barcelona",
+"away": "Villarreal",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-11-22T13:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Barcelona",
+"moneySharePct": 87,
+"moneyOdd": 1.22,
+"moneyDir": "in",
+"totVol": 25187,
+"pinnOdd": 1.21,
+"softOdd": 1.2,
+"softN": 45,
+"poly": null,
+"pinn": {
+"home": 0.7965,
+"draw": 0.1329,
+"away": 0.0706,
+"fav": "home"
+},
+"soft": {
+"home": 0.7891,
+"draw": 0.127,
+"away": 0.0839,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": 0.2,
+"pinnMove": {
+"movePP": 0.2,
+"stepPP": -0.0,
+"n": 25,
+"move": false,
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -1229,6 +1230,43 @@
 "pinnTotals": null
 },
 {
+"matchId": "36323169",
+"home": "Gangwon",
+"away": "Daejeon Citizen",
+"league": "South Korean K1 League",
+"country": "KR",
+"kickoff": "2026-11-21T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Gangwon",
+"moneySharePct": 48,
+"moneyOdd": 2.86,
+"moneyDir": "out",
+"totVol": 15549,
+"pinnOdd": 2.73,
+"softOdd": 2.7,
+"softN": 31,
+"poly": null,
+"pinn": {
+"home": 0.346,
+"draw": 0.4054,
+"away": 0.2486,
+"fav": "draw"
+},
+"soft": {
+"home": 0.3367,
+"draw": 0.4065,
+"away": 0.2568,
+"fav": "draw",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
 "matchId": "36315309",
 "home": "Amed Sportif Faaliyetler",
 "away": "Rizespor",
@@ -1240,27 +1278,33 @@
 "moneyName": "Amed Sportif Faaliyetler",
 "moneySharePct": 68,
 "moneyOdd": 1.92,
-"moneyDir": "in",
-"totVol": 15063,
-"pinnOdd": 1.87,
+"moneyDir": "flat",
+"totVol": 15071,
+"pinnOdd": 1.86,
 "softOdd": 1.81,
 "softN": 42,
 "poly": null,
 "pinn": {
-"home": 0.5177,
-"draw": 0.2384,
-"away": 0.2439,
+"home": 0.5199,
+"draw": 0.2365,
+"away": 0.2436,
 "fav": "home"
 },
 "soft": {
-"home": 0.5132,
-"draw": 0.2445,
-"away": 0.2423,
+"home": 0.5128,
+"draw": 0.2446,
+"away": 0.2426,
 "fav": "home",
 "n": 42
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.2,
+"pinnMove": {
+"movePP": 0.2,
+"stepPP": 0.2,
+"n": 2,
+"move": false,
+"laeuft": true
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1278,7 +1322,7 @@
 "moneySharePct": 80,
 "moneyOdd": 1.63,
 "moneyDir": "flat",
-"totVol": 54687,
+"totVol": 55015,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1297,6 +1341,36 @@
 "score": 0.5,
 "grund": "name"
 }
+},
+{
+"matchId": "36329227",
+"home": "Seongnam FC",
+"away": "Yongin FC",
+"league": "South Korean K2 League",
+"country": "KR",
+"kickoff": "2026-11-21T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Seongnam FC",
+"moneySharePct": 76,
+"moneyOdd": 1.14,
+"moneyDir": "in",
+"totVol": 16523,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Seongnam FC v Yongin FC",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 47,
@@ -1304,11 +1378,20 @@
 "ankerMit": 45,
 "ankerDiagnose": {
 "nach": {
-"name": 5,
-"kein_kandidat": 64,
+"kein_kandidat": 63,
+"name": 6,
 "zeit": 2
 },
 "beispiele": [
+{
+"spiel": "Persebaya Surabaya v Malut United",
+"kandidat": "Incheon United v Ulsan Hyundai FC",
+"key": "soccer_korea_kleague1",
+"score": 0.5,
+"grund": "name",
+"matchId": "36341521",
+"liga": "Indonesian Super League"
+},
 {
 "spiel": "Gimpo Citizen v Suwon FC",
 "kandidat": "Gangwon FC v Daejeon Citizen",
