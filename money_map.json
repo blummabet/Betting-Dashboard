@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-11-21T20:28:36.375034+00:00",
-"count": 5,
+"generatedAt": "2026-11-21T20:43:24.386502+00:00",
+"count": 7,
 "rows": [
 {
 "matchId": "36293717",
@@ -14,14 +14,19 @@
 "side": "home",
 "name": "Real Madrid",
 "sharePct": 94,
-"eur": 2030807,
-"odd": 1.52
+"eur": 2770269,
+"odd": 1.81
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.6084,
+"draw": 0.2355,
+"away": 0.1561
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
 },
 {
 "matchId": "36296219",
@@ -34,9 +39,9 @@
 "betfair": {
 "side": "home",
 "name": "Napoli",
-"sharePct": 88,
-"eur": 684668,
-"odd": 1.69
+"sharePct": 89,
+"eur": 763856,
+"odd": 1.74
 },
 "poly": {
 "side": "home",
@@ -47,9 +52,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5834,
-"draw": 0.2749,
-"away": 0.1417
+"home": 0.5602,
+"draw": 0.3133,
+"away": 0.1265
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -66,16 +71,16 @@
 "betfair": {
 "side": "home",
 "name": "SE Palmeiras",
-"sharePct": 46,
-"eur": 377703,
-"odd": 1.75
+"sharePct": 48,
+"eur": 396024,
+"odd": 1.68
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.5658,
-"draw": 0.2779,
-"away": 0.1563
+"home": 0.5781,
+"draw": 0.2764,
+"away": 0.1454
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -92,9 +97,9 @@
 "betfair": {
 "side": "home",
 "name": "Monaco",
-"sharePct": 80,
-"eur": 181276,
-"odd": 2.54
+"sharePct": 78,
+"eur": 195248,
+"odd": 2.7
 },
 "poly": {
 "side": "home",
@@ -105,9 +110,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.4136,
-"draw": 0.3161,
-"away": 0.2703
+"home": 0.3818,
+"draw": 0.3301,
+"away": 0.2881
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -120,13 +125,13 @@
 "league": "French Ligue 1",
 "live": true,
 "kickoff": "2026-11-21T19:45:00Z",
-"verdict": "teil",
+"verdict": "uneinig",
 "betfair": {
 "side": "home",
 "name": "Lens",
-"sharePct": 61,
-"eur": 146548,
-"odd": 5.3
+"sharePct": 50,
+"eur": 180301,
+"odd": 5.7
 },
 "poly": {
 "side": "home",
@@ -136,35 +141,87 @@
 "src": "liga"
 },
 "pinn": {
-"fav": "home",
-"home": 0.4076,
-"draw": 0.3219,
-"away": 0.2705
+"fav": "away",
+"home": 0.1814,
+"draw": 0.2846,
+"away": 0.534
 },
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
+},
+{
+"matchId": "36305441",
+"home": "New England Revolution",
+"away": "Philadelphia",
+"league": "US MLS",
+"live": true,
+"kickoff": "2026-11-21T19:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "New England Revolution",
+"sharePct": 79,
+"eur": 165763,
+"odd": 1.07
+},
+"poly": null,
+"pinn": {
+"fav": "home",
+"home": 0.6401,
+"draw": 0.2603,
+"away": 0.0996
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
+},
+{
+"matchId": "36295643",
+"home": "Lille",
+"away": "Lyon",
+"league": "French Ligue 1",
+"live": true,
+"kickoff": "2026-11-21T19:45:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Lille",
+"sharePct": 42,
+"eur": 164232,
+"odd": 8.0
+},
+"poly": null,
+"pinn": {
+"fav": "draw",
+"home": 0.3689,
+"draw": 0.3703,
+"away": 0.2608
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
 }
 ],
-"nameMatchMisses": 16,
+"nameMatchMisses": 19,
 "nameMatchMissList": [
+{
+"matchId": "36319086",
+"home": "Alianza Lima",
+"away": "FC Cajamarca",
+"league": "Peruvian Primera Division"
+},
+{
+"matchId": "36336861",
+"home": "Bahia",
+"away": "Coritiba",
+"league": "Brazilian Serie A"
+},
 {
 "matchId": "36323606",
 "home": "Tenerife",
 "away": "Mallorca",
 "league": "Spanish Segunda Division"
-},
-{
-"matchId": "36325966",
-"home": "SC Telstar",
-"away": "PEC Zwolle",
-"league": "Dutch Eredivisie"
-},
-{
-"matchId": "36329226",
-"home": "FC Groningen",
-"away": "Heerenveen",
-"league": "Dutch Eredivisie"
 },
 {
 "matchId": "36303883",
@@ -173,22 +230,34 @@
 "league": "Scottish Premiership"
 },
 {
+"matchId": "36325966",
+"home": "SC Telstar",
+"away": "PEC Zwolle",
+"league": "Dutch Eredivisie"
+},
+{
 "matchId": "36293717",
 "home": "Real Madrid",
 "away": "Celta Vigo",
 "league": "Spanish La Liga"
 },
 {
+"matchId": "36329226",
+"home": "FC Groningen",
+"away": "Heerenveen",
+"league": "Dutch Eredivisie"
+},
+{
+"matchId": "36325965",
+"home": "Argentinos Juniors",
+"away": "CA Independiente",
+"league": "Argentinian Primera Division"
+},
+{
 "matchId": "36316657",
 "home": "Zulte-Waregem",
 "away": "Antwerp",
 "league": "Belgian Pro League"
-},
-{
-"matchId": "36295644",
-"home": "Strasbourg",
-"away": "Brest",
-"league": "French Ligue 1"
 },
 {
 "matchId": "36319804",
@@ -203,16 +272,10 @@
 "league": "French Ligue 1"
 },
 {
-"matchId": "36336802",
-"home": "SE Palmeiras",
-"away": "Flamengo",
-"league": "Brazilian Serie A"
-},
-{
-"matchId": "36316647",
-"home": "St Pauli",
-"away": "Bochum",
-"league": "German Bundesliga 2"
+"matchId": "36295644",
+"home": "Strasbourg",
+"away": "Brest",
+"league": "French Ligue 1"
 },
 {
 "matchId": "36325908",
@@ -221,22 +284,34 @@
 "league": "Swiss Super League"
 },
 {
+"matchId": "36316647",
+"home": "St Pauli",
+"away": "Bochum",
+"league": "German Bundesliga 2"
+},
+{
+"matchId": "36336802",
+"home": "SE Palmeiras",
+"away": "Flamengo",
+"league": "Brazilian Serie A"
+},
+{
 "matchId": "36325886",
 "home": "Radomiak Radom",
 "away": "Wisla Krakow",
 "league": "Polish Ekstraklasa"
 },
 {
-"matchId": "36305441",
-"home": "New England Revolution",
-"away": "Philadelphia",
-"league": "US MLS"
-},
-{
 "matchId": "36319802",
 "home": "Reims",
 "away": "St Etienne",
 "league": "French Ligue 2"
+},
+{
+"matchId": "36305441",
+"home": "New England Revolution",
+"away": "Philadelphia",
+"league": "US MLS"
 },
 {
 "matchId": "36332960",
