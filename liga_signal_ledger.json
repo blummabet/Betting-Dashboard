@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-21T00:15:34Z",
-    "total_records": 352,
+    "updated_at": "2026-11-21T14:37:59Z",
+    "total_records": 353,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -464,6 +464,53 @@
       "entryBook": "soft",
       "processVerdict": "DESERVED_LOSS",
       "clvBasis": "roh"
+    },
+    {
+      "key": "ENG-11-50-36|Über 2.5 Tore",
+      "matchKey": "ENG-11-50-36",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.74
+        },
+        {
+          "name": "injury",
+          "score": 2.75
+        },
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 5.2
+        },
+        {
+          "name": "lineup_signal",
+          "score": -3.25
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.84
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.42
+        }
+      ],
+      "resolvedAt": "2026-11-21T14:37:56Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.44,
+      "entryOdd": 1.44,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "ENG-2-1346-64|Heimsieg",
@@ -16141,7 +16188,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-21T00:15:34Z",
+      "resolvedAt": "2026-11-21T14:37:58Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
