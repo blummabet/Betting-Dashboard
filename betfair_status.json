@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 83 von 236 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Sporting Lisbon v Serra (Portuguese Cup); Defensa y Justicia v Barracas Central (Argentinian Primera Division); Pontevedra CF v Lugo (Spanish Primera Federación - Group 1)"
+        "nur 66 von 222 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Dinamo Bucharest v ACS Petrolul 52 (Romanian Liga I); Empoli v Pisa (Italian Serie B); Grazer AK v Rapid Vienna (Austrian Bundesliga)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,24 +90,26 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1302844 verbraucht, 3697156 uebrig"
+      "note": "Kontingent: 1303939 verbraucht, 3696061 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 9,
       "failures": [
+        "Enkopings SK v Orebro (Swedish Playoffs): unerklaert — bester Kandidat „Enköpings SK v Örebro SK“",
         "GP TS Avia Swidnik v FC Legia Warsaw II (Polish 2 Liga): name — bester Kandidat „TSG Hoffenheim II v SC Preußen Münster“",
         "Laval v Montpellier (French Ligue 2): name — bester Kandidat „Stade Lavallois v Montpellier“",
-        "Al-Wakra v Al Sailiya (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.2h Anpfiff-Abstand",
         "Al-Khaleej Khor Fakkan v Al Jazira (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.5h Anpfiff-Abstand",
-        "Northeast United v FC Goa (Indian Super League): name — bester Kandidat „Chelsea v Leeds United“",
+        "Al-Wakra v Al Sailiya (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.2h Anpfiff-Abstand",
+        "Lunds BK v Norrby IF (Swedish Playoffs): unerklaert — bester Kandidat „Lunds BK v Norrby IF“",
+        "Northeast United v FC Goa (Indian Super League): name — bester Kandidat „Sheffield United v Watford“",
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
         "Millwall v QPR (English Sky Bet Championship): name — bester Kandidat „Millwall v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 68 · kein_pinnacle 1 · name 5 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 66 · name 5 · unerklaert 2 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -125,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 14 gewollt, 14 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -192,5 +194,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-21T12:28:15.830162+00:00"
+  "generatedAt": "2026-11-21T12:42:58.929129+00:00"
 }
