@@ -25,12 +25,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "36293561: zuletzt 96.225 € und Anpfiff erst in 0.0 h — trotzdem nicht mehr im Feed",
-        "36293470: zuletzt 104.994 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36293556: zuletzt 341.058 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36294459: zuletzt 39.924 € und Anpfiff erst in 2.8 h — trotzdem nicht mehr im Feed",
-        "36293717: zuletzt 303.699 € und Anpfiff erst in 3.0 h — trotzdem nicht mehr im Feed",
-        "36296466: zuletzt 41.617 € und Anpfiff erst in 20.0 h — trotzdem nicht mehr im Feed"
+        "36293470: zuletzt 104.994 € und Anpfiff erst in 0.0 h — trotzdem nicht mehr im Feed",
+        "36293556: zuletzt 341.058 € und Anpfiff erst in 0.0 h — trotzdem nicht mehr im Feed",
+        "36294459: zuletzt 39.924 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36293717: zuletzt 303.699 € und Anpfiff erst in 2.5 h — trotzdem nicht mehr im Feed",
+        "36296466: zuletzt 41.617 € und Anpfiff erst in 19.5 h — trotzdem nicht mehr im Feed",
+        "36296032: zuletzt 50.560 € und Anpfiff erst in 20.5 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -41,7 +41,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 0 von 74 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Pachuca v Toluca (Mexican Liga MX); Atletico MG v Boca Juniors (CONMEBOL Copa Sudamericana); Carabobo FC v Portuguesa FC (Venezuelan Primera Division)"
+        "nur 0 von 66 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Estrella Roja v Lobos UPNFM (Honduras Liga Nacional); Santos Laguna v Leon (Mexican Liga MX); Inter Miami CF v Columbus (US MLS)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -97,24 +97,19 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1322993 verbraucht, 3677007 uebrig"
+      "note": "Kontingent: 1325713 verbraucht, 3674287 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 2,
       "failures": [
-        "US Savoia 1908 v Sorrento (Italian Serie C): name — bester Kandidat „US Catanzaro 1929 v Palermo“",
-        "Zaragoza v CF Rayo Majadahonda (Spanish Primera Federación - Group 2): name — bester Kandidat „Rayo Vallecano v Valencia“",
-        "Al Shahaniya v Al Rayyan (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 140.8h Anpfiff-Abstand",
-        "United FC v Al Wahda (Abu Dhabi) (UAE Arabian Gulf League): name — bester Kandidat „Sheffield United v Watford“",
-        "Bedford Town v South Shields (English National League North): name — bester Kandidat „Tottenham Hotspur v Ipswich Town“",
-        "Hebburn Town v Marine FC (English National League North): name — bester Kandidat „Tottenham Hotspur v Ipswich Town“",
-        "FC Eindhoven v RKC Waalwijk (Dutch Eerste Divisie): name — bester Kandidat „NEC Nijmegen v PSV Eindhoven“"
+        "London City Lionesses v Crystal Palace (W) (English WSL): zeit — bester Kandidat „Crystal Palace v Hull City“ · 188.8h Anpfiff-Abstand",
+        "US Savoia 1908 v Sorrento (Italian Serie C): name — bester Kandidat „US Catanzaro 1929 v Palermo“"
       ],
-      "note": "ohne Anker: kein_kandidat 20 · kein_pinnacle 3 · name 6 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 18 · kein_pinnacle 1 · name 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -123,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Chelsea v Leeds (21 Buecher, ohne Pinnacle); NEC Nijmegen v PSV (28 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — NEC Nijmegen v PSV (14 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -132,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -199,5 +194,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-11-21T16:58:29.062143+00:00"
+  "generatedAt": "2026-11-21T17:28:35.078408+00:00"
 }
