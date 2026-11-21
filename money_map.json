@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-21T13:12:34.417999+00:00",
+"generatedAt": "2026-11-21T13:27:28.909390+00:00",
 "count": 22,
 "rows": [
 {
@@ -13,16 +13,16 @@
 "betfair": {
 "side": "home",
 "name": "Man City",
-"sharePct": 87,
-"eur": 2546216,
-"odd": 2.36
+"sharePct": 86,
+"eur": 2759281,
+"odd": 2.64
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.4638,
-"draw": 0.2847,
-"away": 0.2515
+"home": 0.4059,
+"draw": 0.3045,
+"away": 0.2896
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -40,8 +40,8 @@
 "side": "home",
 "name": "Lazio",
 "sharePct": 86,
-"eur": 290992,
-"odd": 1.56
+"eur": 312027,
+"odd": 1.55
 },
 "poly": {
 "side": "home",
@@ -52,9 +52,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.6431,
-"draw": 0.2116,
-"away": 0.1454
+"home": 0.631,
+"draw": 0.2184,
+"away": 0.1507
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -71,16 +71,42 @@
 "betfair": {
 "side": "home",
 "name": "Alaves",
-"sharePct": 64,
-"eur": 262054,
-"odd": 1.43
+"sharePct": 68,
+"eur": 300046,
+"odd": 1.39
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.4485,
-"draw": 0.2953,
-"away": 0.2563
+"home": 0.6892,
+"draw": 0.2104,
+"away": 0.1003
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
+},
+{
+"matchId": "36315172",
+"home": "Wolfsburg",
+"away": "Holstein Kiel",
+"league": "German Bundesliga 2",
+"live": true,
+"kickoff": "2026-11-21T12:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Wolfsburg",
+"sharePct": 84,
+"eur": 285909,
+"odd": 1.05
+},
+"poly": null,
+"pinn": {
+"fav": "home",
+"home": 0.7614,
+"draw": 0.1892,
+"away": 0.0494
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -98,7 +124,7 @@
 "side": "home",
 "name": "Real Madrid",
 "sharePct": 96,
-"eur": 250124,
+"eur": 250913,
 "odd": 1.18
 },
 "poly": null,
@@ -113,30 +139,36 @@
 "nSources": 2
 },
 {
-"matchId": "36315172",
-"home": "Wolfsburg",
-"away": "Holstein Kiel",
-"league": "German Bundesliga 2",
-"live": true,
-"kickoff": "2026-11-21T12:00:00Z",
+"matchId": "36294873",
+"home": "Chelsea",
+"away": "Leeds",
+"league": "English Premier League",
+"live": false,
+"kickoff": "2026-11-21T15:00:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
-"name": "Wolfsburg",
-"sharePct": 83,
-"eur": 235858,
-"odd": 1.32
+"name": "Chelsea",
+"sharePct": 68,
+"eur": 235630,
+"odd": 2.06
 },
-"poly": null,
+"poly": {
+"side": "home",
+"name": "Chelsea FC",
+"sharePct": 52,
+"usd": 5669,
+"src": "liga"
+},
 "pinn": {
 "fav": "home",
-"home": 0.4685,
-"draw": 0.3392,
-"away": 0.1923
+"home": 0.48,
+"draw": 0.2714,
+"away": 0.2486
 },
 "mmStrong": false,
-"polyGeld": false,
-"nSources": 2
+"polyGeld": true,
+"nSources": 3
 },
 {
 "matchId": "36294872",
@@ -150,7 +182,7 @@
 "side": "home",
 "name": "Aston Villa",
 "sharePct": 86,
-"eur": 222776,
+"eur": 229782,
 "odd": 1.8
 },
 "poly": {
@@ -162,43 +194,11 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5471,
-"draw": 0.2517,
-"away": 0.2012
+"home": 0.5463,
+"draw": 0.2519,
+"away": 0.2018
 },
 "mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36294873",
-"home": "Chelsea",
-"away": "Leeds",
-"league": "English Premier League",
-"live": false,
-"kickoff": "2026-11-21T15:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Chelsea",
-"sharePct": 66,
-"eur": 216626,
-"odd": 2.12
-},
-"poly": {
-"side": "home",
-"name": "Chelsea FC",
-"sharePct": 52,
-"usd": 5669,
-"src": "liga"
-},
-"pinn": {
-"fav": "home",
-"home": 0.4779,
-"draw": 0.2715,
-"away": 0.2506
-},
-"mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 },
@@ -214,19 +214,51 @@
 "side": "home",
 "name": "Southampton",
 "sharePct": 80,
-"eur": 207936,
-"odd": 1.82
+"eur": 224749,
+"odd": 1.96
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.6054,
-"draw": 0.2753,
-"away": 0.1192
+"home": 0.4932,
+"draw": 0.3507,
+"away": 0.156
 },
 "mmStrong": false,
 "polyGeld": false,
 "nSources": 2
+},
+{
+"matchId": "36293779",
+"home": "Tottenham",
+"away": "Ipswich",
+"league": "English Premier League",
+"live": false,
+"kickoff": "2026-11-21T15:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Tottenham",
+"sharePct": 85,
+"eur": 220601,
+"odd": 1.58
+},
+"poly": {
+"side": "home",
+"name": "Tottenham Hotspur FC",
+"sharePct": 62,
+"usd": 324,
+"src": "liga"
+},
+"pinn": {
+"fav": "home",
+"home": 0.6432,
+"draw": 0.2032,
+"away": 0.1537
+},
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 3
 },
 {
 "matchId": "36315305",
@@ -240,15 +272,15 @@
 "side": "home",
 "name": "Galatasaray",
 "sharePct": 91,
-"eur": 171200,
-"odd": 1.16
+"eur": 184586,
+"odd": 1.15
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.7515,
-"draw": 0.1496,
-"away": 0.0989
+"home": 0.8322,
+"draw": 0.1202,
+"away": 0.0476
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -266,15 +298,15 @@
 "side": "home",
 "name": "Norwich",
 "sharePct": 83,
-"eur": 166912,
-"odd": 1.95
+"eur": 171657,
+"odd": 2.06
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.5309,
-"draw": 0.2731,
-"away": 0.196
+"home": 0.4819,
+"draw": 0.3128,
+"away": 0.2053
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -292,7 +324,7 @@
 "side": "home",
 "name": "Como",
 "sharePct": 91,
-"eur": 152683,
+"eur": 155986,
 "odd": 1.33
 },
 "poly": {
@@ -304,41 +336,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.756,
-"draw": 0.1541,
-"away": 0.0899
-},
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36293779",
-"home": "Tottenham",
-"away": "Ipswich",
-"league": "English Premier League",
-"live": false,
-"kickoff": "2026-11-21T15:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Tottenham",
-"sharePct": 80,
-"eur": 149341,
-"odd": 1.55
-},
-"poly": {
-"side": "home",
-"name": "Tottenham Hotspur FC",
-"sharePct": 62,
-"usd": 324,
-"src": "liga"
-},
-"pinn": {
-"fav": "home",
-"home": 0.6351,
-"draw": 0.2059,
-"away": 0.159
+"home": 0.7411,
+"draw": 0.1618,
+"away": 0.0971
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -355,8 +355,8 @@
 "betfair": {
 "side": "home",
 "name": "Bournemouth",
-"sharePct": 67,
-"eur": 147862,
+"sharePct": 65,
+"eur": 155127,
 "odd": 2.0
 },
 "poly": {
@@ -387,9 +387,9 @@
 "betfair": {
 "side": "home",
 "name": "Leverkusen",
-"sharePct": 85,
-"eur": 101399,
-"odd": 1.34
+"sharePct": 86,
+"eur": 116655,
+"odd": 1.33
 },
 "poly": {
 "side": "home",
@@ -420,8 +420,8 @@
 "side": "away",
 "name": "Arsenal",
 "sharePct": 78,
-"eur": 94044,
-"odd": 1.61
+"eur": 96839,
+"odd": 1.6
 },
 "poly": {
 "side": "away",
@@ -432,9 +432,9 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.1546,
-"draw": 0.233,
-"away": 0.6125
+"home": 0.1548,
+"draw": 0.2329,
+"away": 0.6123
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -451,8 +451,8 @@
 "betfair": {
 "side": "away",
 "name": "Betis",
-"sharePct": 70,
-"eur": 76606,
+"sharePct": 71,
+"eur": 80395,
 "odd": 2.56
 },
 "poly": {
@@ -483,8 +483,8 @@
 "betfair": {
 "side": "draw",
 "name": "The Draw",
-"sharePct": 36,
-"eur": 75400,
+"sharePct": 35,
+"eur": 78807,
 "odd": 3.55
 },
 "poly": {
@@ -516,8 +516,8 @@
 "side": "away",
 "name": "Roma",
 "sharePct": 86,
-"eur": 73175,
-"odd": 1.25
+"eur": 73411,
+"odd": 1.26
 },
 "poly": {
 "side": "away",
@@ -528,9 +528,9 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.0775,
-"draw": 0.1385,
-"away": 0.7839
+"home": 0.0776,
+"draw": 0.1384,
+"away": 0.784
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -547,9 +547,9 @@
 "betfair": {
 "side": "away",
 "name": "RB Leipzig",
-"sharePct": 81,
-"eur": 45847,
-"odd": 1.53
+"sharePct": 83,
+"eur": 50552,
+"odd": 1.54
 },
 "poly": {
 "side": "away",
@@ -580,7 +580,7 @@
 "side": "away",
 "name": "Genoa",
 "sharePct": 62,
-"eur": 44506,
+"eur": 44523,
 "odd": 2.9
 },
 "poly": {
@@ -601,6 +601,38 @@
 "nSources": 3
 },
 {
+"matchId": "36298788",
+"home": "Eintracht Frankfurt",
+"away": "Hoffenheim",
+"league": "German Bundesliga",
+"live": false,
+"kickoff": "2026-11-21T14:30:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Eintracht Frankfurt",
+"sharePct": 44,
+"eur": 31315,
+"odd": 2.56
+},
+"poly": {
+"side": "home",
+"name": "Eintracht Frankfurt",
+"sharePct": 40,
+"usd": 289,
+"src": "liga"
+},
+"pinn": {
+"fav": "away",
+"home": 0.3784,
+"draw": 0.2417,
+"away": 0.3799
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
 "matchId": "36296168",
 "home": "Bologna",
 "away": "Udinese",
@@ -611,8 +643,8 @@
 "betfair": {
 "side": "home",
 "name": "Bologna",
-"sharePct": 82,
-"eur": 30360,
+"sharePct": 81,
+"eur": 30366,
 "odd": 1.81
 },
 "poly": {
@@ -631,47 +663,39 @@
 "mmStrong": true,
 "polyGeld": true,
 "nSources": 3
-},
-{
-"matchId": "36298788",
-"home": "Eintracht Frankfurt",
-"away": "Hoffenheim",
-"league": "German Bundesliga",
-"live": false,
-"kickoff": "2026-11-21T14:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Eintracht Frankfurt",
-"sharePct": 43,
-"eur": 29796,
-"odd": 2.58
-},
-"poly": {
-"side": "home",
-"name": "Eintracht Frankfurt",
-"sharePct": 40,
-"usd": 289,
-"src": "liga"
-},
-"pinn": {
-"fav": "home",
-"home": 0.3808,
-"draw": 0.2413,
-"away": 0.3779
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
 }
 ],
-"nameMatchMisses": 25,
+"nameMatchMisses": 27,
 "nameMatchMissList": [
+{
+"matchId": "36324112",
+"home": "Sabadell",
+"away": "Granada",
+"league": "Spanish Segunda Division"
+},
 {
 "matchId": "36331392",
 "home": "Kayserispor",
 "away": "Sariyer G.K.",
 "league": "Turkish 1 Lig"
+},
+{
+"matchId": "36291384",
+"home": "Alaves",
+"away": "Deportivo",
+"league": "Spanish La Liga"
+},
+{
+"matchId": "36315302",
+"home": "Fortuna Dusseldorf",
+"away": "SG Sonnenhof",
+"league": "German 3 Liga"
+},
+{
+"matchId": "36315305",
+"home": "Galatasaray",
+"away": "Samsunspor",
+"league": "Turkish Super League"
 },
 {
 "matchId": "36319088",
@@ -686,34 +710,16 @@
 "league": "Turkish Super League"
 },
 {
-"matchId": "36315302",
-"home": "Fortuna Dusseldorf",
-"away": "SG Sonnenhof",
-"league": "German 3 Liga"
+"matchId": "36342773",
+"home": "Liverpool (W)",
+"away": "Chelsea (W)",
+"league": "English WSL"
 },
 {
-"matchId": "36291384",
-"home": "Alaves",
-"away": "Deportivo",
-"league": "Spanish La Liga"
-},
-{
-"matchId": "36315305",
-"home": "Galatasaray",
-"away": "Samsunspor",
-"league": "Turkish Super League"
-},
-{
-"matchId": "36324112",
-"home": "Sabadell",
-"away": "Granada",
-"league": "Spanish Segunda Division"
-},
-{
-"matchId": "36323618",
-"home": "Reading",
-"away": "Bromley",
-"league": "English Sky Bet League 1"
+"matchId": "36324104",
+"home": "Slavia Sofia",
+"away": "Arda",
+"league": "Bulgarian A League"
 },
 {
 "matchId": "36294821",
@@ -722,9 +728,21 @@
 "league": "English Sky Bet Championship"
 },
 {
+"matchId": "36323618",
+"home": "Reading",
+"away": "Bromley",
+"league": "English Sky Bet League 1"
+},
+{
 "matchId": "36294823",
 "home": "Norwich",
 "away": "Cardiff",
+"league": "English Sky Bet Championship"
+},
+{
+"matchId": "36293919",
+"home": "Millwall",
+"away": "QPR",
 "league": "English Sky Bet Championship"
 },
 {
@@ -734,22 +752,10 @@
 "league": "English Sky Bet League 2"
 },
 {
-"matchId": "36293919",
-"home": "Millwall",
-"away": "QPR",
-"league": "English Sky Bet Championship"
-},
-{
 "matchId": "36293092",
 "home": "Man City",
 "away": "Fulham",
 "league": "English Premier League"
-},
-{
-"matchId": "36342286",
-"home": "Bhayangkara FC",
-"away": "Persijap Jepara",
-"league": "Indonesian Super League"
 },
 {
 "matchId": "36315173",
@@ -770,21 +776,15 @@
 "league": "German Bundesliga 2"
 },
 {
+"matchId": "36342286",
+"home": "Bhayangkara FC",
+"away": "Persijap Jepara",
+"league": "Indonesian Super League"
+},
+{
 "matchId": "36293717",
 "home": "Real Madrid",
 "away": "Celta Vigo",
-"league": "Spanish La Liga"
-},
-{
-"matchId": "36225147",
-"home": "Liverpool",
-"away": "Man Utd",
-"league": "English Premier League"
-},
-{
-"matchId": "36296466",
-"home": "Barcelona",
-"away": "Villarreal",
 "league": "Spanish La Liga"
 }
 ]
