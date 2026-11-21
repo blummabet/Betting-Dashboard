@@ -159,14 +159,14 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "epl-ast-sun-2026-11-21 (Aston Villa FC v Sunderland AFC, Anpfiff in 0.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "epl-cov-cry-2026-11-21 (Coventry City FC v Crystal Palace FC, Anpfiff in 0.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "epl-tot-ips-2026-11-21 (Tottenham Hotspur FC v Ipswich Town FC, Anpfiff in 0.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "epl-che-lee-2026-11-21 (Chelsea FC v Leeds United FC, Anpfiff in 0.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "epl-bou-not-2026-11-21 (AFC Bournemouth v Nottingham Forest FC, Anpfiff in 0.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "lal-ray-val-2026-11-21 (Rayo Vallecano de Madrid v Valencia CF, Anpfiff in 0.6h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "fl1-ogc-psg-2026-11-21 (OGC Nice v Paris Saint-Germain FC, Anpfiff in 1.6h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-par-rom-2026-11-21 (Parma Calcio 1913 v AS Roma, Anpfiff in 2.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "fl1-ogc-psg-2026-11-21 (OGC Nice v Paris Saint-Germain FC, Anpfiff in 0.6h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-par-rom-2026-11-21 (Parma Calcio 1913 v AS Roma, Anpfiff in 1.3h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "epl-new-ars-2026-11-21 (Newcastle United FC v Arsenal FC, Anpfiff in 1.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "lal-sev-bet-2026-11-21 (Sevilla FC v Real Betis Balompié, Anpfiff in 1.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "bun-s04-stu-2026-11-21 (FC Schalke 04 v VfB Stuttgart, Anpfiff in 1.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "fl1-lil-lyo-2026-11-21 (Lille OSC v Olympique Lyonnais, Anpfiff in 4.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "fl1-str-sbr-2026-11-21 (RC Strasbourg Alsace v Stade Brestois 29, Anpfiff in 4.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "fl1-asm-aja-2026-11-21 (AS Monaco FC v AJ Auxerre, Anpfiff in 4.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
       "nFail": 8,
       "ok": false,
@@ -207,11 +207,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+10.4 %, UG +5.9 %, Geldseite +1.0 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+10.6 %, UG +6.2 %, Geldseite +0.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6664 (UG +45.6 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6671 (UG +45.7 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -261,8 +261,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 664 h — die Datei selbst ist 664 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 654 h — die Datei selbst ist 654 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 665 h — die Datei selbst ist 665 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 655 h — die Datei selbst ist 655 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -284,7 +284,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1544 Zeilen · 1514 abgerechnet · 18 offen"
+      "hinweis": "1550 Zeilen · 1516 abgerechnet · 22 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -340,7 +340,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 949.9 h, MLS 957.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 950.9 h, MLS 958.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -348,5 +348,5 @@
     }
   ],
   "nFail": 11,
-  "generatedAt": "2026-11-21T14:38:02.714868+00:00"
+  "generatedAt": "2026-11-21T15:39:42.972321+00:00"
 }

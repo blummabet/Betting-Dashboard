@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 664 h kein Lauf mehr verzeichnet"
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 665 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -207,7 +207,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "92/92 mit AH · 92/92 mit Public-O/U."
+      "note": "91/91 mit AH · 90/91 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -277,9 +277,10 @@
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "728-532: Anpfiff in 37min, KEINE Aufstellung"
+        "523-497: Anpfiff in 80min, KEINE Aufstellung",
+        "84-85: Anpfiff in 35min, KEINE Aufstellung"
       ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
@@ -376,7 +377,7 @@
       "ok": false,
       "nFail": 2,
       "failures": [
-        "116-96 Heimsieg @1.83: sichere Linie Doppelte Chance — 1X @1.378 verfügbar (≥1.35), nicht abgeleitet",
+        "116-96 Heimsieg @1.83: sichere Linie Doppelte Chance — 1X @1.382 verfügbar (≥1.35), nicht abgeleitet",
         "79-80 Heimsieg @2.23: sichere Linie Doppelte Chance — 1X @1.374 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
@@ -597,9 +598,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.3h, aber die jüngste Poly-Global-Scan-Datei ist 211.1h alt (poly_wallet_track 211.1h, poly_money_broad 211.1h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.3h, aber die jüngste Poly-Global-Scan-Datei ist 212.1h alt (poly_wallet_track 212.1h, poly_money_broad 212.1h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.3h · jüngste Daten vor 211.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.3h · jüngste Daten vor 212.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -610,16 +611,18 @@
       "failures": [
         "Anker `soccer_italy_coppa_italia` trifft keinen Ligastring im Feed (eingetragen als 'Italian Coppa Italia'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden."
       ],
-      "note": "42 von 43 Ankern der Handliste treffen den Feed · 429 Ligastrings gesehen · Anker liegt auf 87% von 45 offenen Spielen (aus 47 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "42 von 43 Ankern der Handliste treffen den Feed · 428 Ligastrings gesehen · Anker liegt auf 95% von 56 offenen Spielen (aus 47 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
       "label": "Bücher-Punktestand sieht mehr als ein Buch",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "52 Spiele bewertet · 18 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "38 Spiele bewertet, aber bei KEINEM war ein zweites Buch erhoben (Nenner überall < 7). Der Punktestand misst dann nur Betfair gegen sich selbst — genau die Bauform, die gemessen NICHT trägt. Poly-Vorfenster und Pinnacle-Abdeckung prüfen."
+      ],
+      "note": "38 Spiele bewertet · 0 mit mindestens einem fremden Buch · beste Punktzahl 3. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -628,7 +631,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6664/200 seit 75d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 75d · 🔒 Bücher-Score ≥7 von 10: 111/40 seit 81d · 🔒 Liga · Conviction ab 5: 215/80 seit 71d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 81d"
+      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6671/200 seit 75d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 75d · 🔒 Bücher-Score ≥7 von 10: 110/40 seit 81d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 81d · 🔒 Liga · Conviction ab 5: 216/80 seit 71d"
     },
     {
       "id": "killer_push_buch",
@@ -649,6 +652,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 7,
-  "generatedAt": "2026-11-21T14:38:01.904987+00:00"
+  "nFail": 8,
+  "generatedAt": "2026-11-21T15:39:42.125535+00:00"
 }
