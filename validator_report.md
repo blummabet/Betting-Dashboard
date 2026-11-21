@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 21.11.2026 00:14
+# 🟡 Picks Validator — 21.11.2026 09:49
 
 **101 Spiele geprüft** · 🔴 0 Fehler · 🟡 78 Warnungen · 🔵 318 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  21.11.2026 00:14
+  21.11.2026 09:49
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -347,7 +347,7 @@
      Brentford expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇪🇸 La Liga  (rl=26)
+  🇪🇸 La Liga  (rl=25)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 21.11.2026  Alaves vs Deportivo La Coruna
