@@ -22,9 +22,11 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "36294459: zuletzt 39.924 € und Anpfiff erst in 5.0 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +36,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 20 von 192 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Motherwell v Rangers (Scottish Premiership); Cavalry v Atletico Ottawa (Canadian Premier League); UE Sant Andreu v Atletico Madrid II (Spanish Primera Federación - Group 2)"
+        "nur 11 von 181 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Alianza Lima v FC Cajamarca (Peruvian Primera Division); Bahia v Coritiba (Brazilian Serie A); Guimaraes v Braga (Portuguese Cup)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,7 +92,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1312234 verbraucht, 3687766 uebrig"
+      "note": "Kontingent: 1313382 verbraucht, 3686618 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -99,13 +101,13 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "Northeast United v FC Goa (Indian Super League): name — bester Kandidat „Tranmere Rovers v Colchester United“",
+        "Northeast United v FC Goa (Indian Super League): name — bester Kandidat „Chelsea v Leeds United“",
         "Al-Khaleej Khor Fakkan v Al Jazira (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.5h Anpfiff-Abstand",
         "Mgladbach v Dortmund (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v Borussia Dortmund“",
         "Laval v Montpellier (French Ligue 2): name — bester Kandidat „Stade Lavallois v Montpellier“",
         "Al-Wakra v Al Sailiya (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 143.2h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 36 · kein_pinnacle 5 · name 3 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 37 · kein_pinnacle 7 · name 3 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -114,7 +116,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Tromso v Viking (24 Buecher, ohne Pinnacle); Gillingham v Crewe (26 Buecher, ohne Pinnacle); Fortuna Dusseldorf v SG Sonnenhof (20 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Galatasaray v Samsunspor (33 Buecher, ohne Pinnacle); Amed Sportif Faaliyetler v Rizespor (24 Buecher, ohne Pinnacle); Tromso v Viking (12 Buecher, ohne Pinnacle); Fortuna Dusseldorf v SG Sonnenhof (15 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -123,7 +125,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
+      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -189,6 +191,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-21T14:27:59.856505+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-11-21T14:43:05.001441+00:00"
 }
