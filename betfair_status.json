@@ -23,12 +23,10 @@
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
       "ok": false,
-      "nFail": 4,
+      "nFail": 2,
       "failures": [
-        "36297249: zuletzt 122.784 € und Anpfiff erst in 1.7 h — trotzdem nicht mehr im Feed",
-        "36297257: zuletzt 167.706 € und Anpfiff erst in 2.0 h — trotzdem nicht mehr im Feed",
-        "36303120: zuletzt 62.699 € und Anpfiff erst in 26.0 h — trotzdem nicht mehr im Feed",
-        "36288657: zuletzt 29.452 € und Anpfiff erst in 50.0 h — trotzdem nicht mehr im Feed"
+        "36303120: zuletzt 62.699 € und Anpfiff erst in 25.7 h — trotzdem nicht mehr im Feed",
+        "36288657: zuletzt 29.452 € und Anpfiff erst in 49.7 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -39,7 +37,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 12 von 46 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Club Gimnasia y Tiro v Tristan Suarez (Argentinian Primera Nacional); Chicago Fire v Charlotte FC (US MLS); Deportes Limache v La Serena (Chilean Primera Division)"
+        "nur 21 von 46 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Club Gimnasia y Tiro v Tristan Suarez (Argentinian Primera Nacional); Chicago Fire v Charlotte FC (US MLS); Deportes Limache v La Serena (Chilean Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -95,20 +93,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1427159 verbraucht, 3572841 uebrig"
+      "note": "Kontingent: 1428177 verbraucht, 3571823 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
-        "Aalesunds v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Rosenborg“",
+        "Merida AD v Real Union (Spanish Primera Federación - Group 1): name — bester Kandidat „Celta Fortuna v Real Valladolid CF“",
+        "Real Potosi v Bolivar (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Celta Fortuna v Real Valladolid CF“",
         "Wisla Plock v Legia Warsaw (Polish Ekstraklasa): name — bester Kandidat „Wisła Płock v Legia Warszawa“",
         "Athletico-PR v Remo (Brazilian Serie A): name — bester Kandidat „Atletico Paranaense v Remo“"
       ],
-      "note": "ohne Anker: kein_kandidat 24 · kein_pinnacle 2 · name 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 28 · kein_pinnacle 3 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -117,7 +116,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Liverpool v Man Utd (19 Buecher, ohne Pinnacle); PAOK v Kifisia (27 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Liverpool v Man Utd (7 Buecher, ohne Pinnacle); Werder Bremen v Hamburger SV (22 Buecher, ohne Pinnacle); PAOK v Kifisia (31 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -193,5 +192,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-11-22T18:01:42.019140+00:00"
+  "generatedAt": "2026-11-22T18:16:02.458325+00:00"
 }
