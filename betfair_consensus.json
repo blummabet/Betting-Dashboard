@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-22T21:01:15.593803+00:00",
-"count": 17,
-"covered": 13,
+"generatedAt": "2026-11-22T21:15:58.672159+00:00",
+"count": 20,
+"covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -49,9 +49,8 @@
 ],
 "leaguesMitAnker": [
 "Brazilian Serie A",
+"Chilean Primera Division",
 "English Premier League",
-"French Ligue 1",
-"Italian Serie A",
 "Spanish Segunda Division",
 "UEFA Champions League",
 "US MLS"
@@ -59,7 +58,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
 "oddsKeysMitDaten": 46,
-"oddsEvents": 444,
+"oddsEvents": 468,
 "oddsTotals": {
 "versucht": 9,
 "mitDaten": 0,
@@ -68,13 +67,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1439431,
-"remaining": 3560569,
+"used": 1440426,
+"remaining": 3559574,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.909,
+"ankerQuote": 0.857,
 "games": [
 {
 "matchId": "36297249",
@@ -86,13 +85,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Inter",
-"moneySharePct": 90,
-"moneyOdd": 1.07,
+"moneySharePct": 91,
+"moneyOdd": 1.03,
 "moneyDir": "in",
-"totVol": 1475768,
-"pinnOdd": 1.05,
-"softOdd": 1.04,
-"softN": 36,
+"totVol": 1560241,
+"pinnOdd": null,
+"softOdd": 1.02,
+"softN": 34,
 "poly": {
 "vol": 2009,
 "odd": 1.65,
@@ -103,24 +102,28 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": {
-"home": 0.0181,
-"draw": 0.0649,
-"away": 0.917,
-"fav": "away"
-},
+"pinn": null,
 "soft": {
-"home": 0.0208,
-"draw": 0.0727,
-"away": 0.9066,
+"home": 0.0114,
+"draw": 0.0523,
+"away": 0.9364,
 "fav": "away",
-"n": 36
+"n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Atalanta v Inter",
+"grund": "kein_pinnacle",
+"kandidat": "Atalanta BC v Inter Milan",
+"key": "soccer_italy_serie_a",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34
+}
 },
 {
 "matchId": "36297257",
@@ -132,21 +135,21 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Atletico Madrid",
-"moneySharePct": 93,
-"moneyOdd": 1.04,
-"moneyDir": "flat",
-"totVol": 1337589,
+"moneySharePct": 94,
+"moneyOdd": 1.03,
+"moneyDir": "in",
+"totVol": 1432622,
 "pinnOdd": null,
 "softOdd": 1.02,
-"softN": 30,
+"softN": 28,
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.0144,
-"draw": 0.0555,
-"away": 0.9301,
+"home": 0.0106,
+"draw": 0.0464,
+"away": 0.943,
 "fav": "away",
-"n": 30
+"n": 28
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -158,9 +161,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Getafe v Atlético Madrid",
 "key": "soccer_spain_la_liga",
-"nSoft": 30,
+"nSoft": 28,
 "pinnacleImEvent": false,
-"nBuecher": 30
+"nBuecher": 28
 }
 },
 {
@@ -174,11 +177,11 @@
 "moneySide": "home",
 "moneyName": "Marseille",
 "moneySharePct": 89,
-"moneyOdd": 1.07,
-"moneyDir": "in",
-"totVol": 781515,
-"pinnOdd": 1.05,
-"softOdd": 1.04,
+"moneyOdd": 1.24,
+"moneyDir": "out",
+"totVol": 810899,
+"pinnOdd": null,
+"softOdd": 1.05,
 "softN": 37,
 "poly": {
 "vol": 12,
@@ -190,16 +193,11 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": {
-"home": 0.9232,
-"draw": 0.0626,
-"away": 0.0142,
-"fav": "home"
-},
+"pinn": null,
 "soft": {
-"home": 0.9067,
-"draw": 0.0732,
-"away": 0.0201,
+"home": 0.8435,
+"draw": 0.1257,
+"away": 0.0308,
 "fav": "home",
 "n": 37
 },
@@ -207,48 +205,53 @@
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Marseille v Le Mans",
+"grund": "kein_pinnacle",
+"kandidat": "Marseille v Le Mans FC",
+"key": "soccer_france_ligue_one",
+"nSoft": 37,
+"pinnacleImEvent": false,
+"nBuecher": 37
+}
 },
 {
-"matchId": "36328321",
-"home": "Criciuma",
-"away": "Fortaleza EC",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-11-22T19:00:00Z",
+"matchId": "36326383",
+"home": "Burgos",
+"away": "Albacete",
+"league": "Spanish Segunda Division",
+"country": "ES",
+"kickoff": "2026-11-22T20:00:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Criciuma",
-"moneySharePct": 87,
-"moneyOdd": 1.07,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 52,
+"moneyOdd": 2.06,
 "moneyDir": "in",
-"totVol": 115660,
-"pinnOdd": null,
-"softOdd": 1.04,
-"softN": 20,
+"totVol": 108619,
+"pinnOdd": 2.09,
+"softOdd": 1.9,
+"softN": 34,
 "poly": null,
-"pinn": null,
+"pinn": {
+"home": 0.2855,
+"draw": 0.4521,
+"away": 0.2625,
+"fav": "draw"
+},
 "soft": {
-"home": 0.8778,
-"draw": 0.0962,
-"away": 0.026,
-"fav": "home",
-"n": 20
+"home": 0.2768,
+"draw": 0.472,
+"away": 0.2512,
+"fav": "draw",
+"n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Criciuma v Fortaleza EC",
-"grund": "kein_pinnacle",
-"kandidat": "Criciuma v Fortaleza",
-"key": "soccer_brazil_serie_b",
-"nSoft": 20,
-"pinnacleImEvent": false,
-"nBuecher": 20
-}
+"pinnTotals": null
 },
 {
 "matchId": "36303120",
@@ -260,10 +263,10 @@
 "live": false,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 54,
+"moneySharePct": 53,
 "moneyOdd": 3.65,
-"moneyDir": "out",
-"totVol": 100334,
+"moneyDir": "flat",
+"totVol": 103235,
 "pinnOdd": 3.56,
 "softOdd": 3.5,
 "softN": 51,
@@ -303,40 +306,77 @@
 "pinnTotals": null
 },
 {
-"matchId": "36326383",
-"home": "Burgos",
-"away": "Albacete",
-"league": "Spanish Segunda Division",
-"country": "ES",
-"kickoff": "2026-11-22T20:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Burgos",
-"moneySharePct": 53,
-"moneyOdd": 2.96,
-"moneyDir": "out",
-"totVol": 61591,
-"pinnOdd": 2.9,
-"softOdd": 2.65,
-"softN": 35,
+"matchId": "36288664",
+"home": "Lille",
+"away": "Bayern Munich",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-11-25T20:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Bayern Munich",
+"moneySharePct": 81,
+"moneyOdd": 1.67,
+"moneyDir": "flat",
+"totVol": 71861,
+"pinnOdd": 1.64,
+"softOdd": 1.6,
+"softN": 46,
 "poly": null,
 "pinn": {
-"home": 0.3259,
-"draw": 0.42,
-"away": 0.2541,
-"fav": "draw"
+"home": 0.1941,
+"draw": 0.2153,
+"away": 0.5906,
+"fav": "away"
 },
 "soft": {
-"home": 0.3402,
-"draw": 0.3975,
-"away": 0.2623,
-"fav": "draw",
-"n": 35
+"home": 0.1878,
+"draw": 0.2191,
+"away": 0.5931,
+"fav": "away",
+"n": 46
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36304393",
+"home": "Atletico Madrid",
+"away": "Viking",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-11-25T20:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Atletico Madrid",
+"moneySharePct": 97,
+"moneyOdd": 1.15,
+"moneyDir": "flat",
+"totVol": 56297,
+"pinnOdd": 1.11,
+"softOdd": 1.1,
+"softN": 46,
+"poly": null,
+"pinn": {
+"home": 0.8746,
+"draw": 0.0867,
+"away": 0.0387,
+"fav": "home"
+},
+"soft": {
+"home": 0.8576,
+"draw": 0.0961,
+"away": 0.0463,
+"fav": "home",
+"n": 46
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -351,11 +391,11 @@
 "moneyName": "Paris St-G",
 "moneySharePct": 88,
 "moneyOdd": 1.44,
-"moneyDir": "in",
-"totVol": 55472,
+"moneyDir": "flat",
+"totVol": 55491,
 "pinnOdd": 1.4,
 "softOdd": 1.36,
-"softN": 45,
+"softN": 46,
 "poly": null,
 "pinn": {
 "home": 0.6912,
@@ -364,11 +404,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6905,
-"draw": 0.1746,
-"away": 0.135,
+"home": 0.6902,
+"draw": 0.1747,
+"away": 0.1351,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -394,11 +434,11 @@
 "moneyName": "Man City",
 "moneySharePct": 88,
 "moneyOdd": 1.31,
-"moneyDir": "in",
-"totVol": 34693,
+"moneyDir": "flat",
+"totVol": 34708,
 "pinnOdd": 1.28,
 "softOdd": 1.25,
-"softN": 46,
+"softN": 47,
 "poly": null,
 "pinn": {
 "home": 0.752,
@@ -407,11 +447,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7552,
-"draw": 0.1491,
+"home": 0.7553,
+"draw": 0.149,
 "away": 0.0957,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": -1.0,
 "pinnMove": {
@@ -441,7 +481,7 @@
 "totVol": 31825,
 "pinnOdd": 1.4,
 "softOdd": 1.4,
-"softN": 46,
+"softN": 47,
 "poly": null,
 "pinn": {
 "home": 0.6887,
@@ -450,11 +490,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6807,
-"draw": 0.1733,
-"away": 0.146,
+"home": 0.6809,
+"draw": 0.173,
+"away": 0.1461,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -479,12 +519,12 @@
 "moneySide": "away",
 "moneyName": "Barcelona",
 "moneySharePct": 98,
-"moneyOdd": 1.09,
-"moneyDir": "flat",
-"totVol": 30901,
+"moneyOdd": 1.1,
+"moneyDir": "out",
+"totVol": 31550,
 "pinnOdd": 1.07,
 "softOdd": 1.07,
-"softN": 45,
+"softN": 46,
 "poly": null,
 "pinn": {
 "home": 0.042,
@@ -493,11 +533,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.0448,
-"draw": 0.0713,
-"away": 0.8839,
+"home": 0.0447,
+"draw": 0.071,
+"away": 0.8843,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
@@ -524,10 +564,10 @@
 "moneySharePct": 87,
 "moneyOdd": 1.31,
 "moneyDir": "flat",
-"totVol": 21940,
+"totVol": 21947,
 "pinnOdd": 1.28,
 "softOdd": 1.28,
-"softN": 46,
+"softN": 47,
 "poly": null,
 "pinn": {
 "home": 0.7517,
@@ -536,11 +576,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7392,
-"draw": 0.1578,
-"away": 0.103,
+"home": 0.7387,
+"draw": 0.1582,
+"away": 0.1031,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -550,6 +590,80 @@
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36329205",
+"home": "Colo Colo",
+"away": "Univ Catolica (Chile)",
+"league": "Chilean Primera Division",
+"country": "CL",
+"kickoff": "2026-11-22T21:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Colo Colo",
+"moneySharePct": 50,
+"moneyOdd": 2.66,
+"moneyDir": "in",
+"totVol": 17578,
+"pinnOdd": 2.54,
+"softOdd": 2.5,
+"softN": 37,
+"poly": null,
+"pinn": {
+"home": 0.3692,
+"draw": 0.2702,
+"away": 0.3606,
+"fav": "home"
+},
+"soft": {
+"home": 0.3599,
+"draw": 0.2853,
+"away": 0.3548,
+"fav": "home",
+"n": 37
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36340714",
+"home": "Fluminense",
+"away": "Mirassol",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-11-22T21:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Fluminense",
+"moneySharePct": 78,
+"moneyOdd": 1.61,
+"moneyDir": "in",
+"totVol": 15555,
+"pinnOdd": 1.6,
+"softOdd": 1.57,
+"softN": 48,
+"poly": null,
+"pinn": {
+"home": 0.6062,
+"draw": 0.2337,
+"away": 0.1601,
+"fav": "home"
+},
+"soft": {
+"home": 0.5943,
+"draw": 0.2339,
+"away": 0.1718,
+"fav": "home",
+"n": 48
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -565,9 +679,9 @@
 "moneySide": "away",
 "moneyName": "Vasco Da Gama",
 "moneySharePct": 54,
-"moneyOdd": 2.64,
+"moneyOdd": 2.62,
 "moneyDir": "in",
-"totVol": 3060,
+"totVol": 3123,
 "pinnOdd": 2.6,
 "softOdd": 2.5,
 "softN": 47,
@@ -580,8 +694,8 @@
 },
 "soft": {
 "home": 0.3568,
-"draw": 0.2697,
-"away": 0.3735,
+"draw": 0.2698,
+"away": 0.3734,
 "fav": "away",
 "n": 47
 },
@@ -607,10 +721,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Chicago Fire",
-"moneySharePct": 53,
-"moneyOdd": 1.68,
-"moneyDir": "flat",
-"totVol": 1760,
+"moneySharePct": 54,
+"moneyOdd": 1.67,
+"moneyDir": "in",
+"totVol": 1868,
 "pinnOdd": 1.63,
 "softOdd": 1.57,
 "softN": 48,
@@ -622,9 +736,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5881,
+"home": 0.5882,
 "draw": 0.2125,
-"away": 0.1994,
+"away": 0.1993,
 "fav": "home",
 "n": 48
 },
@@ -651,9 +765,9 @@
 "moneySide": "away",
 "moneyName": "Benfica",
 "moneySharePct": 99,
-"moneyOdd": 1.13,
-"moneyDir": "flat",
-"totVol": 142703,
+"moneyOdd": 1.19,
+"moneyDir": "out",
+"totVol": 230350,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -672,37 +786,6 @@
 }
 },
 {
-"matchId": "36322356",
-"home": "Orense Sporting Club",
-"away": "Mushuc Runa",
-"league": "Ecuadorian Serie A",
-"country": "EC",
-"kickoff": "2026-11-22T19:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Mushuc Runa",
-"moneySharePct": 86,
-"moneyOdd": 1.15,
-"moneyDir": "in",
-"totVol": 31536,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Orense Sporting Club v Mushuc Runa",
-"grund": "kein_kandidat",
-"naechster": "Almería v Sporting Gijón"
-}
-},
-{
 "matchId": "36323478",
 "home": "Sporting Cristal",
 "away": "Cienciano",
@@ -712,10 +795,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Sporting Cristal",
-"moneySharePct": 84,
-"moneyOdd": 1.21,
-"moneyDir": "flat",
-"totVol": 25406,
+"moneySharePct": 85,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 27222,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -745,8 +828,8 @@
 "moneyName": "Sport Huancayo",
 "moneySharePct": 79,
 "moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 21820,
+"moneyDir": "flat",
+"totVol": 22000,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -763,17 +846,47 @@
 "grund": "kein_kandidat",
 "naechster": "Deportes Limache v La Serena"
 }
+},
+{
+"matchId": "36329207",
+"home": "Olimpia",
+"away": "Sportivo Trinidense",
+"league": "Paraguayan Primera Division",
+"country": "PY",
+"kickoff": "2026-11-22T21:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Olimpia",
+"moneySharePct": 78,
+"moneyOdd": 2.2,
+"moneyDir": "out",
+"totVol": 16128,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Olimpia v Sportivo Trinidense",
+"grund": "kein_kandidat"
+}
 }
 ],
-"ankerN": 22,
-"ankerNOffen": 78,
-"ankerMit": 20,
+"ankerN": 21,
+"ankerNOffen": 87,
+"ankerMit": 18,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 36,
 "name": 1,
+"kein_kandidat": 43,
 "zeit": 4,
-"kein_pinnacle": 2
+"kein_pinnacle": 3
 },
 "beispiele": [
 {
@@ -826,26 +939,37 @@
 "liga": "AFC Champions League"
 },
 {
+"spiel": "Atalanta v Inter",
+"grund": "kein_pinnacle",
+"kandidat": "Atalanta BC v Inter Milan",
+"key": "soccer_italy_serie_a",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34,
+"matchId": "36297249",
+"liga": "Italian Serie A"
+},
+{
 "spiel": "Getafe v Atletico Madrid",
 "grund": "kein_pinnacle",
 "kandidat": "Getafe v Atlético Madrid",
 "key": "soccer_spain_la_liga",
-"nSoft": 30,
+"nSoft": 28,
 "pinnacleImEvent": false,
-"nBuecher": 30,
+"nBuecher": 28,
 "matchId": "36297257",
 "liga": "Spanish La Liga"
 },
 {
-"spiel": "Criciuma v Fortaleza EC",
+"spiel": "Marseille v Le Mans",
 "grund": "kein_pinnacle",
-"kandidat": "Criciuma v Fortaleza",
-"key": "soccer_brazil_serie_b",
-"nSoft": 20,
+"kandidat": "Marseille v Le Mans FC",
+"key": "soccer_france_ligue_one",
+"nSoft": 37,
 "pinnacleImEvent": false,
-"nBuecher": 20,
-"matchId": "36328321",
-"liga": "Brazilian Serie B"
+"nBuecher": 37,
+"matchId": "36297522",
+"liga": "French Ligue 1"
 }
 ]
 }
