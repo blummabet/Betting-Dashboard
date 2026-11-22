@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-11-22T15:45:43.138868+00:00",
+"generatedAt": "2026-11-22T16:01:11.704757+00:00",
 "byVerdict": {
 "konsens": {
-"n": 967,
-"wins": 579,
-"hitRate": 0.5988,
-"polyN": 929,
+"n": 969,
+"wins": 580,
+"hitRate": 0.5986,
+"polyN": 930,
 "polyWins": 548,
-"polyHitRate": 0.5899,
-"pinnN": 870,
-"pinnHitRate": 0.6023,
-"nRoi": 967,
-"roi": 0.0837,
-"roiLb": 0.0335,
-"nClv": 967,
+"polyHitRate": 0.5892,
+"pinnN": 872,
+"pinnHitRate": 0.6021,
+"nRoi": 969,
+"roi": 0.0828,
+"roiLb": 0.0327,
+"nClv": 969,
 "clv": 0.13,
-"clvLb": -0.0117
+"clvLb": -0.0111
 },
 "uneinig": {
-"n": 49,
+"n": 50,
 "wins": 18,
-"hitRate": 0.3673,
-"polyN": 47,
+"hitRate": 0.36,
+"polyN": 48,
 "polyWins": 19,
-"polyHitRate": 0.4043,
-"pinnN": 37,
-"pinnHitRate": 0.2973,
-"nRoi": 49,
-"roi": 0.0663,
-"roiLb": -0.2706,
-"nClv": 49,
+"polyHitRate": 0.3958,
+"pinnN": 38,
+"pinnHitRate": 0.2895,
+"nRoi": 50,
+"roi": 0.045,
+"roiLb": -0.287,
+"nClv": 50,
 "clv": -0.17,
-"clvLb": -0.6844
+"clvLb": -0.6706
 },
 "teil": {
 "n": 2,
@@ -57,14 +57,14 @@
 "hitRate": 0.5469
 },
 "Italian Serie A": {
-"n": 63,
+"n": 64,
 "wins": 45,
-"hitRate": 0.7143
+"hitRate": 0.7031
 },
 "English Premier League": {
-"n": 57,
+"n": 58,
 "wins": 29,
-"hitRate": 0.5088
+"hitRate": 0.5
 },
 "UEFA Champions League": {
 "n": 54,
@@ -97,9 +97,9 @@
 "hitRate": 0.7045
 },
 "French Ligue 1": {
-"n": 38,
-"wins": 26,
-"hitRate": 0.6842
+"n": 39,
+"wins": 27,
+"hitRate": 0.6923
 },
 "UEFA Conference League": {
 "n": 31,
@@ -439,37 +439,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 630,
+"n": 631,
 "wins": 397,
-"hitRate": 0.6302,
-"nRoi": 630,
-"roi": 0.036,
-"roiLb": -0.0192,
-"nClv": 630,
+"hitRate": 0.6292,
+"nRoi": 631,
+"roi": 0.0344,
+"roiLb": -0.0208,
+"nClv": 631,
 "clv": 0.2,
-"clvLb": 0.023
+"clvLb": 0.0256
 },
 "weak": {
-"n": 388,
-"wins": 200,
-"hitRate": 0.5155,
-"nRoi": 388,
-"roi": 0.1532,
-"roiLb": 0.0565,
-"nClv": 388,
+"n": 390,
+"wins": 201,
+"hitRate": 0.5154,
+"nRoi": 390,
+"roi": 0.1507,
+"roiLb": 0.0543,
+"nClv": 390,
 "clv": -0.03,
-"clvLb": -0.2242
+"clvLb": -0.2259
 }
 },
 "divergence": {
-"n": 49,
+"n": 50,
 "betfairWins": 18,
-"betfairRate": 0.3673,
-"polyN": 47,
+"betfairRate": 0.36,
+"polyN": 48,
 "polyWins": 19,
-"polyRate": 0.4043
+"polyRate": 0.3958
 },
 "recent": [
+{
+"matchId": "36296032",
+"home": "Sassuolo",
+"away": "Genoa",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-11-22T14:00:00Z",
+"settledAt": "2026-11-22T16:01:11.481016+00:00"
+},
+{
+"matchId": "36296140",
+"home": "Hull",
+"away": "Brighton",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Brighton",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-22T14:00:00Z",
+"settledAt": "2026-11-22T16:01:11.481016+00:00"
+},
+{
+"matchId": "36297462",
+"home": "Paris FC",
+"away": "Angers",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Paris FC",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-11-22T14:00:00Z",
+"settledAt": "2026-11-22T16:01:11.481016+00:00"
+},
 {
 "matchId": "36296466",
 "home": "Barcelona",
@@ -1172,76 +1229,19 @@
 ],
 "kickoff": "2026-11-15T19:45:00Z",
 "settledAt": "2026-11-16T01:56:54.028343+00:00"
-},
-{
-"matchId": "36303915",
-"home": "Belgium",
-"away": "Italy",
-"league": "UEFA Nations League A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Belgium",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-11-15T19:45:00Z",
-"settledAt": "2026-11-16T01:56:54.028343+00:00"
-},
-{
-"matchId": "36318913",
-"home": "Finland",
-"away": "San Marino",
-"league": "UEFA Nations League C",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Finland",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-7,
-2
-],
-"kickoff": "2026-11-15T17:00:00Z",
-"settledAt": "2026-11-15T23:11:58.604077+00:00"
-},
-{
-"matchId": "36306636",
-"home": "Belarus",
-"away": "Albania",
-"league": "UEFA Nations League C",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Albania",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-11-15T17:00:00Z",
-"settledAt": "2026-11-15T23:11:58.604077+00:00"
 }
 ],
 "global": {
-"n": 1018,
-"wins": 597,
-"hitRate": 0.5864,
-"nRoi": 1018,
-"roi": 0.0807,
-"roiLb": 0.0303,
-"nClv": 1018,
+"n": 1021,
+"wins": 598,
+"hitRate": 0.5857,
+"nRoi": 1021,
+"roi": 0.0788,
+"roiLb": 0.0286,
+"nClv": 1021,
 "clv": 0.11,
-"clvLb": -0.0191
+"clvLb": -0.0185
 },
-"pending": 21,
+"pending": 18,
 "ausgeschlossenLive": 961
 }
