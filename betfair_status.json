@@ -22,11 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36288657: zuletzt 29.452 € und Anpfiff erst in 48.0 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -90,21 +88,23 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1435291 verbraucht, 3564709 uebrig"
+      "note": "Kontingent: 1436297 verbraucht, 3563703 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 6,
       "failures": [
         "The Strongest v Blooming Santa Cruz (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Guadalajara v Cruz Azul“",
         "Al Shamal v Al Ahli (AFC Champions League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 92.2h Anpfiff-Abstand",
         "Al Quwa Al Jawiya v Al Gharafa (AFC Champions League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 90.0h Anpfiff-Abstand",
+        "Al Ahli (UAE) v Al-Quadisiya (KSA) (AFC Champions League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 68.2h Anpfiff-Abstand",
+        "Al Nassr v Al-Sadd (AFC Champions League): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 66.0h Anpfiff-Abstand",
         "Athletico-PR v Remo (Brazilian Serie A): name — bester Kandidat „Atletico Paranaense v Remo“"
       ],
-      "note": "ohne Anker: kein_kandidat 35 · kein_pinnacle 2 · name 2 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 39 · kein_pinnacle 2 · name 2 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Lommel v Standard (15 Buecher, ohne Pinnacle); Rosario Central v Gimnasia Mendoza (9 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Duisburg v Hansa Rostock (27 Buecher, ohne Pinnacle); Rosario Central v Gimnasia Mendoza (7 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -122,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -188,6 +188,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-22T20:01:19.326215+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-11-22T20:16:15.564454+00:00"
 }
