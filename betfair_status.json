@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 104 von 138 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Anderlecht v Oud-Heverlee Leuven (Belgian Pro League); Celta Vigo B v Valladolid (Spanish Segunda Division); Girona v Eibar (Spanish Segunda Division)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1399525 verbraucht, 3600475 uebrig"
+      "note": "Kontingent: 1400548 verbraucht, 3599452 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -97,19 +99,19 @@
       "ok": false,
       "nFail": 11,
       "failures": [
-        "Dynamo Kiev v Obolon-Brovar Kiev (Ukrainian Premier League): name — bester Kandidat „1. FC Kaiserslautern v Dynamo Dresden“",
-        "Bangkok Utd v Ayutthaya United (Thai League 1): zeit — bester Kandidat „Newcastle United v Manchester United“ · 249.2h Anpfiff-Abstand",
-        "FK Dinamo Samarkand v Bunyodkor (Uzbekistan Super League): name — bester Kandidat „Dinamo Moscow v FC Krasnodar“",
-        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“",
         "Hougang Utd v Tampines Rovers (Singapore Premier League): zeit — bester Kandidat „Rotherham United v Bristol Rovers“ · 315.5h Anpfiff-Abstand",
+        "FK Dinamo Samarkand v Bunyodkor (Uzbekistan Super League): name — bester Kandidat „Dinamo Moscow v FC Krasnodar“",
+        "Bangkok Utd v Ayutthaya United (Thai League 1): zeit — bester Kandidat „Newcastle United v Manchester United“ · 249.2h Anpfiff-Abstand",
+        "Karlsruhe v VfL Osnabruck (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v VfL Osnabrück“",
         "Persikad Depok v Bekasi City (Indonesian Championship): name — bester Kandidat „Hull City v Brighton and Hove Albion“",
         "Panaitolikos v NFC Volos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Volos FC“",
         "Al-Shabab v Al Sahel (Kuwaiti Crown Prince Cup): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 117.9h Anpfiff-Abstand",
         "FC Cartagena v Real Jaen (Spanish Primera Federación - Group 2): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
         "KFCO Beerschot Wilrijk v Racing Genk B (Belgian Challenger Pro League): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
-        "Bulle v SC Bruhl St Gallen (Swiss 1 Liga Promotion): name — bester Kandidat „FC Zurich v FC St Gallen“"
+        "Bulle v SC Bruhl St Gallen (Swiss 1 Liga Promotion): name — bester Kandidat „FC Zurich v FC St Gallen“",
+        "Dynamo Kiev v Obolon-Brovar Kiev (Ukrainian Premier League): name — bester Kandidat „1. FC Kaiserslautern v Dynamo Dresden“"
       ],
-      "note": "ohne Anker: kein_kandidat 79 · name 8 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 79 · kein_pinnacle 1 · name 8 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -118,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — FC Twente v Willem II (37 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -193,6 +195,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-11-22T11:30:39.258426+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-11-22T11:45:13.963293+00:00"
 }
