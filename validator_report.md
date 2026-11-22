@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 22.11.2026 17:57
+# 🟡 Picks Validator — 22.11.2026 23:48
 
-**10 Spiele geprüft** · 🔴 0 Fehler · 🟡 5 Warnungen · 🔵 35 Hinweise
+**7 Spiele geprüft** · 🔴 0 Fehler · 🟡 4 Warnungen · 🔵 23 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  22.11.2026 17:57
+  22.11.2026 23:48
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -35,24 +35,6 @@
 ─────────────────────────────────────────────────────────────────
   🇪🇸 La Liga  (rl=25)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Atletico Madrid dominiert H2H 16W/3X/1L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Getafe: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Ø gpg=1.30, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 22.11.2026  Getafe vs Atletico Madrid
-     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 23.11.2026  Levante vs Elche
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -70,33 +52,8 @@
      Elche expA≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇫🇷 Ligue 1  (rl=23)
-─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 22.11.2026  Marseille vs Le Mans
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 22.11.2026  Marseille vs Le Mans
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 22.11.2026  Marseille vs Le Mans
-     Le Mans expA≈0.95 (statischer Proxy) → FV über 1.5 = 24.6%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-
-─────────────────────────────────────────────────────────────────
   🇮🇹 Serie A  (rl=26)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 22.11.2026  Atalanta vs Inter
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 22.11.2026  Atalanta vs Inter
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 22.11.2026  Atalanta vs Inter
-     Ø gpg=1.80, H2H Ø=2.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 22.11.2026  Atalanta vs Inter
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 23.11.2026  Monza vs Fiorentina
      Monza: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -158,9 +115,9 @@
      Aberdeen expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 10 Spiele
-  🟡 5 Warnungen — manuelle Prüfung empfohlen
-  🔵 35 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 7 Spiele
+  🟡 4 Warnungen — manuelle Prüfung empfohlen
+  🔵 23 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
