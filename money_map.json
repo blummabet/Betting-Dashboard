@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-22T13:30:07.586440+00:00",
+"generatedAt": "2026-11-22T13:45:10.124705+00:00",
 "count": 12,
 "rows": [
 {
@@ -9,19 +9,24 @@
 "league": "Spanish La Liga",
 "live": true,
 "kickoff": "2026-11-22T13:00:00Z",
-"verdict": "konsens",
+"verdict": "uneinig",
 "betfair": {
 "side": "home",
 "name": "Barcelona",
-"sharePct": 90,
-"eur": 1534985,
-"odd": 2.24
+"sharePct": 84,
+"eur": 1969843,
+"odd": 3.1
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.3455,
+"draw": 0.2468,
+"away": 0.4078
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
 },
 {
 "matchId": "36225147",
@@ -34,16 +39,16 @@
 "betfair": {
 "side": "home",
 "name": "Liverpool",
-"sharePct": 66,
-"eur": 338803,
+"sharePct": 69,
+"eur": 393560,
 "odd": 1.82
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.5449,
-"draw": 0.2332,
-"away": 0.2219
+"home": 0.5396,
+"draw": 0.2346,
+"away": 0.2259
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -60,9 +65,9 @@
 "betfair": {
 "side": "away",
 "name": "Brighton",
-"sharePct": 81,
-"eur": 333052,
-"odd": 1.52
+"sharePct": 77,
+"eur": 364683,
+"odd": 1.51
 },
 "poly": {
 "side": "away",
@@ -73,9 +78,9 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.1401,
-"draw": 0.2197,
-"away": 0.6402
+"home": 0.1385,
+"draw": 0.2154,
+"away": 0.6462
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -88,24 +93,56 @@
 "league": "English Sky Bet Championship",
 "live": true,
 "kickoff": "2026-11-22T12:00:00Z",
-"verdict": "konsens",
+"verdict": "uneinig",
 "betfair": {
 "side": "home",
 "name": "Burnley",
-"sharePct": 68,
-"eur": 263946,
-"odd": 1.34
+"sharePct": 62,
+"eur": 315130,
+"odd": 5.2
 },
 "poly": null,
 "pinn": {
-"fav": "home",
-"home": 0.7358,
-"draw": 0.2119,
-"away": 0.0523
+"fav": "draw",
+"home": 0.2263,
+"draw": 0.6011,
+"away": 0.1725
 },
 "mmStrong": false,
 "polyGeld": false,
 "nSources": 2
+},
+{
+"matchId": "36296032",
+"home": "Sassuolo",
+"away": "Genoa",
+"league": "Italian Serie A",
+"live": false,
+"kickoff": "2026-11-22T14:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "draw",
+"name": "The Draw",
+"sharePct": 42,
+"eur": 217716,
+"odd": 3.3
+},
+"poly": {
+"side": "home",
+"name": "US Sassuolo Calcio",
+"sharePct": 38,
+"usd": 224,
+"src": "liga"
+},
+"pinn": {
+"fav": "home",
+"home": 0.3488,
+"draw": 0.311,
+"away": 0.3403
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
 },
 {
 "matchId": "36296168",
@@ -118,9 +155,9 @@
 "betfair": {
 "side": "home",
 "name": "Bologna",
-"sharePct": 79,
-"eur": 186048,
-"odd": 1.78
+"sharePct": 78,
+"eur": 208244,
+"odd": 1.79
 },
 "poly": {
 "side": "home",
@@ -131,9 +168,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5606,
-"draw": 0.2621,
-"away": 0.1773
+"home": 0.5612,
+"draw": 0.261,
+"away": 0.1778
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -151,51 +188,19 @@
 "side": "home",
 "name": "Paris FC",
 "sharePct": 97,
-"eur": 178460,
+"eur": 201934,
 "odd": 1.35
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.7247,
-"draw": 0.1674,
-"away": 0.1079
+"home": 0.7292,
+"draw": 0.1687,
+"away": 0.1021
 },
 "mmStrong": false,
 "polyGeld": false,
 "nSources": 2
-},
-{
-"matchId": "36296032",
-"home": "Sassuolo",
-"away": "Genoa",
-"league": "Italian Serie A",
-"live": false,
-"kickoff": "2026-11-22T14:00:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "Genoa",
-"sharePct": 40,
-"eur": 162404,
-"odd": 2.88
-},
-"poly": {
-"side": "home",
-"name": "US Sassuolo Calcio",
-"sharePct": 38,
-"usd": 224,
-"src": "liga"
-},
-"pinn": {
-"fav": "home",
-"home": 0.344,
-"draw": 0.3121,
-"away": 0.344
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
 },
 {
 "matchId": "36297245",
@@ -208,8 +213,8 @@
 "betfair": {
 "side": "home",
 "name": "AC Milan",
-"sharePct": 72,
-"eur": 70296,
+"sharePct": 73,
+"eur": 73184,
 "odd": 1.69
 },
 "poly": {
@@ -230,6 +235,38 @@
 "nSources": 3
 },
 {
+"matchId": "36297711",
+"home": "Augsburg",
+"away": "Mainz",
+"league": "German Bundesliga",
+"live": false,
+"kickoff": "2026-11-22T14:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Mainz",
+"sharePct": 63,
+"eur": 61898,
+"odd": 2.36
+},
+"poly": {
+"side": "away",
+"name": "1. FSV Mainz 05",
+"sharePct": 40,
+"usd": 1194,
+"src": "liga"
+},
+"pinn": {
+"fav": "away",
+"home": 0.3326,
+"draw": 0.2492,
+"away": 0.4182
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
 "matchId": "36297249",
 "home": "Atalanta",
 "away": "Inter",
@@ -240,9 +277,9 @@
 "betfair": {
 "side": "away",
 "name": "Inter",
-"sharePct": 80,
-"eur": 54184,
-"odd": 1.59
+"sharePct": 79,
+"eur": 57914,
+"odd": 1.58
 },
 "poly": {
 "side": "away",
@@ -262,38 +299,6 @@
 "nSources": 3
 },
 {
-"matchId": "36297711",
-"home": "Augsburg",
-"away": "Mainz",
-"league": "German Bundesliga",
-"live": false,
-"kickoff": "2026-11-22T14:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Mainz",
-"sharePct": 62,
-"eur": 53294,
-"odd": 2.3
-},
-"poly": {
-"side": "away",
-"name": "1. FSV Mainz 05",
-"sharePct": 40,
-"usd": 1194,
-"src": "liga"
-},
-"pinn": {
-"fav": "away",
-"home": 0.3274,
-"draw": 0.2483,
-"away": 0.4243
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
 "matchId": "36303120",
 "home": "Brentford",
 "away": "Everton",
@@ -305,7 +310,7 @@
 "side": "draw",
 "name": "The Draw",
 "sharePct": 45,
-"eur": 50058,
+"eur": 50251,
 "odd": 3.6
 },
 "poly": {
@@ -317,9 +322,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.4161,
-"draw": 0.2731,
-"away": 0.3108
+"home": 0.4183,
+"draw": 0.2726,
+"away": 0.3091
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -336,8 +341,8 @@
 "betfair": {
 "side": "home",
 "name": "Werder Bremen",
-"sharePct": 77,
-"eur": 32231,
+"sharePct": 78,
+"eur": 33899,
 "odd": 1.64
 },
 "poly": {
@@ -358,8 +363,38 @@
 "nSources": 3
 }
 ],
-"nameMatchMisses": 25,
+"nameMatchMisses": 27,
 "nameMatchMissList": [
+{
+"matchId": "36329251",
+"home": "Sparta Rotterdam",
+"away": "AZ Alkmaar",
+"league": "Dutch Eredivisie"
+},
+{
+"matchId": "36329246",
+"home": "Ajax",
+"away": "ADO Den Haag",
+"league": "Dutch Eredivisie"
+},
+{
+"matchId": "36327963",
+"home": "PFC Levski Sofia",
+"away": "Lokomotiv Sofia",
+"league": "Bulgarian A League"
+},
+{
+"matchId": "36319930",
+"home": "SCR Altach",
+"away": "Sturm Graz",
+"league": "Austrian Bundesliga"
+},
+{
+"matchId": "36327908",
+"home": "Viborg",
+"away": "Randers",
+"league": "Danish Superliga"
+},
 {
 "matchId": "36324223",
 "home": "Cordoba",
@@ -367,10 +402,28 @@
 "league": "Spanish Segunda Division"
 },
 {
+"matchId": "36298697",
+"home": "Hacken",
+"away": "Elfsborg",
+"league": "Swedish Allsvenskan"
+},
+{
 "matchId": "36327907",
 "home": "AC Horsens",
 "away": "Silkeborg",
 "league": "Danish Superliga"
+},
+{
+"matchId": "36327905",
+"home": "FC Zurich",
+"away": "St Gallen",
+"league": "Swiss Super League"
+},
+{
+"matchId": "36329220",
+"home": "Olympiakos Nicosia FC",
+"away": "AEK Larnaca",
+"league": "Cypriot 1st Division"
 },
 {
 "matchId": "36319866",
@@ -385,40 +438,10 @@
 "league": "Swedish Allsvenskan"
 },
 {
-"matchId": "36298697",
-"home": "Hacken",
-"away": "Elfsborg",
-"league": "Swedish Allsvenskan"
-},
-{
 "matchId": "36296466",
 "home": "Barcelona",
 "away": "Villarreal",
 "league": "Spanish La Liga"
-},
-{
-"matchId": "36327908",
-"home": "Viborg",
-"away": "Randers",
-"league": "Danish Superliga"
-},
-{
-"matchId": "36329218",
-"home": "Karlsruhe",
-"away": "VfL Osnabruck",
-"league": "German Bundesliga 2"
-},
-{
-"matchId": "36329243",
-"home": "Waasland-Beveren",
-"away": "Gent",
-"league": "Belgian Pro League"
-},
-{
-"matchId": "36319839",
-"home": "Kaiserslautern",
-"away": "Dynamo Dresden",
-"league": "German Bundesliga 2"
 },
 {
 "matchId": "36329256",
@@ -427,10 +450,22 @@
 "league": "German Bundesliga 2"
 },
 {
-"matchId": "36343665",
-"home": "Man City (W)",
-"away": "Tottenham (W)",
-"league": "English WSL"
+"matchId": "36329218",
+"home": "Karlsruhe",
+"away": "VfL Osnabruck",
+"league": "German Bundesliga 2"
+},
+{
+"matchId": "36319839",
+"home": "Kaiserslautern",
+"away": "Dynamo Dresden",
+"league": "German Bundesliga 2"
+},
+{
+"matchId": "36329243",
+"home": "Waasland-Beveren",
+"away": "Gent",
+"league": "Belgian Pro League"
 },
 {
 "matchId": "36336231",
@@ -449,36 +484,6 @@
 "home": "Burnley",
 "away": "Blackburn",
 "league": "English Sky Bet Championship"
-},
-{
-"matchId": "36297257",
-"home": "Getafe",
-"away": "Atletico Madrid",
-"league": "Spanish La Liga"
-},
-{
-"matchId": "36288657",
-"home": "RB Leipzig",
-"away": "Lens",
-"league": "UEFA Champions League"
-},
-{
-"matchId": "36225147",
-"home": "Liverpool",
-"away": "Man Utd",
-"league": "English Premier League"
-},
-{
-"matchId": "36297462",
-"home": "Paris FC",
-"away": "Angers",
-"league": "French Ligue 1"
-},
-{
-"matchId": "36296523",
-"home": "Racing Santander",
-"away": "Real Sociedad",
-"league": "Spanish La Liga"
 }
 ]
 }
