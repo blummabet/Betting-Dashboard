@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 21.11.2026 23:19
+# 🟡 Picks Validator — 22.11.2026 10:00
 
 **45 Spiele geprüft** · 🔴 0 Fehler · 🟡 28 Warnungen · 🔵 145 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  21.11.2026 23:19
+  22.11.2026 10:00
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -177,7 +177,7 @@
      Barcelona dominiert H2H 15W/2X/3L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
   🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
      📅 22.11.2026  Barcelona vs Villarreal
-     Score-Differenz 5.0 Punkte: Barcelona (9.5) vs Villarreal (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
+     Score-Differenz 5.1 Punkte: Barcelona (9.6) vs Villarreal (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Barcelona vs Villarreal
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
