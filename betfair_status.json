@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 8 von 68 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Molynes United FC v Tivoli Gardens (Jamaican Premier League); River Plate v Lanus (Argentinian Primera Division); Inter San Carlos v Sporting San Jose FC (Costa Rican Primera Division)"
+        "nur 6 von 66 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: River Plate v Lanus (Argentinian Primera Division); Inter San Carlos v Sporting San Jose FC (Costa Rican Primera Division); Molynes United FC v Tivoli Gardens (Jamaican Premier League)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,20 +90,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1419296 verbraucht, 3580704 uebrig"
+      "note": "Kontingent: 1420332 verbraucht, 3579668 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
-        "Panaitolikos v NFC Volos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Volos FC“",
-        "Al-Shabab v Al Sahel (Kuwaiti Crown Prince Cup): zeit — bester Kandidat „Al-Kholood v Al-Khaleej“ · 117.9h Anpfiff-Abstand",
-        "Aalesunds v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Rosenborg“"
+        "FC Cartagena v Real Jaen (Spanish Primera Federación - Group 2): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
+        "KFCO Beerschot Wilrijk v Racing Genk B (Belgian Challenger Pro League): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
+        "Aalesunds v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Rosenborg“",
+        "Panaitolikos v NFC Volos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Volos FC“"
       ],
-      "note": "ohne Anker: kein_kandidat 20 · kein_pinnacle 3 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 15 · kein_pinnacle 3 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -112,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Augsburg v Mainz (31 Buecher, ohne Pinnacle); Trabzonspor v Eyupspor (32 Buecher, ohne Pinnacle); Kfum Oslo v Brann (35 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Trabzonspor v Eyupspor (28 Buecher, ohne Pinnacle); Brommapojkarna v Halmstads (30 Buecher, ohne Pinnacle); Kfum Oslo v Brann (12 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -188,5 +189,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-22T16:15:57.437835+00:00"
+  "generatedAt": "2026-11-22T16:31:08.022162+00:00"
 }
