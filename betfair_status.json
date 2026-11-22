@@ -22,9 +22,15 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "36297245: zuletzt 397.810 € und Anpfiff erst in 0.2 h — trotzdem nicht mehr im Feed",
+        "36297249: zuletzt 122.784 € und Anpfiff erst in 3.0 h — trotzdem nicht mehr im Feed",
+        "36297257: zuletzt 167.706 € und Anpfiff erst in 3.2 h — trotzdem nicht mehr im Feed",
+        "36303120: zuletzt 62.699 € und Anpfiff erst in 27.2 h — trotzdem nicht mehr im Feed",
+        "36288657: zuletzt 29.452 € und Anpfiff erst in 51.2 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 6 von 66 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: River Plate v Lanus (Argentinian Primera Division); Inter San Carlos v Sporting San Jose FC (Costa Rican Primera Division); Molynes United FC v Tivoli Gardens (Jamaican Premier League)"
+        "nur 0 von 55 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Red Bull Bragantino v Vasco Da Gama (Brazilian Serie A); River Plate v Lanus (Argentinian Primera Division); Molynes United FC v Tivoli Gardens (Jamaican Premier League)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,21 +96,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1420332 verbraucht, 3579668 uebrig"
+      "note": "Kontingent: 1421361 verbraucht, 3578639 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
-        "FC Cartagena v Real Jaen (Spanish Primera Federación - Group 2): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
-        "KFCO Beerschot Wilrijk v Racing Genk B (Belgian Challenger Pro League): name — bester Kandidat „Real Racing Club de Santander v Real Sociedad“",
-        "Aalesunds v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Rosenborg“",
-        "Panaitolikos v NFC Volos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Volos FC“"
+        "Wisla Plock v Legia Warsaw (Polish Ekstraklasa): name — bester Kandidat „Wisła Płock v Legia Warszawa“",
+        "Panaitolikos v NFC Volos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Volos FC“",
+        "Aalesunds v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Rosenborg“"
       ],
-      "note": "ohne Anker: kein_kandidat 15 · kein_pinnacle 3 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 25 · kein_pinnacle 4 · name 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Trabzonspor v Eyupspor (28 Buecher, ohne Pinnacle); Brommapojkarna v Halmstads (30 Buecher, ohne Pinnacle); Kfum Oslo v Brann (12 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Liverpool v Man Utd (36 Buecher, ohne Pinnacle); Trabzonspor v Eyupspor (32 Buecher, ohne Pinnacle); Brommapojkarna v Halmstads (28 Buecher, ohne Pinnacle); Kfum Oslo v Brann (3 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -122,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -188,6 +193,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-22T16:31:08.022162+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-11-22T16:46:13.519096+00:00"
 }
