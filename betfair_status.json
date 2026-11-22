@@ -25,8 +25,8 @@
       "ok": false,
       "nFail": 2,
       "failures": [
-        "36303120: zuletzt 62.699 € und Anpfiff erst in 25.2 h — trotzdem nicht mehr im Feed",
-        "36288657: zuletzt 29.452 € und Anpfiff erst in 49.2 h — trotzdem nicht mehr im Feed"
+        "36303120: zuletzt 62.699 € und Anpfiff erst in 25.0 h — trotzdem nicht mehr im Feed",
+        "36288657: zuletzt 29.452 € und Anpfiff erst in 49.0 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -37,7 +37,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 26 von 40 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Club Gimnasia y Tiro v Tristan Suarez (Argentinian Primera Nacional); Deportes Limache v La Serena (Chilean Primera Division); Chicago Fire v Charlotte FC (US MLS)"
+        "nur 25 von 37 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Instituto v CA Huracan (Argentinian Primera Division); Diriangen FC v Managua FC (Nicaraguan Primera Division); Club Gimnasia y Tiro v Tristan Suarez (Argentinian Primera Nacional)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -93,19 +93,18 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1430213 verbraucht, 3569787 uebrig"
+      "note": "Kontingent: 1431230 verbraucht, 3568770 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "The Strongest v Blooming Santa Cruz (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Guadalajara v Cruz Azul“",
-        "Athletico-PR v Remo (Brazilian Serie A): name — bester Kandidat „Atletico Paranaense v Remo“"
+        "The Strongest v Blooming Santa Cruz (Bolivian Liga de Futbol Profesional): name — bester Kandidat „Guadalajara v Cruz Azul“"
       ],
-      "note": "ohne Anker: kein_kandidat 28 · kein_pinnacle 5 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 24 · kein_pinnacle 1 · name 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -114,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — AC Milan v Frosinone (9 Buecher, ohne Pinnacle); Olympiakos v Iraklis (11 Buecher, ohne Pinnacle); PAOK v Kifisia (21 Buecher, ohne Pinnacle); FC Nordsjaelland v FC Copenhagen (8 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — PAOK v Kifisia (7 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -123,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -190,5 +189,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-11-22T18:46:13.218023+00:00"
+  "generatedAt": "2026-11-22T19:01:30.052152+00:00"
 }
