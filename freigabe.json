@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T09:14:39.216797+00:00",
+ "generatedAt": "2026-11-22T09:30:01.454057+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T06:34:08.582101+00:00",
    "zielN": 200,
@@ -1000,12 +1000,12 @@
    "strom": "poly",
    "zerlegung": "nach Conviction",
    "art": "conviction",
-   "gruppen": 5,
+   "gruppen": 4,
    "basis": "1840 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1823,
-   "pl": 3.58,
-   "roi": 0.002,
-   "clv": -0.159,
+   "n": 1816,
+   "pl": 6.68,
+   "roi": 0.0037,
+   "clv": -0.163,
    "belegte": 0
   }
  ],
@@ -4527,7 +4527,7 @@
     "nieAnteil": 0.0,
     "schaetzbar": true
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T06:34:08.582101+00:00",
    "zielN": 200,
@@ -14004,28 +14004,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 3",
-   "strom": "poly",
-   "n": 7,
-   "status": "sammelt",
-   "grund": "7 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
-   "roi": -0.443,
-   "pl": -3.1,
-   "roiLb": null,
-   "clv": 1.0,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 23,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "zu_wenige",
-   "entfernung": null,
-   "alterTage": 21.0,
-   "art": "conviction",
-   "wert": 3
-  },
-  {
    "schublade": "WM · BEOBACHTEN",
    "strom": "cards",
    "n": 2,
@@ -14155,6 +14133,27 @@
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
+  },
+  {
+   "schublade": "Conviction 3",
+   "strom": "poly",
+   "n": 7,
+   "status": "ruht",
+   "grund": "letzter Play vor 21 Tagen — die Schublade liefert nichts mehr",
+   "roi": -0.443,
+   "pl": -3.1,
+   "roiLb": null,
+   "clv": 1.0,
+   "clvLb": null,
+   "clvOg": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "zu_wenige",
+   "fehltN": 0,
+   "alterTage": 21.0,
+   "art": "conviction",
+   "wert": 3
   },
   {
    "schublade": "Mix bf+sharp",
@@ -14287,7 +14286,7 @@
   "schubladen": 422,
   "freigegeben": 3,
   "kandidaten": 24,
-  "ruhend": 11,
+  "ruhend": 12,
   "naechsteFreigabe": 0,
   "naechsterBeleg": 19
  }
