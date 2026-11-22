@@ -1,35 +1,17 @@
-# 🟡 Picks Validator — 21.11.2026 17:31
+# 🟡 Picks Validator — 21.11.2026 23:19
 
-**64 Spiele geprüft** · 🔴 0 Fehler · 🟡 48 Warnungen · 🔵 212 Hinweise
+**45 Spiele geprüft** · 🔴 0 Fehler · 🟡 28 Warnungen · 🔵 145 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  21.11.2026 17:31
+  21.11.2026 23:19
   Filter: nächste 3 Tag(e)
 =================================================================
 
 ─────────────────────────────────────────────────────────────────
-  🇦🇹 Österreich BL  (rl=20)
+  🇦🇹 Österreich BL  (rl=19)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     Grazer AK: formScore=0.11 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     Grazer AK: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     H2H Schnitt=3.6 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  Grazer AK vs Rapid Vienna
-     Grazer AK expH≈0.40 (statischer Proxy) → FV über 1.5 = 6.2%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  SCR Altach vs Sturm Graz
      Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -79,27 +61,6 @@
 ─────────────────────────────────────────────────────────────────
   🇧🇪 Jupiler Pro League  (rl=28)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  KV Mechelen vs Club Brugge KV
-     KV Mechelen: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  KV Mechelen vs Club Brugge KV
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  KV Mechelen vs Club Brugge KV
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  KV Mechelen vs Club Brugge KV
-     H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 21.11.2026  Zulte Waregem vs Antwerp
-     Zulte Waregem: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Zulte Waregem vs Antwerp
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Zulte Waregem vs Antwerp
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 22.11.2026  SK Beveren vs Gent
      Gent dominiert H2H 16W/2X/1L in 19 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -153,7 +114,7 @@
      Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
-  🇭🇷 HNL  (rl=23)
+  🇭🇷 HNL  (rl=22)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Dinamo Zagreb vs Istra 1961
@@ -186,18 +147,6 @@
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=27)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
-     📅 21.11.2026  Newcastle vs Arsenal
-     Score-Differenz 4.7 Punkte: Arsenal (9.2) vs Newcastle (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 21.11.2026  Newcastle vs Arsenal
-     Newcastle: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Newcastle vs Arsenal
-     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  Newcastle vs Arsenal
-     Newcastle expH≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 22.11.2026  Hull City vs Brighton
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
@@ -223,39 +172,12 @@
 ─────────────────────────────────────────────────────────────────
   🇪🇸 La Liga  (rl=25)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Sevilla vs Real Betis
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Sevilla vs Real Betis
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 21.11.2026  Sevilla vs Real Betis
-     Ø gpg=1.70, H2H Ø=2.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 21.11.2026  Sevilla vs Real Betis
-     Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     Real Madrid dominiert H2H 17W/2X/1L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
-  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     Score-Differenz 4.5 Punkte: Real Madrid (9.0) vs Celta Vigo (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     H2H Schnitt=4.0 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 21.11.2026  Real Madrid vs Celta Vigo
-     Celta Vigo expA≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 22.11.2026  Barcelona vs Villarreal
      Barcelona dominiert H2H 15W/2X/3L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
+  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
+     📅 22.11.2026  Barcelona vs Villarreal
+     Score-Differenz 5.0 Punkte: Barcelona (9.5) vs Villarreal (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Barcelona vs Villarreal
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -301,9 +223,6 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 22.11.2026  Getafe vs Atletico Madrid
      Getafe expH≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 23.11.2026  Levante vs Elche
-     Levante: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 23.11.2026  Levante vs Elche
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -323,57 +242,6 @@
 ─────────────────────────────────────────────────────────────────
   🇫🇷 Ligue 1  (rl=23)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Lille vs Lyon
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Lille vs Lyon
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 21.11.2026  Lille vs Lyon
-     Ø gpg=2.00, H2H Ø=2.8 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 21.11.2026  Lille vs Lyon
-     Ø gpg=2.00 (statischer Proxy) → Poisson FV für Over 3.5 = 14.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  Lille vs Lyon
-     Lille expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 21.11.2026  Lille vs Lyon
-     Lyon expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
-     📅 21.11.2026  Monaco vs Auxerre
-     Monaco dominiert H2H 9W/2X/0L in 11 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Monaco vs Auxerre
-     Auxerre: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Monaco vs Auxerre
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Monaco vs Auxerre
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  Monaco vs Auxerre
-     H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 21.11.2026  Monaco vs Auxerre
-     Auxerre expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 21.11.2026  Strasbourg vs Stade Brestois 29
-     Strasbourg: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Strasbourg vs Stade Brestois 29
-     Strasbourg: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Strasbourg vs Stade Brestois 29
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Strasbourg vs Stade Brestois 29
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  Strasbourg vs Stade Brestois 29
-     Strasbourg expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Paris FC vs Angers
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -405,27 +273,6 @@
 ─────────────────────────────────────────────────────────────────
   🇩🇪 Bundesliga  (rl=24)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     FC Schalke 04: formScore=0.06 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     Ø gpg=1.80, H2H Ø=3.0 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  FC Schalke 04 vs VfB Stuttgart
-     FC Schalke 04 expH≈0.80 (statischer Proxy) → FV über 1.5 = 19.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 22.11.2026  FC Augsburg vs FSV Mainz 05
      FC Augsburg: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -448,15 +295,9 @@
 ─────────────────────────────────────────────────────────────────
   🇭🇺 NB I  (rl=19)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Ferencvarosi TC vs Gyori ETO FC
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Ferencvarosi TC vs Gyori ETO FC
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 21.11.2026  Ferencvarosi TC vs Gyori ETO FC
-     Gyori ETO FC expA≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 22.11.2026  Zalaegerszegi TE vs Vasas
+     Zalaegerszegi TE: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Zalaegerszegi TE vs Vasas
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -574,65 +415,8 @@
      H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ─────────────────────────────────────────────────────────────────
-  🇳🇱 Eredivisie  (rl=22)
+  🇳🇱 Eredivisie  (rl=21)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Utrecht vs Cambuur
-     Utrecht: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Utrecht vs Cambuur
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Utrecht vs Cambuur
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  Utrecht vs Cambuur
-     H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 21.11.2026  Utrecht vs Cambuur
-     Ø gpg=1.80, H2H Ø=3.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 21.11.2026  Utrecht vs Cambuur
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Feyenoord dominiert H2H 18W/0X/2L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
-  🔵 HINWEIS [H2H_DOM_GOLD_RED]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Feyenoord dominiert H2H 18W/0X/2L in 20 Spielen. Gold vs Rot, aber H2H-Favorit klar — Angle sollte Pick-Richtung bestätigen, nicht dramatisieren.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Excelsior: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 21.11.2026  Feyenoord vs Excelsior
-     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Groningen vs Heerenveen
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Groningen vs Heerenveen
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Telstar vs PEC Zwolle
-     PEC Zwolle: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Telstar vs PEC Zwolle
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Telstar vs PEC Zwolle
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  Telstar vs PEC Zwolle
-     H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Twente vs Willem II
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -663,6 +447,9 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 22.11.2026  Ajax vs ADO Den Haag
      ADO Den Haag expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 22.11.2026  Sparta Rotterdam vs AZ Alkmaar
+     Sparta Rotterdam: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Sparta Rotterdam vs AZ Alkmaar
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -672,28 +459,10 @@
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 22.11.2026  Sparta Rotterdam vs AZ Alkmaar
      H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 22.11.2026  Sparta Rotterdam vs AZ Alkmaar
-     Ø gpg=1.80, H2H Ø=3.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 22.11.2026  Sparta Rotterdam vs AZ Alkmaar
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
   🇵🇱 Ekstraklasa  (rl=19)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  Radomiak Radom vs Wisla Krakow
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Radomiak Radom vs Wisla Krakow
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 21.11.2026  Radomiak Radom vs Wisla Krakow
-     H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 22.11.2026  Raków Częstochowa vs Widzew Łódź
-     Widzew Łódź: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 22.11.2026  Raków Częstochowa vs Widzew Łódź
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -747,35 +516,20 @@
      Ø gpg=1.20 (statischer Proxy) → Poisson FV für Over 3.5 = 3.4%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
-  🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Prem  (rl=25)
+  🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Prem  (rl=24)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Dundee vs Heart Of Midlothian
-     Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  Dundee vs Heart Of Midlothian
-     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  Motherwell vs Rangers
-     Motherwell: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  Motherwell vs Rangers
-     Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  Motherwell vs Rangers
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  Motherwell vs Rangers
-     Motherwell expH≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 24.11.2026  Hibernian vs Dundee
-     Hibernian: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
      📅 24.11.2026  Hibernian vs Dundee
      Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 24.11.2026  Hibernian vs Dundee
      H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
+  🔵 HINWEIS [LOW_SCORING_PROFILE]
+     📅 24.11.2026  Hibernian vs Dundee
+     Ø gpg=1.50, H2H Ø=3.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+  🔵 HINWEIS [OVER35_LOW_FV]
+     📅 24.11.2026  Hibernian vs Dundee
+     Ø gpg=1.50 (statischer Proxy) → Poisson FV für Over 3.5 = 6.6%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 24.11.2026  Rangers vs Aberdeen
      Aberdeen: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -787,23 +541,8 @@
      Aberdeen expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇨🇭 Swiss SL  (rl=23)
+  🇨🇭 Swiss SL  (rl=22)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.11.2026  FC Sion vs Servette FC
-     Servette FC: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.11.2026  FC Sion vs Servette FC
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.11.2026  FC Sion vs Servette FC
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 21.11.2026  FC Sion vs Servette FC
-     H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.11.2026  FC Sion vs Servette FC
-     FC Sion expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 22.11.2026  FC Basel 1893 vs FC Luzern
      FC Basel 1893: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -846,9 +585,9 @@
      Eyüpspor expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 64 Spiele
-  🟡 48 Warnungen — manuelle Prüfung empfohlen
-  🔵 212 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 45 Spiele
+  🟡 28 Warnungen — manuelle Prüfung empfohlen
+  🔵 145 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
