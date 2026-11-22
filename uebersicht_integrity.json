@@ -107,19 +107,19 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [
-        "Barcelona v Villarreal: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Lorient v Rennes (French Ligue 1): Poly-Seite heisst „Stade Rennais FC 1901“ und gehoert zu keinem der beiden Teams — $0 fremdes Geld in einer Konsens-Zeile"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -161,14 +161,14 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "lal-rrc-rso-2026-11-22 (Real Racing Club v Real Sociedad de Fútbol, Anpfiff in 0.6h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "fl1-lor-ren-2026-11-22 (FC Lorient v Stade Rennais FC 1901, Anpfiff in 1.6h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "epl-liv-mun-2026-11-22 (Liverpool FC v Manchester United FC, Anpfiff in 1.9h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "bun-wer-hsv-2026-11-22 (SV Werder Bremen v Hamburger SV, Anpfiff in 1.9h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-mil-fro-2026-11-22 (AC Milan v Frosinone Calcio, Anpfiff in 2.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "lal-osa-mala-2026-11-22 (CA Osasuna v Málaga CF, Anpfiff in 2.9h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "fl1-olm-lmf-2026-11-22 (Olympique de Marseille v Le Mans FC, Anpfiff in 5.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-ata-int-2026-11-22 (Atalanta BC v FC Internazionale Milano, Anpfiff in 5.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "fl1-lor-ren-2026-11-22 (FC Lorient v Stade Rennais FC 1901, Anpfiff in 0.5h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "epl-liv-mun-2026-11-22 (Liverpool FC v Manchester United FC, Anpfiff in 0.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "bun-wer-hsv-2026-11-22 (SV Werder Bremen v Hamburger SV, Anpfiff in 0.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-mil-fro-2026-11-22 (AC Milan v Frosinone Calcio, Anpfiff in 1.3h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "lal-osa-mala-2026-11-22 (CA Osasuna v Málaga CF, Anpfiff in 1.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "fl1-olm-lmf-2026-11-22 (Olympique de Marseille v Le Mans FC, Anpfiff in 4.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-ata-int-2026-11-22 (Atalanta BC v FC Internazionale Milano, Anpfiff in 4.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "lal-get-mad-2026-11-22 (Getafe CF v Club Atlético de Madrid, Anpfiff in 4.3h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
       "nFail": 8,
       "ok": false,
@@ -210,11 +210,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+10.4 %, UG +6.0 %, Geldseite +0.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+10.3 %, UG +5.9 %, Geldseite +1.0 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6693 (UG +45.8 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6692 (UG +45.7 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -265,8 +265,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 688 h — die Datei selbst ist 688 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 678 h — die Datei selbst ist 678 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 689 h — die Datei selbst ist 689 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 679 h — die Datei selbst ist 679 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -288,7 +288,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1594 Zeilen · 1572 abgerechnet · 10 offen"
+      "hinweis": "1598 Zeilen · 1577 abgerechnet · 9 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -344,7 +344,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 973.9 h, MLS 981.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 975.0 h, MLS 982.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -352,5 +352,5 @@
     }
   ],
   "nFail": 12,
-  "generatedAt": "2026-11-22T14:36:04.878433+00:00"
+  "generatedAt": "2026-11-22T15:42:40.826760+00:00"
 }
