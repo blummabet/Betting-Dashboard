@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-11-22T21:15:58.672159+00:00",
-"count": 5,
+"generatedAt": "2026-11-22T21:31:00.665548+00:00",
+"count": 7,
 "rows": [
 {
 "matchId": "36297249",
@@ -13,9 +13,9 @@
 "betfair": {
 "side": "away",
 "name": "Inter",
-"sharePct": 91,
-"eur": 1560241,
-"odd": 1.03
+"sharePct": 92,
+"eur": 1849834,
+"odd": 1.18
 },
 "poly": {
 "side": "away",
@@ -24,10 +24,15 @@
 "usd": 2009,
 "src": "liga"
 },
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.0197,
+"draw": 0.1429,
+"away": 0.8374
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36297257",
@@ -41,8 +46,8 @@
 "side": "away",
 "name": "Atletico Madrid",
 "sharePct": 94,
-"eur": 1432622,
-"odd": 1.03
+"eur": 1498793,
+"odd": 1.01
 },
 "poly": null,
 "pinn": null,
@@ -62,8 +67,8 @@
 "side": "home",
 "name": "Marseille",
 "sharePct": 89,
-"eur": 810899,
-"odd": 1.24
+"eur": 915859,
+"odd": 5.2
 },
 "poly": {
 "side": "home",
@@ -72,9 +77,40 @@
 "usd": 12,
 "src": "liga"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.8332,
+"draw": 0.1492,
+"away": 0.0176
+},
 "mmStrong": true,
 "polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36326383",
+"home": "Burgos",
+"away": "Albacete",
+"league": "Spanish Segunda Division",
+"live": true,
+"kickoff": "2026-11-22T20:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Burgos",
+"sharePct": 47,
+"eur": 159058,
+"odd": 1.24
+},
+"poly": null,
+"pinn": {
+"fav": "home",
+"home": 0.7497,
+"draw": 0.2052,
+"away": 0.0451
+},
+"mmStrong": false,
+"polyGeld": false,
 "nSources": 2
 },
 {
@@ -89,8 +125,8 @@
 "side": "draw",
 "name": "The Draw",
 "sharePct": 53,
-"eur": 103235,
-"odd": 3.65
+"eur": 103523,
+"odd": 3.6
 },
 "poly": {
 "side": "home",
@@ -101,9 +137,41 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.4179,
-"draw": 0.2723,
-"away": 0.3098
+"home": 0.4165,
+"draw": 0.2734,
+"away": 0.3101
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36303929",
+"home": "Levante",
+"away": "Elche",
+"league": "Spanish La Liga",
+"live": false,
+"kickoff": "2026-11-23T20:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Levante",
+"sharePct": 50,
+"eur": 20083,
+"odd": 2.24
+},
+"poly": {
+"side": "home",
+"name": "Levante UD",
+"sharePct": 44,
+"usd": 75,
+"src": "liga"
+},
+"pinn": {
+"fav": "home",
+"home": 0.4486,
+"draw": 0.2647,
+"away": 0.2867
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -121,8 +189,8 @@
 "side": "away",
 "name": "Benfica",
 "sharePct": 99,
-"eur": 230350,
-"odd": 1.19
+"eur": 316487,
+"odd": 1.09
 },
 "poly": null,
 "pinn": null,
@@ -131,7 +199,7 @@
 "nSources": 1
 }
 ],
-"nameMatchMisses": 16,
+"nameMatchMisses": 15,
 "nameMatchMissList": [
 {
 "matchId": "36329207",
@@ -152,12 +220,6 @@
 "league": "Spanish La Liga"
 },
 {
-"matchId": "36323478",
-"home": "Sporting Cristal",
-"away": "Cienciano",
-"league": "Peruvian Primera Division"
-},
-{
 "matchId": "36321550",
 "home": "Sport Huancayo",
 "away": "Universitario de Deportes",
@@ -168,6 +230,24 @@
 "home": "Burgos",
 "away": "Albacete",
 "league": "Spanish Segunda Division"
+},
+{
+"matchId": "36323478",
+"home": "Sporting Cristal",
+"away": "Cienciano",
+"league": "Peruvian Primera Division"
+},
+{
+"matchId": "36288664",
+"home": "Lille",
+"away": "Bayern Munich",
+"league": "UEFA Champions League"
+},
+{
+"matchId": "36304393",
+"home": "Atletico Madrid",
+"away": "Viking",
+"league": "UEFA Champions League"
 },
 {
 "matchId": "36288662",
@@ -206,28 +286,10 @@
 "league": "US MLS"
 },
 {
-"matchId": "36340714",
-"home": "Fluminense",
-"away": "Mirassol",
-"league": "Brazilian Serie A"
-},
-{
 "matchId": "36340576",
 "home": "Red Bull Bragantino",
 "away": "Vasco Da Gama",
 "league": "Brazilian Serie A"
-},
-{
-"matchId": "36304393",
-"home": "Atletico Madrid",
-"away": "Viking",
-"league": "UEFA Champions League"
-},
-{
-"matchId": "36288664",
-"home": "Lille",
-"away": "Bayern Munich",
-"league": "UEFA Champions League"
 }
 ]
 }
