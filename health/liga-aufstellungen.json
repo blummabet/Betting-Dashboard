@@ -1,12 +1,12 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-23T19:48:28.411105+00:00",
+  "updatedAt": "2026-11-23T21:14:13.320987+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 27.8,
-    "proTag": 16.4,
+    "spanneH": 29.0,
+    "proTag": 15.7,
     "lueckeMinMin": 3.3,
     "lueckeMedianMin": 15.2,
     "lueckeMaxMin": 1206.7,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 52,
-    "gelaufen": 52,
+    "erzeugt": 53,
+    "gelaufen": 53,
     "verdraengt": 0,
-    "spanneH": 534.1,
+    "spanneH": 556.9,
     "erzeugtProTag": 2.3,
-    "widerspruch": "erzeugtProTag 2.3 gegen eine gemessene Kadenz von 16.4/Tag (Faktor 7.1) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 2.3 gegen eine gemessene Kadenz von 15.7/Tag (Faktor 6.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-23T21:14:13.320987+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "45267487041",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/45267487041",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-23T21:13:40Z",
+      "startedAt": "2026-11-23T21:13:40Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 33.3,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-23T19:48:28.411105+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-11-22T16:14:36Z",
       "wartetS": 0.0,
       "laeuftSeitS": 40.0,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-22T16:00:22.221735+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "45041305112",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/45041305112",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-22T15:59:35Z",
-      "startedAt": "2026-11-22T15:59:35Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 47.2,
       "event": "workflow_dispatch"
     }
   ]
