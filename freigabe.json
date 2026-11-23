@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-23T11:47:55.827758+00:00",
+ "generatedAt": "2026-11-23T12:02:56.118614+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -1073,12 +1073,12 @@
    "strom": "cards",
    "zerlegung": "nach Verdikt",
    "art": "verdict",
-   "gruppen": 3,
+   "gruppen": 2,
    "basis": null,
-   "n": 531,
-   "pl": 9.39,
-   "roi": 0.0177,
-   "clv": -1.721,
+   "n": 371,
+   "pl": 13.17,
+   "roi": 0.0355,
+   "clv": -1.391,
    "belegte": 1
   },
   {
@@ -6473,7 +6473,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 20.6,
+   "alterTage": 20.7,
    "art": "gate"
   },
   {
@@ -6500,7 +6500,7 @@
     "nieAnteil": 0.798,
     "schaetzbar": false
    },
-   "alterTage": 20.6,
+   "alterTage": 20.7,
    "art": "mix",
    "wert": "money+sharp"
   },
@@ -7460,35 +7460,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "MLS · ABWÄGEN",
-   "strom": "cards",
-   "n": 160,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0236,
-   "pl": -3.78,
-   "roiLb": -0.1331,
-   "clv": -2.486,
-   "clvLb": -3.004,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.968,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 1498,
-    "lo": 161,
-    "hi": 107168,
-    "nieAnteil": 0.615,
-    "schaetzbar": false
-   },
-   "alterTage": 21.0,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "MLS"
   },
   {
    "schublade": "German Bundesliga 2 · Over/Under 3.5 Goals",
@@ -14408,6 +14379,28 @@
    "wert": "bf+money"
   },
   {
+   "schublade": "MLS · ABWÄGEN",
+   "strom": "cards",
+   "n": 160,
+   "status": "ruht",
+   "grund": "letzter Play vor 21 Tagen — die Schublade liefert nichts mehr",
+   "roi": -0.0236,
+   "pl": -3.78,
+   "roiLb": -0.1331,
+   "clv": -2.486,
+   "clvLb": -3.004,
+   "clvOg": -1.968,
+   "clvUrteil": "negativ belegt",
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "fehltN": 0,
+   "alterTage": 21.0,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "MLS"
+  },
+  {
    "schublade": "WM · ABWÄGEN",
    "strom": "cards",
    "n": 133,
@@ -14688,7 +14681,7 @@
   "schubladen": 436,
   "freigegeben": 4,
   "kandidaten": 25,
-  "ruhend": 15,
+  "ruhend": 16,
   "naechsteFreigabe": 5,
   "naechsterBeleg": null
  }
