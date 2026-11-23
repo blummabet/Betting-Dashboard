@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-23T01:46:19.049863+00:00",
-"count": 12,
-"covered": 11,
+"generatedAt": "2026-11-23T02:01:43.469988+00:00",
+"count": 13,
+"covered": 12,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -55,7 +55,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
 "oddsKeysMitDaten": 46,
-"oddsEvents": 486,
+"oddsEvents": 485,
 "oddsTotals": {
 "versucht": 4,
 "mitDaten": 0,
@@ -64,13 +64,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 1459045,
-"remaining": 3540955,
+"used": 1460011,
+"remaining": 3539989,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.895,
+"ankerQuote": 0.905,
 "games": [
 {
 "matchId": "36303120",
@@ -85,7 +85,7 @@
 "moneySharePct": 47,
 "moneyOdd": 3.6,
 "moneyDir": "flat",
-"totVol": 117402,
+"totVol": 117532,
 "pinnOdd": 3.55,
 "softOdd": 3.5,
 "softN": 51,
@@ -106,9 +106,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4175,
-"draw": 0.2727,
-"away": 0.3098,
+"home": 0.4174,
+"draw": 0.273,
+"away": 0.3097,
 "fav": "home",
 "n": 51
 },
@@ -178,8 +178,8 @@
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
 "moneySharePct": 97,
-"moneyOdd": 1.14,
-"moneyDir": "flat",
+"moneyOdd": 1.15,
+"moneyDir": "out",
 "totVol": 59092,
 "pinnOdd": 1.11,
 "softOdd": 1.1,
@@ -266,7 +266,7 @@
 "moneySharePct": 86,
 "moneyOdd": 1.32,
 "moneyDir": "flat",
-"totVol": 40628,
+"totVol": 40740,
 "pinnOdd": 1.28,
 "softOdd": 1.25,
 "softN": 48,
@@ -307,30 +307,30 @@
 "moneySide": "away",
 "moneyName": "Barcelona",
 "moneySharePct": 98,
-"moneyOdd": 1.09,
-"moneyDir": "flat",
-"totVol": 34722,
+"moneyOdd": 1.08,
+"moneyDir": "in",
+"totVol": 34729,
 "pinnOdd": 1.07,
 "softOdd": 1.07,
 "softN": 47,
 "poly": null,
 "pinn": {
-"home": 0.0419,
-"draw": 0.0584,
-"away": 0.8997,
+"home": 0.0415,
+"draw": 0.0578,
+"away": 0.9007,
 "fav": "away"
 },
 "soft": {
-"home": 0.0444,
+"home": 0.0443,
 "draw": 0.0704,
-"away": 0.8851,
+"away": 0.8853,
 "fav": "away",
 "n": 47
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": 0.1,
+"stepPP": 0.1,
 "n": 11,
 "move": false,
 "laeuft": false
@@ -438,7 +438,7 @@
 "moneySharePct": 59,
 "moneyOdd": 2.44,
 "moneyDir": "flat",
-"totVol": 22047,
+"totVol": 22073,
 "pinnOdd": 2.37,
 "softOdd": 2.35,
 "softN": 47,
@@ -460,13 +460,54 @@
 "pinnMove": {
 "movePP": 0.1,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36331252",
+"home": "Instituto",
+"away": "CA Huracan",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-11-23T01:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Instituto",
+"moneySharePct": 92,
+"moneyOdd": 1.09,
+"moneyDir": "flat",
+"totVol": 21747,
+"pinnOdd": null,
+"softOdd": 1.05,
+"softN": 24,
+"poly": null,
+"pinn": null,
+"soft": {
+"home": 0.8885,
+"draw": 0.0862,
+"away": 0.0254,
+"fav": "home",
+"n": 24
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Instituto v CA Huracan",
+"grund": "kein_pinnacle",
+"kandidat": "Instituto de Córdoba v Atlético Huracán",
+"key": "soccer_argentina_primera_division",
+"nSoft": 24,
+"pinnacleImEvent": false,
+"nBuecher": 24
+}
 },
 {
 "matchId": "36303929",
@@ -481,7 +522,7 @@
 "moneySharePct": 50,
 "moneyOdd": 2.24,
 "moneyDir": "flat",
-"totVol": 21197,
+"totVol": 21209,
 "pinnOdd": 2.18,
 "softOdd": 2.15,
 "softN": 45,
@@ -521,45 +562,41 @@
 "pinnTotals": null
 },
 {
-"matchId": "36331252",
-"home": "Instituto",
-"away": "CA Huracan",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-11-23T01:00:00Z",
-"live": true,
+"matchId": "36288652",
+"home": "Real Madrid",
+"away": "PSV",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-11-24T20:00:00Z",
+"live": false,
 "moneySide": "home",
-"moneyName": "Instituto",
-"moneySharePct": 93,
-"moneyOdd": 1.09,
+"moneyName": "Real Madrid",
+"moneySharePct": 97,
+"moneyOdd": 1.18,
 "moneyDir": "in",
-"totVol": 20322,
-"pinnOdd": null,
-"softOdd": 1.04,
-"softN": 24,
+"totVol": 20537,
+"pinnOdd": 1.19,
+"softOdd": 1.17,
+"softN": 48,
 "poly": null,
-"pinn": null,
+"pinn": {
+"home": 0.809,
+"draw": 0.1087,
+"away": 0.0823,
+"fav": "home"
+},
 "soft": {
-"home": 0.8941,
-"draw": 0.0823,
-"away": 0.0236,
+"home": 0.8067,
+"draw": 0.1129,
+"away": 0.0804,
 "fav": "home",
-"n": 24
+"n": 48
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Instituto v CA Huracan",
-"grund": "kein_pinnacle",
-"kandidat": "Instituto de Córdoba v Atlético Huracán",
-"key": "soccer_argentina_primera_division",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24
-}
+"pinnTotals": null
 },
 {
 "matchId": "36341601",
@@ -571,10 +608,10 @@
 "live": true,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 76,
-"moneyOdd": 1.4,
+"moneySharePct": 79,
+"moneyOdd": 1.13,
 "moneyDir": "in",
-"totVol": 9054,
+"totVol": 11590,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -593,13 +630,13 @@
 }
 }
 ],
-"ankerN": 19,
-"ankerNOffen": 123,
-"ankerMit": 17,
+"ankerN": 21,
+"ankerNOffen": 126,
+"ankerMit": 19,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 78,
-"zeit": 7,
+"zeit": 8,
 "kein_pinnacle": 2,
 "name": 1
 },
@@ -693,6 +730,16 @@
 "grund": "name",
 "matchId": "36352990",
 "liga": "Saudi U21 Elite League"
+},
+{
+"spiel": "Portmore Utd v Racing United FC",
+"kandidat": "Newcastle United v Manchester United",
+"key": "soccer_epl",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 211.2,
+"matchId": "36353234",
+"liga": "Jamaican Premier League"
 },
 {
 "spiel": "Instituto v CA Huracan",
