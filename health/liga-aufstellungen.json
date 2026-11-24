@@ -1,12 +1,12 @@
 {
   "slug": "liga-aufstellungen",
   "workflow": "📋 Liga Aufstellungen (T-1h)",
-  "updatedAt": "2026-11-24T05:24:16.613098+00:00",
+  "updatedAt": "2026-11-24T20:06:33.976502+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 36.9,
-    "proTag": 12.4,
+    "spanneH": 51.4,
+    "proTag": 8.9,
     "lueckeMinMin": 3.3,
     "lueckeMedianMin": 15.2,
     "lueckeMaxMin": 1206.7,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 54,
-    "gelaufen": 54,
+    "erzeugt": 55,
+    "gelaufen": 55,
     "verdraengt": 0,
-    "spanneH": 565.0,
+    "spanneH": 579.8,
     "erzeugtProTag": 2.3,
-    "widerspruch": "erzeugtProTag 2.3 gegen eine gemessene Kadenz von 12.4/Tag (Faktor 5.4) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 2.3 gegen eine gemessene Kadenz von 8.9/Tag (Faktor 3.9) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-11-24T20:06:33.976502+00:00",
+      "workflow": "📋 Liga Aufstellungen (T-1h)",
+      "runId": "45477173431",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/45477173431",
+      "nSteps": 13,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-11-24T20:05:58Z",
+      "startedAt": "2026-11-24T20:05:58Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 36.0,
+      "event": "schedule"
+    },
     {
       "ts": "2026-11-24T05:24:16.613098+00:00",
       "workflow": "📋 Liga Aufstellungen (T-1h)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-11-22T16:44:58Z",
       "wartetS": 0.0,
       "laeuftSeitS": 35.5,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-11-22T16:30:18.674730+00:00",
-      "workflow": "📋 Liga Aufstellungen (T-1h)",
-      "runId": "45044136598",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/45044136598",
-      "nSteps": 13,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-11-22T16:29:41Z",
-      "startedAt": "2026-11-22T16:29:41Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 37.7,
       "event": "workflow_dispatch"
     }
   ]
