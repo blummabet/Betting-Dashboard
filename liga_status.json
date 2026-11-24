@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 739 h kein Lauf mehr verzeichnet"
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 741 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -372,10 +372,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
         "33-55 Heimsieg @1.95: sichere Linie Doppelte Chance — 1X @1.372 verfügbar (≥1.35), nicht abgeleitet",
-        "494-502 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.419 verfügbar (≥1.35), nicht abgeleitet"
+        "494-502 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.419 verfügbar (≥1.35), nicht abgeleitet",
+        "535-531 Unter 2.5 Tore @1.85: sichere Linie Unter 3.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -568,7 +569,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.2h · jüngste Daten vor 0.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.5h · jüngste Daten vor 0.5h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -577,9 +578,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.1h, aber die jüngste Poly-Global-Scan-Datei ist 286.0h alt (poly_wallet_track 286.0h, poly_money_broad 286.0h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.4h, aber die jüngste Poly-Global-Scan-Datei ist 287.8h alt (poly_wallet_track 287.8h, poly_money_broad 287.8h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.1h · jüngste Daten vor 286.0h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.4h · jüngste Daten vor 287.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -599,7 +600,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "120 Spiele bewertet · 38 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "116 Spiele bewertet · 35 mit mindestens einem fremden Buch · beste Punktzahl 6. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -608,7 +609,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6689/200 seit 78d · 🔒 Bücher-Score ≥7 von 10: 92/40 seit 84d · 🔒 Liga · Conviction ab 5: 238/80 seit 74d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 78d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 84d"
+      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6691/200 seit 79d · 🔒 Bücher-Score ≥7 von 10: 92/40 seit 84d · 🔒 Liga · Conviction ab 5: 238/80 seit 74d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 78d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 84d"
     },
     {
       "id": "killer_push_buch",
@@ -630,5 +631,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-11-24T17:35:00.476008+00:00"
+  "generatedAt": "2026-11-24T19:20:56.046017+00:00"
 }
