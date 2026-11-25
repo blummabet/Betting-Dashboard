@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-25T01:52:03.955842+00:00",
+"generatedAt": "2026-11-25T02:22:32.967816+00:00",
 "byVerdict": {
 "konsens": {
-"n": 986,
-"wins": 588,
-"hitRate": 0.5963,
+"n": 993,
+"wins": 593,
+"hitRate": 0.5972,
 "polyN": 941,
 "polyWins": 552,
 "polyHitRate": 0.5866,
-"pinnN": 889,
-"pinnHitRate": 0.5996,
-"nRoi": 986,
-"roi": 0.078,
-"roiLb": 0.0283,
-"nClv": 986,
+"pinnN": 896,
+"pinnHitRate": 0.6004,
+"nRoi": 993,
+"roi": 0.0778,
+"roiLb": 0.0284,
+"nClv": 993,
 "clv": 0.13,
-"clvLb": -0.0036
+"clvLb": -0.0035
 },
 "uneinig": {
 "n": 50,
@@ -61,6 +61,11 @@
 "wins": 35,
 "hitRate": 0.5469
 },
+"UEFA Champions League": {
+"n": 63,
+"wins": 44,
+"hitRate": 0.6984
+},
 "English Premier League": {
 "n": 60,
 "wins": 31,
@@ -70,11 +75,6 @@
 "n": 56,
 "wins": 33,
 "hitRate": 0.5893
-},
-"UEFA Champions League": {
-"n": 56,
-"wins": 39,
-"hitRate": 0.6964
 },
 "US MLS": {
 "n": 50,
@@ -450,15 +450,15 @@
 "clvLb": 0.0177
 },
 "weak": {
-"n": 401,
-"wins": 206,
-"hitRate": 0.5137,
-"nRoi": 401,
-"roi": 0.1404,
-"roiLb": 0.0458,
-"nClv": 401,
+"n": 408,
+"wins": 211,
+"hitRate": 0.5172,
+"nRoi": 408,
+"roi": 0.1389,
+"roiLb": 0.0456,
+"nClv": 408,
 "clv": 0.0,
-"clvLb": -0.1914
+"clvLb": -0.1882
 }
 },
 "divergence": {
@@ -470,6 +470,139 @@
 "polyRate": 0.3958
 },
 "recent": [
+{
+"matchId": "36288643",
+"home": "Man City",
+"away": "Napoli",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Man City",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288652",
+"home": "Real Madrid",
+"away": "PSV",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Real Madrid",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288658",
+"home": "Slovan Bratislava",
+"away": "Betis",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Betis",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288648",
+"home": "Como",
+"away": "AEK Athens",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Como",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288672",
+"home": "Feyenoord",
+"away": "Porto",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Porto",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288642",
+"home": "Arsenal",
+"away": "Dortmund",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Arsenal",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
+{
+"matchId": "36288657",
+"home": "RB Leipzig",
+"away": "Lens",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "RB Leipzig",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-11-24T20:00:00Z",
+"settledAt": "2026-11-25T02:07:10.275315+00:00"
+},
 {
 "matchId": "36288640",
 "home": "Galatasaray",
@@ -1096,152 +1229,19 @@
 ],
 "kickoff": "2026-11-21T13:00:00Z",
 "settledAt": "2026-11-21T19:13:06.512414+00:00"
-},
-{
-"matchId": "36293561",
-"home": "Parma",
-"away": "Roma",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Roma",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-5
-],
-"kickoff": "2026-11-21T17:00:00Z",
-"settledAt": "2026-11-21T18:58:21.973815+00:00"
-},
-{
-"matchId": "36293092",
-"home": "Man City",
-"away": "Fulham",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Man City",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-11-21T12:30:00Z",
-"settledAt": "2026-11-21T18:42:59.026578+00:00"
-},
-{
-"matchId": "36292923",
-"home": "Bournemouth",
-"away": "Nottm Forest",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bournemouth",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-11-21T15:00:00Z",
-"settledAt": "2026-11-21T16:58:04.792357+00:00"
-},
-{
-"matchId": "36291552",
-"home": "Union Berlin",
-"away": "RB Leipzig",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "RB Leipzig",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-5
-],
-"kickoff": "2026-11-21T14:30:00Z",
-"settledAt": "2026-11-21T16:27:46.288827+00:00"
-},
-{
-"matchId": "36293332",
-"home": "Lazio",
-"away": "Lecce",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lazio",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-11-21T14:00:00Z",
-"settledAt": "2026-11-21T15:57:48.476794+00:00"
-},
-{
-"matchId": "36289341",
-"home": "Athletic Bilbao",
-"away": "Espanyol",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Athletic Bilbao",
-"polySide": null,
-"winner": "away",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-11-20T20:00:00Z",
-"settledAt": "2026-11-21T02:12:10.111058+00:00"
-},
-{
-"matchId": "36291230",
-"home": "ESTAC Troyes",
-"away": "Le Havre",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "ESTAC Troyes",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-11-20T19:45:00Z",
-"settledAt": "2026-11-21T01:56:22.277805+00:00"
 }
 ],
 "global": {
-"n": 1038,
-"wins": 606,
-"hitRate": 0.5838,
-"nRoi": 1038,
-"roi": 0.0743,
-"roiLb": 0.0245,
-"nClv": 1038,
+"n": 1045,
+"wins": 611,
+"hitRate": 0.5847,
+"nRoi": 1045,
+"roi": 0.0741,
+"roiLb": 0.0246,
+"nClv": 1045,
 "clv": 0.12,
-"clvLb": -0.0114
+"clvLb": -0.0112
 },
-"pending": 18,
+"pending": 11,
 "ausgeschlossenLive": 944
 }
