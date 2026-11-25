@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-25T13:38:43.992581+00:00",
+"generatedAt": "2026-11-25T14:23:44.234731+00:00",
 "count": 6,
 "rows": [
 {
@@ -14,35 +14,19 @@
 "side": "away",
 "name": "Barcelona",
 "sharePct": 98,
-"eur": 622855,
-"odd": 1.1
+"eur": 763936,
+"odd": 1.09
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.0336,
+"draw": 0.066,
+"away": 0.9004
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
-},
-{
-"matchId": "36288664",
-"home": "Lille",
-"away": "Bayern Munich",
-"league": "UEFA Champions League",
-"live": false,
-"kickoff": "2026-11-25T20:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Bayern Munich",
-"sharePct": 78,
-"eur": 265787,
-"odd": 1.66
-},
-"poly": null,
-"pinn": null,
-"mmStrong": false,
-"polyGeld": false,
-"nSources": 1
+"nSources": 2
 },
 {
 "matchId": "36288662",
@@ -56,14 +40,45 @@
 "side": "home",
 "name": "Paris St-G",
 "sharePct": 83,
-"eur": 254083,
-"odd": 1.53
+"eur": 289048,
+"odd": 1.55
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.6372,
+"draw": 0.1972,
+"away": 0.1656
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
+},
+{
+"matchId": "36288664",
+"home": "Lille",
+"away": "Bayern Munich",
+"league": "UEFA Champions League",
+"live": false,
+"kickoff": "2026-11-25T20:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Bayern Munich",
+"sharePct": 79,
+"eur": 273956,
+"odd": 1.65
+},
+"poly": null,
+"pinn": {
+"fav": "away",
+"home": 0.1734,
+"draw": 0.2298,
+"away": 0.5967
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
 },
 {
 "matchId": "36288660",
@@ -77,14 +92,19 @@
 "side": "away",
 "name": "Villarreal",
 "sharePct": 70,
-"eur": 194886,
-"odd": 2.38
+"eur": 203583,
+"odd": 2.36
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.3135,
+"draw": 0.2607,
+"away": 0.4258
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
 },
 {
 "matchId": "36304393",
@@ -98,15 +118,15 @@
 "side": "home",
 "name": "Atletico Madrid",
 "sharePct": 95,
-"eur": 169811,
+"eur": 173337,
 "odd": 1.14
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.8633,
-"draw": 0.0877,
-"away": 0.049
+"home": 0.8603,
+"draw": 0.0894,
+"away": 0.0503
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -124,29 +144,58 @@
 "side": "home",
 "name": "Sporting Lisbon",
 "sharePct": 49,
-"eur": 162047,
-"odd": 2.78
+"eur": 170525,
+"odd": 2.82
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.3559,
+"draw": 0.2601,
+"away": 0.384
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
 }
 ],
-"nameMatchMisses": 16,
+"nameMatchMisses": 17,
 "nameMatchMissList": [
 {
-"matchId": "36358880",
-"home": "Persib Bandung",
-"away": "FC Seoul",
+"matchId": "36359893",
+"home": "Club Brugge U19",
+"away": "Liverpool U19",
+"league": "UEFA Youth League"
+},
+{
+"matchId": "36359105",
+"home": "Nasaf",
+"away": "Al Khalidiyah",
 "league": "AFC Champions League Two"
 },
 {
-"matchId": "36358869",
-"home": "Al-Anwar Club",
-"away": "Al-Jndal",
-"league": "Saudi 1st Division"
+"matchId": "36358973",
+"home": "Sporting CP U19",
+"away": "Man Utd U19",
+"league": "UEFA Youth League"
+},
+{
+"matchId": "36317178",
+"home": "Freiburg",
+"away": "FC Twente",
+"league": "UEFA Conference League"
+},
+{
+"matchId": "36320347",
+"home": "Nottm Forest",
+"away": "Chelsea",
+"league": "English Premier League"
+},
+{
+"matchId": "36304050",
+"home": "FC Sabah",
+"away": "Barcelona",
+"league": "UEFA Champions League"
 },
 {
 "matchId": "36288664",
@@ -158,6 +207,12 @@
 "matchId": "36288662",
 "home": "Paris St-G",
 "away": "Roma",
+"league": "UEFA Champions League"
+},
+{
+"matchId": "36288660",
+"home": "Slavia Prague",
+"away": "Villarreal",
 "league": "UEFA Champions League"
 },
 {
@@ -191,12 +246,6 @@
 "league": "UEFA Champions League"
 },
 {
-"matchId": "36317178",
-"home": "Freiburg",
-"away": "FC Twente",
-"league": "UEFA Conference League"
-},
-{
 "matchId": "36348147",
 "home": "Stoke",
 "away": "Millwall",
@@ -209,28 +258,10 @@
 "league": "English Sky Bet Championship"
 },
 {
-"matchId": "36320347",
-"home": "Nottm Forest",
-"away": "Chelsea",
-"league": "English Premier League"
-},
-{
-"matchId": "36304050",
-"home": "FC Sabah",
-"away": "Barcelona",
-"league": "UEFA Champions League"
-},
-{
-"matchId": "36288660",
-"home": "Slavia Prague",
-"away": "Villarreal",
-"league": "UEFA Champions League"
-},
-{
-"matchId": "36359893",
-"home": "Club Brugge U19",
-"away": "Liverpool U19",
-"league": "UEFA Youth League"
+"matchId": "36348359",
+"home": "Bolton",
+"away": "West Brom",
+"league": "English Sky Bet Championship"
 }
 ]
 }
