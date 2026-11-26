@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-26T01:09:52.926940+00:00",
+ "generatedAt": "2026-11-26T01:24:43.706235+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -129,7 +129,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 4.0,
+   "alterTage": 4.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -948,7 +948,7 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 245.44,
+   "pl": 243.82,
    "roi": 0.0061,
    "clv": null,
    "belegte": 24
@@ -2850,18 +2850,6 @@
    "belegt": false
   },
   {
-   "liga": "Mexican Liga MX",
-   "n": 303,
-   "wins": 139,
-   "hit": 0.4587,
-   "hitLb": 0.4122,
-   "roi": -0.0779,
-   "roiLb": -0.18,
-   "pl": -23.59,
-   "clv": 0.208,
-   "belegt": false
-  },
-  {
    "liga": "Peruvian Primera Division",
    "n": 273,
    "wins": 130,
@@ -2871,6 +2859,18 @@
    "roiLb": -0.1818,
    "pl": -20.32,
    "clv": -0.258,
+   "belegt": false
+  },
+  {
+   "liga": "Mexican Liga MX",
+   "n": 302,
+   "wins": 138,
+   "hit": 0.457,
+   "hitLb": 0.4104,
+   "roi": -0.0802,
+   "roiLb": -0.1826,
+   "pl": -24.23,
+   "clv": 0.203,
    "belegt": false
   },
   {
@@ -3415,14 +3415,14 @@
   },
   {
    "liga": "Guatemalan Liga Nacional",
-   "n": 169,
-   "wins": 79,
-   "hit": 0.4675,
-   "hitLb": 0.4053,
-   "roi": -0.1139,
-   "roiLb": -0.2502,
-   "pl": -19.25,
-   "clv": -0.174,
+   "n": 166,
+   "wins": 78,
+   "hit": 0.4699,
+   "hitLb": 0.4072,
+   "roi": -0.1121,
+   "roiLb": -0.2495,
+   "pl": -18.61,
+   "clv": -0.177,
    "belegt": false
   },
   {
@@ -3495,18 +3495,6 @@
    "roiLb": -0.2575,
    "pl": -1.12,
    "clv": -0.438,
-   "belegt": false
-  },
-  {
-   "liga": "Bolivian Cup",
-   "n": 82,
-   "wins": 40,
-   "hit": 0.4878,
-   "hitLb": 0.3989,
-   "roi": -0.0618,
-   "roiLb": -0.2595,
-   "pl": -5.07,
-   "clv": 0.244,
    "belegt": false
   },
   {
@@ -3651,6 +3639,18 @@
    "roiLb": -0.2749,
    "pl": -19.52,
    "clv": 0.085,
+   "belegt": false
+  },
+  {
+   "liga": "Bolivian Cup",
+   "n": 89,
+   "wins": 42,
+   "hit": 0.4719,
+   "hitLb": 0.387,
+   "roi": -0.0873,
+   "roiLb": -0.2765,
+   "pl": -7.77,
+   "clv": 0.184,
    "belegt": false
   },
   {
@@ -4527,7 +4527,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 4.0,
+   "alterTage": 4.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5314,12 +5314,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6438,
+   "n": 6437,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0239,
-   "pl": 153.87,
-   "roiLb": -0.0027,
+   "roi": 0.0238,
+   "pl": 153.2,
+   "roiLb": -0.0028,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5493,9 +5493,9 @@
    "n": 5014,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0045,
-   "pl": 22.56,
-   "roiLb": -0.0201,
+   "roi": 0.0044,
+   "pl": 22.06,
+   "roiLb": -0.0202,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5583,28 +5583,6 @@
    "zuschnitt": "top5"
   },
   {
-   "schublade": "Both teams to Score?",
-   "strom": "betfair",
-   "n": 5951,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0083,
-   "pl": -49.39,
-   "roiLb": -0.0306,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Italian Serie B · First Half Goals 0.5",
    "strom": "betfair",
    "n": 56,
@@ -5624,6 +5602,28 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Both teams to Score?",
+   "strom": "betfair",
+   "n": 5951,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0087,
+   "pl": -51.77,
+   "roiLb": -0.031,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
    "naeherung": false
   },
   {
@@ -5673,12 +5673,12 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 4831,
+   "n": 4832,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0077,
-   "pl": -37.2,
-   "roiLb": -0.0406,
+   "roi": -0.0073,
+   "pl": -35.27,
+   "roiLb": -0.0402,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5716,7 +5716,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 2.5,
+   "alterTage": 2.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -8224,28 +8224,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mexican Liga MX · Match Odds",
-   "strom": "betfair",
-   "n": 44,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0752,
-   "pl": 3.31,
-   "roiLb": -0.208,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "UEFA Conference League · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 36,
@@ -8562,6 +8540,28 @@
    "roi": 0.0603,
    "pl": 1.99,
    "roiLb": -0.2236,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Mexican Liga MX · Match Odds",
+   "strom": "betfair",
+   "n": 43,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0621,
+   "pl": 2.67,
+   "roiLb": -0.227,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -13327,7 +13327,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 27.1,
+   "alterTage": 27.2,
    "art": "mix",
    "wert": "sharp+steam"
   },
@@ -13600,7 +13600,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 23.5,
+   "alterTage": 23.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -13622,7 +13622,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 129.5,
+   "alterTage": 129.6,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -13665,7 +13665,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 144.5,
+   "alterTage": 144.6,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
@@ -13687,7 +13687,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 24.3,
+   "alterTage": 24.4,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -13708,7 +13708,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 24.2,
+   "alterTage": 24.3,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -13750,7 +13750,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "fehltN": 0,
-   "alterTage": 27.5,
+   "alterTage": 27.6,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -13793,7 +13793,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "fehltN": 0,
-   "alterTage": 35.1,
+   "alterTage": 35.2,
    "art": "mix",
    "wert": "bf+sharp"
   },
