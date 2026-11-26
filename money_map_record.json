@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-26T23:42:25.507147+00:00",
+"generatedAt": "2026-11-26T23:57:44.018301+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1003,
-"wins": 599,
-"hitRate": 0.5972,
+"n": 1007,
+"wins": 602,
+"hitRate": 0.5978,
 "polyN": 941,
 "polyWins": 552,
 "polyHitRate": 0.5866,
-"pinnN": 906,
-"pinnHitRate": 0.6004,
-"nRoi": 1003,
-"roi": 0.0776,
-"roiLb": 0.0284,
-"nClv": 1003,
-"clv": 0.13,
-"clvLb": -0.0041
+"pinnN": 910,
+"pinnHitRate": 0.6011,
+"nRoi": 1007,
+"roi": 0.0793,
+"roiLb": 0.0302,
+"nClv": 1007,
+"clv": 0.12,
+"clvLb": -0.0132
 },
 "uneinig": {
 "n": 50,
@@ -81,6 +81,11 @@
 "wins": 26,
 "hitRate": 0.52
 },
+"UEFA Europa League": {
+"n": 49,
+"wins": 27,
+"hitRate": 0.551
+},
 "German Bundesliga": {
 "n": 47,
 "wins": 27,
@@ -90,11 +95,6 @@
 "n": 45,
 "wins": 31,
 "hitRate": 0.6889
-},
-"UEFA Europa League": {
-"n": 45,
-"wins": 24,
-"hitRate": 0.5333
 },
 "French Ligue 1": {
 "n": 41,
@@ -450,15 +450,15 @@
 "clvLb": 0.0177
 },
 "weak": {
-"n": 418,
-"wins": 217,
-"hitRate": 0.5191,
-"nRoi": 418,
-"roi": 0.1369,
-"roiLb": 0.045,
-"nClv": 418,
-"clv": 0.0,
-"clvLb": -0.1858
+"n": 422,
+"wins": 220,
+"hitRate": 0.5213,
+"nRoi": 422,
+"roi": 0.1405,
+"roiLb": 0.049,
+"nClv": 422,
+"clv": -0.02,
+"clvLb": -0.2065
 }
 },
 "divergence": {
@@ -470,6 +470,82 @@
 "polyRate": 0.3958
 },
 "recent": [
+{
+"matchId": "36315131",
+"home": "Celta Vigo",
+"away": "Bournemouth",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bournemouth",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-11-26T17:45:00Z",
+"settledAt": "2026-11-26T23:57:43.759385+00:00"
+},
+{
+"matchId": "36320096",
+"home": "Besiktas",
+"away": "Hapoel Be'er Sheva",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Besiktas",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-11-26T17:45:00Z",
+"settledAt": "2026-11-26T23:57:43.759385+00:00"
+},
+{
+"matchId": "36313893",
+"home": "Plzen",
+"away": "Benfica",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Benfica",
+"polySide": null,
+"winner": "home",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-11-26T17:45:00Z",
+"settledAt": "2026-11-26T23:57:43.759385+00:00"
+},
+{
+"matchId": "36313900",
+"home": "Olympiakos",
+"away": "AC Milan",
+"league": "UEFA Europa League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "AC Milan",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-11-26T17:45:00Z",
+"settledAt": "2026-11-26T23:57:43.759385+00:00"
+},
 {
 "matchId": "36288662",
 "home": "Paris St-G",
@@ -1153,95 +1229,19 @@
 ],
 "kickoff": "2026-11-22T14:00:00Z",
 "settledAt": "2026-11-22T16:01:11.481016+00:00"
-},
-{
-"matchId": "36297462",
-"home": "Paris FC",
-"away": "Angers",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Paris FC",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-11-22T14:00:00Z",
-"settledAt": "2026-11-22T16:01:11.481016+00:00"
-},
-{
-"matchId": "36296466",
-"home": "Barcelona",
-"away": "Villarreal",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Barcelona",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-11-22T13:00:00Z",
-"settledAt": "2026-11-22T15:15:24.560410+00:00"
-},
-{
-"matchId": "36293717",
-"home": "Real Madrid",
-"away": "Celta Vigo",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Real Madrid",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-11-21T20:00:00Z",
-"settledAt": "2026-11-22T02:13:54.394540+00:00"
-},
-{
-"matchId": "36293470",
-"home": "Sevilla",
-"away": "Betis",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Betis",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-11-21T17:30:00Z",
-"settledAt": "2026-11-21T23:43:35.671199+00:00"
 }
 ],
 "global": {
-"n": 1055,
-"wins": 617,
-"hitRate": 0.5848,
-"nRoi": 1055,
-"roi": 0.074,
-"roiLb": 0.0246,
-"nClv": 1055,
-"clv": 0.12,
-"clvLb": -0.0117
+"n": 1059,
+"wins": 620,
+"hitRate": 0.5855,
+"nRoi": 1059,
+"roi": 0.0756,
+"roiLb": 0.0263,
+"nClv": 1059,
+"clv": 0.11,
+"clvLb": -0.0202
 },
-"pending": 15,
+"pending": 11,
 "ausgeschlossenLive": 930
 }
