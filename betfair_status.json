@@ -88,20 +88,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1805077 verbraucht, 3194923 uebrig"
+      "note": "Kontingent: 1806094 verbraucht, 3193906 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "Werder Bremen v Mgladbach (German Bundesliga): name — bester Kandidat „Werder Bremen v Borussia Monchengladbach“",
         "Hertha Berlin v Karlsruhe (German Bundesliga 2): name — bester Kandidat „Hertha Berlin v Karlsruher SC“",
-        "Al Sailiya v Al Gharafa (Qatari Stars League): unerklaert — bester Kandidat „Al-Kholood v Al-Khaleej“"
+        "Al Sailiya v Al Gharafa (Qatari Stars League): unerklaert — bester Kandidat „Al-Kholood v Al-Khaleej“",
+        "Alanyaspor U19 v Konyaspor U19 (Turkish U19): zeit — bester Kandidat „Alanyaspor v Torku Konyaspor“ · 7.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 22 · name 2 · unerklaert 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 24 · kein_pinnacle 3 · name 2 · unerklaert 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -110,7 +111,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 3 — Hearts v Monaco (27 Buecher, ohne Pinnacle); Brighton v Universitatea Craiova (25 Buecher, ohne Pinnacle); Ajax v Thun (27 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -186,5 +187,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-26T17:57:14.616437+00:00"
+  "generatedAt": "2026-11-26T18:12:15.334875+00:00"
 }
