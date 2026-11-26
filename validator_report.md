@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 26.11.2026 02:10
+# 🟡 Picks Validator — 26.11.2026 19:50
 
 **110 Spiele geprüft** · 🔴 0 Fehler · 🟡 75 Warnungen · 🔵 369 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  26.11.2026 02:10
+  26.11.2026 19:50
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -235,7 +235,7 @@
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 29.11.2026  HNK Gorica vs Dinamo Zagreb
-     HNK Gorica expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     HNK Gorica expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 29.11.2026  HNK Hajduk Split vs Rudes
      HNK Hajduk Split dominiert H2H 11W/0X/2L in 13 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
