@@ -88,20 +88,19 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1914662 verbraucht, 3085338 uebrig"
+      "note": "Kontingent: 1915659 verbraucht, 3084341 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
-        "Man City U21 v West Brom U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „West Bromwich Albion v Bristol City“ · 20.0h Anpfiff-Abstand",
         "Hertha Berlin v Karlsruhe (German Bundesliga 2): name — bester Kandidat „Hertha Berlin v Karlsruher SC“",
         "Nacional (Par) v Rubio Nu (Paraguayan Primera Division): name — bester Kandidat „CS Maritimo v Nacional“"
       ],
-      "note": "ohne Anker: kein_kandidat 31 · name 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 30 · kein_pinnacle 2 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -110,7 +109,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 2 — Nottm Forest v Chelsea (28 Buecher, ohne Pinnacle); Maritimo v CD Nacional Funchal (31 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -119,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -186,5 +185,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-11-27T21:30:17.970773+00:00"
+  "generatedAt": "2026-11-27T21:45:37.489709+00:00"
 }
