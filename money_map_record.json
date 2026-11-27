@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-11-27T21:45:14.564861+00:00",
+"generatedAt": "2026-11-27T21:59:58.931035+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1010,
-"wins": 604,
-"hitRate": 0.598,
+"n": 1013,
+"wins": 605,
+"hitRate": 0.5972,
 "polyN": 941,
 "polyWins": 552,
 "polyHitRate": 0.5866,
-"pinnN": 913,
-"pinnHitRate": 0.6013,
-"nRoi": 1010,
-"roi": 0.0801,
-"roiLb": 0.0311,
-"nClv": 1010,
+"pinnN": 916,
+"pinnHitRate": 0.6004,
+"nRoi": 1013,
+"roi": 0.0794,
+"roiLb": 0.0304,
+"nClv": 1013,
 "clv": 0.12,
-"clvLb": -0.0137
+"clvLb": -0.013
 },
 "uneinig": {
 "n": 50,
@@ -62,19 +62,19 @@
 "hitRate": 0.6812
 },
 "English Sky Bet Championship": {
-"n": 64,
+"n": 65,
 "wins": 35,
-"hitRate": 0.5469
+"hitRate": 0.5385
 },
 "English Premier League": {
-"n": 60,
-"wins": 31,
-"hitRate": 0.5167
+"n": 61,
+"wins": 32,
+"hitRate": 0.5246
 },
 "Spanish La Liga": {
-"n": 56,
+"n": 57,
 "wins": 33,
-"hitRate": 0.5893
+"hitRate": 0.5789
 },
 "UEFA Europa League": {
 "n": 51,
@@ -450,15 +450,15 @@
 "clvLb": 0.0177
 },
 "weak": {
-"n": 425,
-"wins": 222,
-"hitRate": 0.5224,
-"nRoi": 425,
-"roi": 0.1421,
-"roiLb": 0.051,
-"nClv": 425,
+"n": 428,
+"wins": 223,
+"hitRate": 0.521,
+"nRoi": 428,
+"roi": 0.14,
+"roiLb": 0.0492,
+"nClv": 428,
 "clv": -0.02,
-"clvLb": -0.2066
+"clvLb": -0.2035
 }
 },
 "divergence": {
@@ -470,6 +470,63 @@
 "polyRate": 0.3958
 },
 "recent": [
+{
+"matchId": "36320347",
+"home": "Nottm Forest",
+"away": "Chelsea",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Nottm Forest",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-11-27T20:00:00Z",
+"settledAt": "2026-11-27T21:59:58.682780+00:00"
+},
+{
+"matchId": "36320796",
+"home": "Levante",
+"away": "Racing Santander",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Levante",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-11-27T20:00:00Z",
+"settledAt": "2026-11-27T21:59:58.682780+00:00"
+},
+{
+"matchId": "36348166",
+"home": "Southampton",
+"away": "Middlesbrough",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Middlesbrough",
+"polySide": null,
+"winner": "home",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-11-27T20:00:00Z",
+"settledAt": "2026-11-27T21:59:58.682780+00:00"
+},
 {
 "matchId": "36313860",
 "home": "Lyon",
@@ -1172,76 +1229,19 @@
 ],
 "kickoff": "2026-11-22T14:30:00Z",
 "settledAt": "2026-11-22T20:45:50.529301+00:00"
-},
-{
-"matchId": "36296168",
-"home": "Bologna",
-"away": "Udinese",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bologna",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-11-22T14:00:00Z",
-"settledAt": "2026-11-22T20:15:53.045388+00:00"
-},
-{
-"matchId": "36297245",
-"home": "AC Milan",
-"away": "Frosinone",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "AC Milan",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-11-22T17:00:00Z",
-"settledAt": "2026-11-22T19:01:04.253242+00:00"
-},
-{
-"matchId": "36296899",
-"home": "Werder Bremen",
-"away": "Hamburger SV",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Werder Bremen",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-11-22T16:30:00Z",
-"settledAt": "2026-11-22T18:30:56.472935+00:00"
 }
 ],
 "global": {
-"n": 1062,
-"wins": 622,
-"hitRate": 0.5857,
-"nRoi": 1062,
-"roi": 0.0764,
-"roiLb": 0.0272,
-"nClv": 1062,
+"n": 1065,
+"wins": 623,
+"hitRate": 0.585,
+"nRoi": 1065,
+"roi": 0.0758,
+"roiLb": 0.0266,
+"nClv": 1065,
 "clv": 0.11,
-"clvLb": -0.0208
+"clvLb": -0.0201
 },
-"pending": 12,
+"pending": 9,
 "ausgeschlossenLive": 926
 }
