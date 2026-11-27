@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 795 h kein Lauf mehr verzeichnet"
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 810 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -372,10 +372,12 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 6,
       "failures": [
-        "33-55 Heimsieg @1.95: sichere Linie Doppelte Chance — 1X @1.373 verfügbar (≥1.35), nicht abgeleitet",
-        "494-502 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.393 verfügbar (≥1.35), nicht abgeleitet",
+        "33-55 Heimsieg @1.95: sichere Linie Doppelte Chance — 1X @1.42 verfügbar (≥1.35), nicht abgeleitet",
+        "494-502 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.395 verfügbar (≥1.35), nicht abgeleitet",
+        "503-487 Auswärtssieg @1.9: sichere Linie Doppelte Chance — X2 @1.35 verfügbar (≥1.35), nicht abgeleitet",
+        "517-500 Auswärtssieg @2.0: sichere Linie Doppelte Chance — X2 @1.42 verfügbar (≥1.35), nicht abgeleitet",
         "895-496 Unter 2.5 Tore @2.02: sichere Linie Unter 3.5 Tore @1.4 verfügbar (≥1.35), nicht abgeleitet",
         "535-531 Unter 2.5 Tore @1.85: sichere Linie Unter 3.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet"
       ],
@@ -561,7 +563,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 38.3 Tage Fenster (2026-10-19 bis 2026-11-27). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 38.6 Tage Fenster (2026-10-20 bis 2026-11-27). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -570,7 +572,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.3h · jüngste Daten vor 0.3h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.1h · jüngste Daten vor 0.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -579,9 +581,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.2h, aber die jüngste Poly-Global-Scan-Datei ist 342.2h alt (poly_wallet_track 342.2h, poly_money_broad 342.2h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.5h, aber die jüngste Poly-Global-Scan-Datei ist 357.1h alt (poly_wallet_track 357.1h, poly_money_broad 357.1h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.2h · jüngste Daten vor 342.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.5h · jüngste Daten vor 357.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -592,7 +594,7 @@
       "failures": [
         "Anker `soccer_italy_coppa_italia` trifft keinen Ligastring im Feed (eingetragen als 'Italian Coppa Italia'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden."
       ],
-      "note": "42 von 43 Ankern der Handliste treffen den Feed · 429 Ligastrings gesehen · Anker liegt auf 97% von 67 offenen Spielen (aus 44 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "42 von 43 Ankern der Handliste treffen den Feed · 428 Ligastrings gesehen · Anker liegt auf 97% von 31 offenen Spielen (aus 46 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -601,7 +603,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "95 Spiele bewertet · 60 mit mindestens einem fremden Buch · beste Punktzahl 5. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "113 Spiele bewertet · 27 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -610,7 +612,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6685/200 seit 81d · 🔒 Bücher-Score ≥7 von 10: 77/40 seit 86d · 🔒 Liga · Conviction ab 5: 238/80 seit 77d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 81d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 86d"
+      "note": "🔒 Fade-Unter · Ganzspiel-Torlinie: 6701/200 seit 81d · 🔒 Bücher-Score ≥7 von 10: 74/40 seit 87d · 🔒 Liga · Conviction ab 5: 238/80 seit 77d · 🔒 E-Sport ohne Wallet-Nachweis: 443/120 seit 81d · 🔒 Poly-Auswahl · von Betfair bestätigt: 631/60 seit 87d"
     },
     {
       "id": "killer_push_buch",
@@ -632,5 +634,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-11-27T01:47:30.618009+00:00"
+  "generatedAt": "2026-11-27T16:37:30.313394+00:00"
 }
