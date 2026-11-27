@@ -31,11 +31,9 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "nur 65 von 84 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Maritimo v CD Nacional Funchal (Portuguese Primeira Liga); Hercules CF v Antequera CF (Spanish Primera Federación - Group 2); Southampton v Middlesbrough (English Sky Bet Championship)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -90,29 +88,27 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1885728 verbraucht, 3114272 uebrig"
+      "note": "Kontingent: 1886673 verbraucht, 3113327 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 10,
       "failures": [
         "Shabab Al Ordon v Al Salt (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Ettifaq“ · 144.7h Anpfiff-Abstand",
-        "Al Sailiya v Al Gharafa (Qatari Stars League): unerklaert — bester Kandidat „Al-Qadsiah v Al-Fayha“",
-        "City FC v Al-Fujairah FC (UAE Division 1): name — bester Kandidat „Al-Qadsiah v Al-Fayha“",
         "Gulf United v Palm City FC (UAE Division 1): zeit — bester Kandidat „Leeds United v Coventry City“ · 26.2h Anpfiff-Abstand",
-        "Sohar v Al-Mudhaibi (Omani Sultan Cup): name — bester Kandidat „Al-Qadsiah v Al-Fayha“",
-        "Ismaily v Baladeyet Al-Mahalla (Egyptian 2nd Division): name — bester Kandidat „Al-Qadsiah v Al-Fayha“",
         "Norwich U21 v Chelsea U21 (English Premier League 2 - Div 1): name — bester Kandidat „Nottingham Forest v Chelsea“",
         "Lusail v Al Arabi (QAT) (Qatari Stars League): name — bester Kandidat „Al-Qadsiah v Al-Fayha“",
         "East Riffa v Al-Ittifaq Maqaba (Bahraini Premier): name — bester Kandidat „Al-Qadsiah v Al-Fayha“",
         "Warta Poznan v Pogon Siedlce (Polish I Liga): zeit — bester Kandidat „Lech Poznań v Pogoń Szczecin“ · 44.8h Anpfiff-Abstand",
         "Fulham U21 v Nottingham Forest U21 (English Premier League 2 - Div 1): name — bester Kandidat „Nottingham Forest v Chelsea“",
-        "Werder Bremen v Mgladbach (German Bundesliga): name — bester Kandidat „Werder Bremen v Borussia Monchengladbach“"
+        "Cardiff City U21 v Swansea U21 (English U21 Pro Development League): zeit — bester Kandidat „Swansea City v Cardiff City“ · 41.0h Anpfiff-Abstand",
+        "Werder Bremen v Mgladbach (German Bundesliga): name — bester Kandidat „Werder Bremen v Borussia Monchengladbach“",
+        "Al Sailiya v Al Gharafa (Qatari Stars League): unerklaert — bester Kandidat „Al-Qadsiah v Al-Fayha“"
       ],
-      "note": "ohne Anker: kein_kandidat 60 · name 8 · unerklaert 1 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 57 · name 5 · unerklaert 1 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -196,6 +192,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-27T14:29:19.322439+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-11-27T14:44:20.987920+00:00"
 }
