@@ -25,12 +25,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "36320716: zuletzt 52.929 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36322594: zuletzt 162.960 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36335308: zuletzt 236.507 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36321842: zuletzt 39.109 € und Anpfiff erst in 2.7 h — trotzdem nicht mehr im Feed",
-        "36348589: zuletzt 91.003 € und Anpfiff erst in 2.7 h — trotzdem nicht mehr im Feed",
-        "36324075: zuletzt 64.940 € und Anpfiff erst in 2.7 h — trotzdem nicht mehr im Feed"
+        "36320716: zuletzt 52.929 € und Anpfiff erst in 0.2 h — trotzdem nicht mehr im Feed",
+        "36322594: zuletzt 162.960 € und Anpfiff erst in 0.2 h — trotzdem nicht mehr im Feed",
+        "36335308: zuletzt 236.507 € und Anpfiff erst in 0.2 h — trotzdem nicht mehr im Feed",
+        "36321842: zuletzt 39.109 € und Anpfiff erst in 2.5 h — trotzdem nicht mehr im Feed",
+        "36348589: zuletzt 91.003 € und Anpfiff erst in 2.5 h — trotzdem nicht mehr im Feed",
+        "36324075: zuletzt 64.940 € und Anpfiff erst in 2.5 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -41,7 +41,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 0 von 72 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Velez Sarsfield v CA Independiente (Argentinian Primera Division); UNAN Managua v CD Walter Ferreti (Nicaraguan Primera Division); Sportivo Trinidense v Deportivo Recoleta (Paraguayan Primera Division)"
+        "nur 0 von 71 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Velez Sarsfield v CA Independiente (Argentinian Primera Division); UNAN Managua v CD Walter Ferreti (Nicaraguan Primera Division); Sportivo Trinidense v Deportivo Recoleta (Paraguayan Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -97,22 +97,19 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1998470 verbraucht, 3001530 uebrig"
+      "note": "Kontingent: 1999504 verbraucht, 3000496 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 2,
       "failures": [
         "Bourg-en-Bresse v US Thionville Lusitanos (French Cup): name — bester Kandidat „FBBP 01 v Thionville Lusitanos“",
-        "Kruger United FC v Mamelodi Sundowns (South African Premier Division): name — bester Kandidat „Queens Park Rangers v Sheffield United“",
-        "Musselburgh Athletic F.C. v Airdrieonians (Scottish FA Cup): name — bester Kandidat „Rangers v Falkirk F.C.“",
-        "Boness United v Brechin (Scottish FA Cup): name — bester Kandidat „Queens Park Rangers v Sheffield United“",
         "Austria Wien v RZ Pellets WAC (Austrian Bundesliga): name — bester Kandidat „Austria Wien v Wolfsberger AC“"
       ],
-      "note": "ohne Anker: kein_kandidat 38 · kein_pinnacle 5 · name 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 40 · kein_pinnacle 6 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -121,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Malaga v Athletic Bilbao (24 Buecher, ohne Pinnacle); West Ham v Stoke (26 Buecher, ohne Pinnacle); Gaziantep FK v Amed Sportif Faaliyetler (30 Buecher, ohne Pinnacle); Albacete v Tenerife (10 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Moreirense v Santa Clara (20 Buecher, ohne Pinnacle); Gaziantep FK v Amed Sportif Faaliyetler (29 Buecher, ohne Pinnacle); Grasshoppers Zurich v FC Basel (37 Buecher, ohne Pinnacle); FC Vaduz v FC Zurich (28 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -130,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
+      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -197,5 +194,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-11-28T17:02:31.658135+00:00"
+  "generatedAt": "2026-11-28T17:17:47.996919+00:00"
 }
