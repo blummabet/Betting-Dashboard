@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-28T01:33:02Z",
-    "total_records": 383,
+    "updated_at": "2026-11-28T16:28:35Z",
+    "total_records": 384,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -628,7 +628,7 @@
           "score": 0.66
         }
       ],
-      "resolvedAt": "2026-11-28T01:33:02Z",
+      "resolvedAt": "2026-11-28T16:28:35Z",
       "source": "steam",
       "convictionScore": 6,
       "lateEntry": true,
@@ -5582,6 +5582,59 @@
       "entryOdd": 1.38,
       "entryBook": "soft",
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ESP-14-543-728|Heimsieg",
+      "matchKey": "ESP-14-543-728",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.35
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.47
+        },
+        {
+          "name": "opener_move",
+          "score": 1.28
+        },
+        {
+          "name": "move_following",
+          "score": 0.6
+        },
+        {
+          "name": "venue_form",
+          "score": 2.6
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-11-28T16:28:32Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -5.1,
+      "clvResolved": true,
+      "odds": 1.52,
+      "entryOdd": 1.52,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": -2.94,
+      "clvBasis": "fair"
     },
     {
       "key": "ESP-2-543-548|Heimsieg",
@@ -17779,7 +17832,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-28T01:33:02Z",
+      "resolvedAt": "2026-11-28T16:28:35Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
