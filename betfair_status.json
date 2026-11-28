@@ -22,9 +22,15 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "36320716: zuletzt 52.929 € und Anpfiff erst in 3.0 h — trotzdem nicht mehr im Feed",
+        "36321842: zuletzt 39.109 € und Anpfiff erst in 5.2 h — trotzdem nicht mehr im Feed",
+        "36324075: zuletzt 64.940 € und Anpfiff erst in 5.2 h — trotzdem nicht mehr im Feed",
+        "36348337: zuletzt 23.994 € und Anpfiff erst in 5.2 h — trotzdem nicht mehr im Feed",
+        "36372019: zuletzt 21.061 € und Anpfiff erst in 3.5 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 24 von 214 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Valladolid v Sociedad B (Spanish Segunda Division); Extremadura UD v Cacereno (Spanish Primera Federación - Group 1); SE Palmeiras v Estudiantes (CONMEBOL Copa Libertadores)"
+        "nur 8 von 199 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Guimaraes v Club Football Estrela (Portuguese Primeira Liga); SE Palmeiras v Estudiantes (CONMEBOL Copa Libertadores); Valladolid v Sociedad B (Spanish Segunda Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,19 +96,21 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1986396 verbraucht, 3013604 uebrig"
+      "note": "Kontingent: 1987524 verbraucht, 3012476 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 4,
       "failures": [
-        "Chennaiyin FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Lincoln City v Wolverhampton Wanderers“",
-        "Chippa Utd v Kaizer Chiefs (South African Premier Division): name — bester Kandidat „Queens Park Rangers v Sheffield United“"
+        "Bregenz v SV Austria Salzburg (Austrian Erste Liga): name — bester Kandidat „Hamburger SV v Bayern Munich“",
+        "Voitsberg v Austria Wien (A) (Austrian Erste Liga): name — bester Kandidat „Austria Wien v Wolfsberger AC“",
+        "Chennaiyin FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Leeds United v Coventry City“",
+        "Chippa Utd v Kaizer Chiefs (South African Premier Division): name — bester Kandidat „Manchester United v Brentford“"
       ],
-      "note": "ohne Anker: kein_kandidat 37 · kein_pinnacle 3 · name 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 31 · kein_pinnacle 3 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -111,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Bristol Rovers v Tranmere (21 Buecher, ohne Pinnacle); Samsunspor v Genclerbirligi (26 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Samsunspor v Genclerbirligi (25 Buecher, ohne Pinnacle); Widzew Lodz v Zaglebie Lubin (32 Buecher, ohne Pinnacle); Wurzburger Kickers v Fortuna Dusseldorf (27 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -120,7 +128,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -186,6 +194,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-11-28T14:17:34.143251+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-11-28T14:32:12.540161+00:00"
 }
