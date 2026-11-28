@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 70 von 244 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Kisvarda v Nyiregyhaza (Hungarian NB I); Beitar Jerusalem v Hapoel Jerusalem (Israeli Premier League); Academico de Viseu v Alverca (Portuguese Primeira Liga)"
+        "nur 53 von 229 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: SC Austria Lustenau v Rapid Vienna (Austrian Bundesliga); Palermo v Benevento (Italian Serie B); Kisvarda v Nyiregyhaza (Hungarian NB I)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,27 +90,30 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1977329 verbraucht, 3022671 uebrig"
+      "note": "Kontingent: 1978460 verbraucht, 3021540 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 13,
       "failures": [
+        "Rasi Salai United FC v Buriram Utd (Thai League 1): zeit — bester Kandidat „Sheffield United v West Ham United“ · 152.0h Anpfiff-Abstand",
+        "Madura Utd v Malut United (Indonesian Super League): unerklaert — bester Kandidat „Peterborough United v Cambridge United“",
         "Orebro v Enkopings SK (Swedish Playoffs): unerklaert — bester Kandidat „Örebro SK v Enköpings SK“",
         "Slask Wroclaw II v NKP Podhale Nowy Targ (Polish 2 Liga): name — bester Kandidat „Rot-Weiss Essen v TSG Hoffenheim II“",
+        "Ho Chi Minh City v Hoang Anh Gia Lai (Vietnamese V-League): name — bester Kandidat „Lincoln City v Wolverhampton Wanderers“",
         "Al-Wakra v Al-Sadd (Qatari Stars League): unerklaert — bester Kandidat „Al-Hazem v Al-Nassr“",
         "Al Wasl v Al Dhafra (UAE Arabian Gulf League): unerklaert — bester Kandidat „Al-Hazem v Al-Nassr“",
-        "Chippa Utd v Kaizer Chiefs (South African Premier Division): name — bester Kandidat „Manchester United v Brentford“",
+        "Chippa Utd v Kaizer Chiefs (South African Premier Division): name — bester Kandidat „Queens Park Rangers v Sheffield United“",
         "Norrby IF v Lunds BK (Swedish Playoffs): unerklaert — bester Kandidat „Norrby IF v Lunds BK“",
         "Bregenz v SV Austria Salzburg (Austrian Erste Liga): name — bester Kandidat „Hamburger SV v Bayern Munich“",
-        "Chennaiyin FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Leeds United v Coventry City“",
+        "Chennaiyin FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Lincoln City v Wolverhampton Wanderers“",
         "Hertha Berlin v Karlsruhe (German Bundesliga 2): name — bester Kandidat „Hertha Berlin v Karlsruher SC“",
         "Dynamo Kiev v Chernomorets Odesa (Ukrainian Premier League): name — bester Kandidat „Dynamo Dresden v FC St. Pauli“"
       ],
-      "note": "ohne Anker: kein_kandidat 60 · name 6 · unerklaert 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 57 · name 7 · unerklaert 5 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -128,7 +131,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -195,5 +198,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-28T12:17:00.882387+00:00"
+  "generatedAt": "2026-11-28T12:32:00.184681+00:00"
 }
