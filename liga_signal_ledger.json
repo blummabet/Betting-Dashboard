@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-11-27T17:54:51Z",
-    "total_records": 379,
+    "updated_at": "2026-11-28T01:33:02Z",
+    "total_records": 383,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -628,7 +628,7 @@
           "score": 0.66
         }
       ],
-      "resolvedAt": "2026-11-27T17:54:51Z",
+      "resolvedAt": "2026-11-28T01:33:02Z",
       "source": "steam",
       "convictionScore": 6,
       "lateEntry": true,
@@ -998,6 +998,57 @@
       "entryOdd": 1.72,
       "entryBook": "soft",
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "ENG-12-65-49|Unter 3.5 Tore",
+      "matchKey": "ENG-12-65-49",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 8.5
+        },
+        {
+          "name": "form_trend",
+          "score": 1.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.34
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.67
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.47
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.62
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-11-28T01:32:58Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.39,
+      "entryOdd": 1.39,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "ENG-2-1346-64|Heimsieg",
@@ -5500,6 +5551,37 @@
       "processVerdict": "JUSTIFIED",
       "clvFairPP": 0.01,
       "clvBasis": "fair"
+    },
+    {
+      "key": "ESP-14-539-4665|Beide Teams treffen — Ja",
+      "matchKey": "ESP-14-539-4665",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": -2.82
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.82
+        }
+      ],
+      "resolvedAt": "2026-11-28T01:32:58Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.38,
+      "entryOdd": 1.38,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ESP-2-543-548|Heimsieg",
@@ -15465,6 +15547,122 @@
       "processVerdict": "LUCKY"
     },
     {
+      "key": "ITA-13-517-500|Auswärtssieg",
+      "matchKey": "ITA-13-517-500",
+      "market": "Auswärtssieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -4.52
+        },
+        {
+          "name": "form_trend",
+          "score": 3.07
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.42
+        },
+        {
+          "name": "lineup_signal",
+          "score": 0.14
+        },
+        {
+          "name": "apif_predictions",
+          "score": 1.19
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.48
+        },
+        {
+          "name": "form_rating",
+          "score": 3.52
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.07
+        },
+        {
+          "name": "opener_move",
+          "score": 0.6
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-11-28T01:32:58Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -10.67,
+      "clvResolved": true,
+      "odds": 2.0,
+      "entryOdd": 2.0,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": -8.39,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-13-517-500|Unter 2.5 Tore",
+      "matchKey": "ITA-13-517-500",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -4.25
+        },
+        {
+          "name": "form_trend",
+          "score": -1.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": -2.86
+        },
+        {
+          "name": "lineup_signal",
+          "score": 5.69
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.04
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-11-28T01:32:58Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.75,
+      "entryOdd": 1.75,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "ITA-2-1579-494|Über 2.5 Tore",
       "matchKey": "ITA-2-1579-494",
       "market": "Über 2.5 Tore",
@@ -17581,7 +17779,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-11-27T17:54:51Z",
+      "resolvedAt": "2026-11-28T01:33:02Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
