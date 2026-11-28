@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-11-28T19:59:56.499832+00:00",
-"count": 13,
-"covered": 13,
+"generatedAt": "2026-11-28T20:02:10.262926+00:00",
+"count": 16,
+"covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -49,10 +49,14 @@
 ],
 "leaguesMitAnker": [
 "Belgian Pro League",
+"CONMEBOL Copa Libertadores",
+"Dutch Eredivisie",
 "French Ligue 1",
 "German Bundesliga 2",
 "Italian Serie A",
 "Polish Ekstraklasa",
+"Spanish La Liga",
+"Spanish Segunda Division",
 "Swiss Super League",
 "US MLS"
 ],
@@ -61,21 +65,58 @@
 "oddsKeysMitDaten": 46,
 "oddsEvents": 440,
 "oddsTotals": {
-"versucht": 10,
+"versucht": 13,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 10,
+"gewollt": 13,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 2011210,
-"remaining": 2988790,
+"used": 2011645,
+"remaining": 2988355,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.786,
+"ankerQuote": 0.824,
 "games": [
+{
+"matchId": "36334793",
+"home": "Real Madrid",
+"away": "Alaves",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-11-28T20:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Real Madrid",
+"moneySharePct": 93,
+"moneyOdd": 1.15,
+"moneyDir": "flat",
+"totVol": 662474,
+"pinnOdd": 1.13,
+"softOdd": 1.13,
+"softN": 45,
+"poly": null,
+"pinn": {
+"home": 0.859,
+"draw": 0.0924,
+"away": 0.0485,
+"fav": "home"
+},
+"soft": {
+"home": 0.8353,
+"draw": 0.1046,
+"away": 0.0601,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36348589",
 "home": "Inter",
@@ -88,11 +129,11 @@
 "moneyName": "Inter",
 "moneySharePct": 88,
 "moneyOdd": 1.28,
-"moneyDir": "out",
-"totVol": 626607,
+"moneyDir": "flat",
+"totVol": 647160,
 "pinnOdd": 1.25,
 "softOdd": 1.25,
-"softN": 47,
+"softN": 40,
 "poly": null,
 "pinn": {
 "home": 0.7608,
@@ -101,11 +142,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7492,
-"draw": 0.1622,
-"away": 0.0885,
+"home": 0.7431,
+"draw": 0.1681,
+"away": 0.0888,
 "fav": "home",
-"n": 47
+"n": 40
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -123,13 +164,13 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Paris St-G",
-"moneySharePct": 91,
-"moneyOdd": 1.25,
-"moneyDir": "out",
-"totVol": 350934,
+"moneySharePct": 90,
+"moneyOdd": 1.24,
+"moneyDir": "in",
+"totVol": 371054,
 "pinnOdd": 1.22,
-"softOdd": 1.21,
-"softN": 46,
+"softOdd": 1.22,
+"softN": 40,
 "poly": null,
 "pinn": {
 "home": 0.7815,
@@ -138,11 +179,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7664,
-"draw": 0.1559,
-"away": 0.0777,
+"home": 0.7609,
+"draw": 0.1608,
+"away": 0.0784,
 "fav": "home",
-"n": 46
+"n": 40
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -161,31 +202,35 @@
 "moneySide": "home",
 "moneyName": "Nice",
 "moneySharePct": 74,
-"moneyOdd": 1.36,
+"moneyOdd": 1.33,
 "moneyDir": "in",
-"totVol": 151588,
-"pinnOdd": 1.74,
-"softOdd": 1.29,
-"softN": 46,
+"totVol": 155595,
+"pinnOdd": null,
+"softOdd": 1.28,
+"softN": 40,
 "poly": null,
-"pinn": {
-"home": 0.5575,
-"draw": 0.2413,
-"away": 0.2012,
-"fav": "home"
-},
+"pinn": null,
 "soft": {
-"home": 0.6824,
-"draw": 0.1932,
-"away": 0.1244,
+"home": 0.7066,
+"draw": 0.1855,
+"away": 0.1079,
 "fav": "home",
-"n": 46
+"n": 40
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Nice v ESTAC Troyes",
+"grund": "kein_pinnacle",
+"kandidat": "Nice v Troyes",
+"key": "soccer_france_ligue_one",
+"nSoft": 40,
+"pinnacleImEvent": false,
+"nBuecher": 40
+}
 },
 {
 "matchId": "36322596",
@@ -197,13 +242,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Lille",
-"moneySharePct": 63,
-"moneyOdd": 2.26,
-"moneyDir": "out",
-"totVol": 138077,
+"moneySharePct": 62,
+"moneyOdd": 2.24,
+"moneyDir": "in",
+"totVol": 140219,
 "pinnOdd": 2.25,
-"softOdd": 2.12,
-"softN": 46,
+"softOdd": 2.1,
+"softN": 40,
 "poly": null,
 "pinn": {
 "home": 0.2813,
@@ -212,58 +257,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2726,
-"draw": 0.2918,
-"away": 0.4356,
+"home": 0.2669,
+"draw": 0.2968,
+"away": 0.4363,
 "fav": "away",
-"n": 46
+"n": 40
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
-},
-{
-"matchId": "36352157",
-"home": "Academico de Viseu",
-"away": "Alverca",
-"league": "Portuguese Primeira Liga",
-"country": "PT",
-"kickoff": "2026-11-28T18:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Alverca",
-"moneySharePct": 83,
-"moneyOdd": 1.02,
-"moneyDir": "flat",
-"totVol": 135255,
-"pinnOdd": null,
-"softOdd": 1.02,
-"softN": 24,
-"poly": null,
-"pinn": null,
-"soft": {
-"home": 0.0177,
-"draw": 0.0812,
-"away": 0.9011,
-"fav": "away",
-"n": 24
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Academico de Viseu v Alverca",
-"grund": "kein_pinnacle",
-"kandidat": "Académico de Viseu v Alverca",
-"key": "soccer_portugal_primeira_liga",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24
-}
 },
 {
 "matchId": "36348337",
@@ -276,12 +280,12 @@
 "moneySide": "away",
 "moneyName": "Strasbourg",
 "moneySharePct": 71,
-"moneyOdd": 1.45,
-"moneyDir": "in",
-"totVol": 112859,
+"moneyOdd": 1.46,
+"moneyDir": "out",
+"totVol": 115246,
 "pinnOdd": 2.08,
-"softOdd": 1.4,
-"softN": 46,
+"softOdd": 1.37,
+"softN": 40,
 "poly": null,
 "pinn": {
 "home": 0.2715,
@@ -290,11 +294,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1666,
-"draw": 0.2136,
-"away": 0.6197,
+"home": 0.1491,
+"draw": 0.2053,
+"away": 0.6456,
 "fav": "away",
-"n": 46
+"n": 40
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -312,13 +316,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Hannover",
-"moneySharePct": 55,
-"moneyOdd": 2.46,
+"moneySharePct": 53,
+"moneyOdd": 2.5,
 "moneyDir": "out",
-"totVol": 66917,
+"totVol": 75569,
 "pinnOdd": 2.53,
-"softOdd": 2.33,
-"softN": 35,
+"softOdd": 2.25,
+"softN": 36,
 "poly": null,
 "pinn": {
 "home": 0.3083,
@@ -327,11 +331,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2977,
-"draw": 0.3154,
-"away": 0.3869,
+"home": 0.2815,
+"draw": 0.3212,
+"away": 0.3974,
 "fav": "away",
-"n": 35
+"n": 36
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -350,9 +354,9 @@
 "moneySide": "home",
 "moneyName": "Servette",
 "moneySharePct": 84,
-"moneyOdd": 2.24,
+"moneyOdd": 2.26,
 "moneyDir": "out",
-"totVol": 58388,
+"totVol": 59877,
 "pinnOdd": 2.09,
 "softOdd": 2.05,
 "softN": 38,
@@ -364,9 +368,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4426,
-"draw": 0.3097,
-"away": 0.2477,
+"home": 0.4406,
+"draw": 0.3135,
+"away": 0.2459,
 "fav": "home",
 "n": 38
 },
@@ -389,16 +393,16 @@
 "moneySharePct": 61,
 "moneyOdd": 1.01,
 "moneyDir": "flat",
-"totVol": 56983,
+"totVol": 57059,
 "pinnOdd": null,
 "softOdd": 1.0,
 "softN": 13,
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.9783,
-"draw": 0.0152,
-"away": 0.0064,
+"home": 0.9788,
+"draw": 0.0148,
+"away": 0.0063,
 "fav": "home",
 "n": 13
 },
@@ -427,19 +431,19 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Rapid Vienna",
-"moneySharePct": 55,
-"moneyOdd": 1.16,
-"moneyDir": "out",
-"totVol": 47368,
+"moneySharePct": 56,
+"moneyOdd": 1.13,
+"moneyDir": "in",
+"totVol": 48712,
 "pinnOdd": null,
 "softOdd": 1.1,
 "softN": 32,
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.0288,
-"draw": 0.1405,
-"away": 0.8307,
+"home": 0.0262,
+"draw": 0.1345,
+"away": 0.8393,
 "fav": "away",
 "n": 32
 },
@@ -459,6 +463,43 @@
 }
 },
 {
+"matchId": "36227902",
+"home": "SE Palmeiras",
+"away": "Estudiantes",
+"league": "CONMEBOL Copa Libertadores",
+"country": "International",
+"kickoff": "2026-11-28T20:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "SE Palmeiras",
+"moneySharePct": 60,
+"moneyOdd": 2.18,
+"moneyDir": "flat",
+"totVol": 46351,
+"pinnOdd": 2.11,
+"softOdd": 2.05,
+"softN": 36,
+"poly": null,
+"pinn": {
+"home": 0.4576,
+"draw": 0.3284,
+"away": 0.2141,
+"fav": "home"
+},
+"soft": {
+"home": 0.45,
+"draw": 0.3256,
+"away": 0.2244,
+"fav": "home",
+"n": 36
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36360759",
 "home": "Houston Dynamo",
 "away": "San Jose Earthquakes",
@@ -468,10 +509,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Houston Dynamo",
-"moneySharePct": 79,
+"moneySharePct": 81,
 "moneyOdd": 1.18,
-"moneyDir": "in",
-"totVol": 37078,
+"moneyDir": "flat",
+"totVol": 41155,
 "pinnOdd": 1.13,
 "softOdd": 1.12,
 "softN": 38,
@@ -483,9 +524,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.806,
-"draw": 0.1283,
-"away": 0.0657,
+"home": 0.8096,
+"draw": 0.126,
+"away": 0.0643,
 "fav": "home",
 "n": 38
 },
@@ -505,13 +546,13 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Charleroi",
-"moneySharePct": 76,
-"moneyOdd": 1.89,
-"moneyDir": "out",
-"totVol": 35497,
+"moneySharePct": 77,
+"moneyOdd": 1.87,
+"moneyDir": "in",
+"totVol": 36248,
 "pinnOdd": 1.72,
-"softOdd": 1.73,
-"softN": 38,
+"softOdd": 1.75,
+"softN": 34,
 "poly": null,
 "pinn": {
 "home": 0.548,
@@ -520,11 +561,85 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5232,
-"draw": 0.2592,
-"away": 0.2176,
+"home": 0.5218,
+"draw": 0.2617,
+"away": 0.2166,
 "fav": "home",
-"n": 38
+"n": 34
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36352649",
+"home": "Cambuur Leeuwarden",
+"away": "Sparta Rotterdam",
+"league": "Dutch Eredivisie",
+"country": "NL",
+"kickoff": "2026-11-28T20:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Cambuur Leeuwarden",
+"moneySharePct": 76,
+"moneyOdd": 1.86,
+"moneyDir": "flat",
+"totVol": 34872,
+"pinnOdd": 1.87,
+"softOdd": 1.78,
+"softN": 45,
+"poly": null,
+"pinn": {
+"home": 0.5179,
+"draw": 0.2306,
+"away": 0.2515,
+"fav": "home"
+},
+"soft": {
+"home": 0.5176,
+"draw": 0.2318,
+"away": 0.2506,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36352126",
+"home": "Valladolid",
+"away": "Sociedad B",
+"league": "Spanish Segunda Division",
+"country": "ES",
+"kickoff": "2026-11-28T20:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Valladolid",
+"moneySharePct": 55,
+"moneyOdd": 1.8,
+"moneyDir": "flat",
+"totVol": 21970,
+"pinnOdd": 1.79,
+"softOdd": 1.7,
+"softN": 41,
+"poly": null,
+"pinn": {
+"home": 0.5406,
+"draw": 0.2425,
+"away": 0.2169,
+"fav": "home"
+},
+"soft": {
+"home": 0.5347,
+"draw": 0.2463,
+"away": 0.219,
+"fav": "home",
+"n": 41
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -542,12 +657,12 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Wisla Krakow",
-"moneySharePct": 73,
-"moneyOdd": 2.42,
+"moneySharePct": 72,
+"moneyOdd": 2.48,
 "moneyDir": "out",
-"totVol": 16228,
+"totVol": 16675,
 "pinnOdd": 2.4,
-"softOdd": 2.23,
+"softOdd": 2.3,
 "softN": 37,
 "poly": null,
 "pinn": {
@@ -557,9 +672,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4061,
-"draw": 0.3418,
-"away": 0.2521,
+"home": 0.397,
+"draw": 0.3547,
+"away": 0.2483,
 "fav": "home",
 "n": 37
 },
@@ -570,25 +685,16 @@
 "pinnTotals": null
 }
 ],
-"ankerN": 14,
-"ankerNOffen": 28,
-"ankerMit": 11,
+"ankerN": 17,
+"ankerNOffen": 32,
+"ankerMit": 14,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 12,
+"kein_kandidat": 13,
 "name": 2,
 "kein_pinnacle": 3
 },
 "beispiele": [
-{
-"spiel": "Vannes v Concarneau",
-"kandidat": "Cannes v Concarneau",
-"key": "soccer_france_coupe_de_france",
-"score": 1.0,
-"grund": "name",
-"matchId": "36369146",
-"liga": "French Cup"
-},
 {
 "spiel": "CD Gualberto Villarroel v Real Potosi",
 "kandidat": "Real Madrid v Alavés",
@@ -599,15 +705,24 @@
 "liga": "Bolivian Liga de Futbol Profesional"
 },
 {
-"spiel": "Academico de Viseu v Alverca",
+"spiel": "Vannes v Concarneau",
+"kandidat": "Cannes v Concarneau",
+"key": "soccer_france_coupe_de_france",
+"score": 1.0,
+"grund": "name",
+"matchId": "36369146",
+"liga": "French Cup"
+},
+{
+"spiel": "Nice v ESTAC Troyes",
 "grund": "kein_pinnacle",
-"kandidat": "Académico de Viseu v Alverca",
-"key": "soccer_portugal_primeira_liga",
-"nSoft": 24,
+"kandidat": "Nice v Troyes",
+"key": "soccer_france_ligue_one",
+"nSoft": 40,
 "pinnacleImEvent": false,
-"nBuecher": 24,
-"matchId": "36352157",
-"liga": "Portuguese Primeira Liga"
+"nBuecher": 40,
+"matchId": "36321842",
+"liga": "French Ligue 1"
 },
 {
 "spiel": "Palermo v Benevento",
