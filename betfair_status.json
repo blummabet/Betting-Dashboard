@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 53 von 229 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Palermo v Benevento (Italian Serie B); SC Austria Lustenau v Rapid Vienna (Austrian Bundesliga); Beitar Jerusalem v Hapoel Jerusalem (Israeli Premier League)"
+        "nur 40 von 221 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: CD Gualberto Villarroel v Real Potosi (Bolivian Liga de Futbol Profesional); SC Lokeren-Temse v KFCO Beerschot Wilrijk (Belgian Challenger Pro League); Vannes v Concarneau (French Cup)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,29 +90,28 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1979598 verbraucht, 3020402 uebrig"
+      "note": "Kontingent: 1980738 verbraucht, 3019262 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 11,
       "failures": [
-        "Orebro v Enkopings SK (Swedish Playoffs): unerklaert — bester Kandidat „Örebro SK v Enköpings SK“",
-        "Rasi Salai United FC v Buriram Utd (Thai League 1): zeit — bester Kandidat „Sheffield United v West Ham United“ · 152.0h Anpfiff-Abstand",
-        "Slask Wroclaw II v NKP Podhale Nowy Targ (Polish 2 Liga): name — bester Kandidat „Rot-Weiss Essen v TSG Hoffenheim II“",
-        "Ho Chi Minh City v Hoang Anh Gia Lai (Vietnamese V-League): name — bester Kandidat „Lincoln City v Wolverhampton Wanderers“",
         "Al-Wakra v Al-Sadd (Qatari Stars League): unerklaert — bester Kandidat „Al-Hazem v Al-Nassr“",
-        "Al Wasl v Al Dhafra (UAE Arabian Gulf League): unerklaert — bester Kandidat „Al-Hazem v Al-Nassr“",
+        "Rasi Salai United FC v Buriram Utd (Thai League 1): zeit — bester Kandidat „Sheffield United v West Ham United“ · 152.0h Anpfiff-Abstand",
+        "Orebro v Enkopings SK (Swedish Playoffs): unerklaert — bester Kandidat „Örebro SK v Enköpings SK“",
+        "Slask Wroclaw II v NKP Podhale Nowy Targ (Polish 2 Liga): name — bester Kandidat „Rot-Weiss Essen v TSG Hoffenheim II“",
         "Chippa Utd v Kaizer Chiefs (South African Premier Division): name — bester Kandidat „Queens Park Rangers v Sheffield United“",
+        "Al Wasl v Al Dhafra (UAE Arabian Gulf League): unerklaert — bester Kandidat „Al-Hazem v Al-Nassr“",
         "Norrby IF v Lunds BK (Swedish Playoffs): unerklaert — bester Kandidat „Norrby IF v Lunds BK“",
         "Chennaiyin FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Lincoln City v Wolverhampton Wanderers“",
         "Hertha Berlin v Karlsruhe (German Bundesliga 2): name — bester Kandidat „Hertha Berlin v Karlsruher SC“",
         "Dynamo Kiev v Chernomorets Odesa (Ukrainian Premier League): name — bester Kandidat „Dynamo Dresden v FC St. Pauli“",
         "Madura Utd v Malut United (Indonesian Super League): unerklaert — bester Kandidat „Peterborough United v Cambridge United“"
       ],
-      "note": "ohne Anker: kein_kandidat 57 · name 6 · unerklaert 5 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 51 · kein_pinnacle 1 · name 5 · unerklaert 5 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -121,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Al-Hazm (KSA) v Al Nassr (23 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -130,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -197,5 +196,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-11-28T12:47:05.911377+00:00"
+  "generatedAt": "2026-11-28T13:02:25.805647+00:00"
 }
